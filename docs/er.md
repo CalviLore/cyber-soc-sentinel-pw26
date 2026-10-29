@@ -1,8 +1,16 @@
-# Schema ER di Cyber-SOC Sentinel
+# Modello dei dati: schema ER
 
-Le 6 tabelle del DB SQLite, definite in [../src/schema.sql](../src/schema.sql).
-Il diagramma si vede su GitHub e nell'anteprima Markdown di VS Code
+| | |
+|---|---|
+| **DBMS** | SQLite |
+| **Definizione** | [src/schema.sql](../src/schema.sql) |
+| **Tabelle** | 6 |
+| **Popolamento** | Dati sintetici generati da `tools/simulatore.py` |
+
+Il diagramma è visualizzabile su GitHub e nell'anteprima Markdown di VS Code
 (`Ctrl+Shift+V`).
+
+## 1. Diagramma
 
 ```mermaid
 erDiagram
@@ -58,31 +66,47 @@ erDiagram
     NETWORK_LOGS }o--o{ INCIDENT_TICKETS : "ip = ip_correlato"
 ```
 
-## Come si legge
+### Notazione
 
-Ogni riquadro è una tabella; `PK` indica la chiave primaria, `UK` un valore unico.
-Le linee uniscono tabelle che condividono lo stesso indirizzo IP.
-`}o--o|` significa "molti (anche zero) da un lato, al massimo uno dall'altro":
-per esempio molti log possono avere lo stesso IP, ma un IP compare al massimo
-una volta in `ISOLATED_IPS`. `|o--o|` è "al massimo uno da entrambi i lati" e
-`}o--o{` è "molti da entrambi i lati" (un IP può avere più ticket, un ticket
-può non riferirsi a nessun IP).
+`PK` indica la chiave primaria e `UK` un vincolo di unicità. Le associazioni
+collegano tabelle che condividono lo stesso indirizzo IP.
 
-## Chi legge e chi scrive (tool MCP)
+| Simbolo | Significato |
+|---|---|
+| `}o--o\|` | Molti (anche zero) da un lato, al massimo uno dall'altro. Esempio: più log possono riferirsi allo stesso IP, che compare al massimo una volta in `ISOLATED_IPS` |
+| `\|o--o\|` | Al massimo uno da entrambi i lati |
+| `}o--o{` | Molti da entrambi i lati. Esempio: un IP può avere più ticket, e un ticket può non riferirsi ad alcun IP |
+
+## 2. Descrizione delle tabelle
+
+| Tabella | Contenuto | Vincoli principali |
+|---|---|---|
+| `network_logs` | Richieste di rete registrate (data, IP sorgente, metodo, endpoint, codice di stato, user agent) | Indici su `ip` e `status_code` |
+| `assets` | Asset aziendali noti | `ip` univoco; `critico = 1` indica un asset da non isolare mai |
+| `ip_whitelist` | Indirizzi con traffico legittimo | `ip` univoco |
+| `threat_intel_db` | Indirizzi noti come pericolosi, con punteggio | `ip` univoco; `score` tra 0 e 100 |
+| `isolated_ips` | Indirizzi isolati, con motivo, data e operatore | `ip` univoco |
+| `incident_tickets` | Ticket di incidente | `gravita` limitata a Bassa, Media, Alta; `stato` predefinito `aperto` |
+
+## 3. Accesso da parte dei tool MCP
 
 | Tabella | Tool | Accesso |
 |---|---|---|
-| `network_logs` | `readLogs` | lettura |
-| `assets`, `ip_whitelist`, `threat_intel_db` | `checkReputation` | lettura |
-| `isolated_ips` | `isolateIp` | scrittura (con conferma Y/N) |
-| `incident_tickets` | `openTicket` | scrittura (con conferma Y/N) |
+| `network_logs` | `readLogs` | Lettura |
+| `assets`, `ip_whitelist`, `threat_intel_db` | `checkReputation` | Lettura |
+| `isolated_ips` | `isolateIp` | Scrittura (con conferma Y/N) |
+| `incident_tickets` | `openTicket` | Scrittura (con conferma Y/N) |
 
-## Note
+`assets` è letta anche da `isolateIp` per rifiutare l'isolamento degli asset
+critici (vedi [backend.md](backend.md)).
 
-- Non ci sono chiavi esterne: le relazioni sono logiche e passano dal campo
-  `ip`. `network_logs` contiene anche IP esterni che non compaiono in nessuna
-  altra tabella, e un vincolo FK li rifiuterebbe.
-- `user_agent` è un dato non fidato (scenario 7, prompt injection): l'agente
-  lo tratta sempre come dato, mai come istruzione.
-- Gli IP e le quantità dei log vengono dal seed e cambiano con `/seed N` nel
-  simulatore. Lo schema resta lo stesso.
+## 4. Scelte di progetto
+
+- **Nessuna chiave esterna.** Le relazioni sono logiche e passano dal campo
+  `ip`. `network_logs` contiene anche indirizzi esterni assenti dalle altre
+  tabelle, che un vincolo di chiave esterna rifiuterebbe.
+- **`user_agent` come dato non fidato.** Il campo può contenere testo
+  iniettato (scenario 7, prompt injection). L'agente lo tratta sempre come
+  dato e mai come istruzione.
+- **Dati generati dal seed.** Gli indirizzi IP e le quantità di log variano con
+  il comando `/seed N` del simulatore. Lo schema non cambia.
