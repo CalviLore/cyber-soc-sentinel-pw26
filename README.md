@@ -14,3 +14,27 @@ venv\Scripts\Activate.ps1
 # macOS / Linux
 source venv/bin/activate
 ```
+
+```bash
+pip install faker mcp jsonschema
+```
+
+## Struttura
+
+```
+src/        codice condiviso: db.py (connessione SQLite), schema.sql (6 tabelle)
+tools/      simulatore.py — programma a parte che prepara i dati degli scenari
+docs/       documentazione (schema ER)
+data/       soc.db, generato dal simulatore (non versionato)
+```
+
+## Simulatore
+
+```bash
+python tools/simulatore.py            # modalita' interattiva, /help per i comandi
+python tools/simulatore.py /clear /bruteforce /stato
+```
+
+`/clear` riporta il DB allo stato di base; `/bruteforce`, `/injection`,
+`/multitool`... aggiungono la situazione di uno scenario. Gli IP e le
+quantita' sono generati dal seed (`/seed N`, `/ip` per vederli).

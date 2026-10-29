@@ -3,7 +3,8 @@ import os
 import sqlite3
 from pathlib import Path
 
-BASE = Path(__file__).parent
+SRC = Path(__file__).parent
+BASE = SRC.parent  # radice del repo (qui sta data/)
 DB_PATH = Path(os.environ.get("SOC_DB", BASE / "data" / "soc.db"))
 
 
@@ -14,9 +15,9 @@ def connetti():
     return conn
 
 
-def crea_schema(conn):
+def creaSchema(conn):
     """Ricrea da zero le 6 tabelle."""
     for t in ("network_logs", "assets", "ip_whitelist", "threat_intel_db",
               "isolated_ips", "incident_tickets"):
         conn.execute(f"DROP TABLE IF EXISTS {t}")
-    conn.executescript((BASE / "schema.sql").read_text(encoding="utf-8"))
+    conn.executescript((SRC / "schema.sql").read_text(encoding="utf-8"))

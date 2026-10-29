@@ -1,13 +1,15 @@
 # Schema ER — Cyber-SOC Sentinel
 
-Le 6 tabelle del DB SQLite (definizione in [schema.sql](../schema.sql)).
+Le 6 tabelle del DB SQLite, definite in [../src/schema.sql](../src/schema.sql).
+Il diagramma si vede renderizzato su GitHub e nell'anteprima Markdown di VS Code
+(`Ctrl+Shift+V`).
 
 ```mermaid
 erDiagram
     NETWORK_LOGS {
         int id PK
-        text timestamp
-        text ip
+        text timestamp "ISO 8601"
+        text ip "IPv4 sorgente"
         int status_code
         text method
         text endpoint
@@ -43,28 +45,44 @@ erDiagram
         text titolo
         text descrizione
         text gravita "Bassa, Media, Alta"
-        text ip_correlato
-        int status_code_correlato
+        text ip_correlato "opzionale"
+        int status_code_correlato "opzionale"
         text timestamp
-        text stato
+        text stato "default: aperto"
     }
 
-    ASSETS ||--o| IP_WHITELIST : "ip (puo' essere in whitelist)"
-    NETWORK_LOGS }o--o| ASSETS : "ip sorgente"
-    NETWORK_LOGS }o--o| THREAT_INTEL_DB : "ip sorgente"
-    NETWORK_LOGS }o--o| ISOLATED_IPS : "ip isolato dopo analisi"
-    NETWORK_LOGS ||--o{ INCIDENT_TICKETS : "ip_correlato / status_code_correlato"
+    NETWORK_LOGS }o--o| ASSETS : "ip = ip"
+    NETWORK_LOGS }o--o| THREAT_INTEL_DB : "ip = ip"
+    ASSETS |o--o| IP_WHITELIST : "ip = ip"
+    NETWORK_LOGS }o--o| ISOLATED_IPS : "ip = ip"
+    NETWORK_LOGS }o--o{ INCIDENT_TICKETS : "ip = ip_correlato"
 ```
+
+## Come si legge
+
+- Ogni riquadro è una tabella; `PK` = chiave primaria, `UK` = valore unico.
+- Le linee uniscono tabelle che condividono lo stesso **indirizzo IP**.
+  `}o--o|` significa "molti (anche zero) da un lato, al massimo uno dall'altro":
+  per esempio molti log possono avere lo stesso IP, ma un IP compare al massimo
+  una volta in `ISOLATED_IPS`. `|o--o|` è "al massimo uno da entrambi i lati" e
+  `}o--o{` è "molti da entrambi i lati" (un IP può avere più ticket, un ticket
+  può non riferirsi a nessun IP).
+
+## Chi legge e chi scrive (tool MCP)
+
+| Tabella | Tool | Accesso |
+|---|---|---|
+| `network_logs` | `leggi_log` | lettura |
+| `assets`, `ip_whitelist`, `threat_intel_db` | `verifica_reputazione` | lettura |
+| `isolated_ips` | `isola_ip` | **scrittura** (con conferma Y/N) |
+| `incident_tickets` | `apri_ticket` | **scrittura** (con conferma Y/N) |
 
 ## Note
 
-- **Nessuna chiave esterna:** le relazioni sono *logiche*, passano dal campo
+- **Nessuna chiave esterna:** le relazioni sono *logiche* e passano dal campo
   `ip`. `network_logs` contiene anche IP esterni che non compaiono in nessuna
-  altra tabella, quindi un vincolo FK sarebbe sbagliato. Le tabelle di
-  contesto (`assets`, `ip_whitelist`, `threat_intel_db`) si consultano con
-  `verifica_reputazione`.
-- **Tabelle di sola lettura per l'agente:** `network_logs`, `assets`,
-  `ip_whitelist`, `threat_intel_db`.
-- **Tabelle scritte dall'agente (con conferma Y/N):** `isolated_ips`
-  (`isola_ip`) e `incident_tickets` (`apri_ticket`).
-- **`user_agent`** e' dato non fidato (vedi scenario 7, prompt injection).
+  altra tabella: un vincolo FK li rifiuterebbe.
+- **`user_agent`** è dato non fidato (scenario 7, prompt injection): l'agente
+  lo tratta sempre come dato, mai come istruzione.
+- **Dati generati dal seed:** gli IP e le quantità dei log cambiano con
+  `/seed N` nel simulatore; lo schema resta lo stesso.
