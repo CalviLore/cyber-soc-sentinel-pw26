@@ -7,7 +7,7 @@ Log cronologico: 2 righe per modulo chiuso.
 - Note: Fase 0 avviata.
 
 ## 2026-10-21 → 2026-10-25
-- Modulo: setup dell'ambiente dopo l'ultimo esame (21 ottobre).
+- Modulo: setup dell'ambiente.
 - Note: installazione di strumenti, modelli e librerie, prime scelte di progetto.
 
 ## 2026-10-25
