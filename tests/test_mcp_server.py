@@ -43,7 +43,7 @@ class McpServerTest(unittest.TestCase):
         db.DB_PATH = self._oldPath
         self.tmp.cleanup()
 
-    def run_session(self, scenario, answer=None):
+    def run_session(self, scenario, answer=None, extraEnv=None):
         """Avvia il server, apre una sessione e esegue `scenario(session)`.
 
         `answer` simula l'operatore: True = Y, False = N, None = client che non
@@ -59,7 +59,7 @@ class McpServerTest(unittest.TestCase):
         params = StdioServerParameters(
             command=sys.executable,
             args=[str(SRC / "mcp_server.py")],
-            env={**os.environ, "SOC_DB": str(self.dbPath)},
+            env={**os.environ, "SOC_DB": str(self.dbPath), **(extraEnv or {})},
         )
 
         async def main():
@@ -158,6 +158,25 @@ class McpServerTest(unittest.TestCase):
             await session.call_tool("checkReputation", {"ip": "10.0.0.5"})
         self.run_session(scenario, answer=True)
         self.assertEqual(self.questions, [])
+
+    def test_fault_timeout_makes_check_reputation_hang(self):
+        async def scenario(session):
+            with self.assertRaises(Exception):
+                await session.call_tool(
+                    "checkReputation", {"ip": "10.0.0.5"},
+                    read_timeout_seconds=2)
+            # gli altri tool non sono toccati dal guasto
+            return await session.call_tool("readLogs", {"ip": "10.0.0.5"})
+        result = self.run_session(scenario, extraEnv={"FAULT_TIMEOUT": "1"})
+        self.assertEqual(self.payload(result)["total"], 1)
+
+    def test_check_reputation_answers_without_fault_flag(self):
+        async def scenario(session):
+            return await session.call_tool(
+                "checkReputation", {"ip": "10.0.0.1"},
+                read_timeout_seconds=10)
+        result = self.run_session(scenario, extraEnv={"FAULT_TIMEOUT": "0"})
+        self.assertTrue(self.payload(result)["criticalAsset"])
 
     def countRows(self, table):
         with closing(db.connetti()) as conn:
