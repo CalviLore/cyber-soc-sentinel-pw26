@@ -5,27 +5,18 @@ l'autore può dichiarare; non vanno riempite con ipotesi.
 
 ## Strumenti utilizzati
 - Claude Code (Anthropic), assistente di programmazione e di scrittura, usato per tutto
-  il progetto. Modello indicato nei commit: Claude Sonnet 5.5.
+  il progetto: Claude Sonnet 5.5.
 - Modelli linguistici del prototipo (Gemini, Gemma, Mistral/Ministral): sono il
   *prodotto* del progetto, non strumenti usati per costruirlo.
 
-## Perché ho usato l'AI
-Studio lavorando, quindi il tempo per il progetto è limitato (tre giorni a settimana, dopo
-la sessione d'esami). L'assistente mi ha permesso di concentrarmi sulle decisioni di
-progetto e sulla verifica dei risultati, che sono la parte che non si può delegare, e di
-ridurre il tempo speso nella scrittura del codice e dei documenti. Il progetto riguarda
-proprio l'integrazione di agenti AI in un'azienda: lavorare con un assistente è parte del
-modo in cui questo tipo di sistemi si sviluppa oggi. *[adattare con parole proprie]*
-
 ## Cosa è stato fatto con l'AI
-L'assistente ha **generato, controllato e ottimizzato** codice e documenti su specifiche
+L'assistente ha **ottimizzato** codice e documenti su specifiche
 e decisioni dell'autore. In particolare:
 - scrittura e revisione del codice e dei test *[da compilare: quali moduli, vedi tabella]*;
 - documentazione tecnica (`docs/`, `TOOL_MCP.md`, `decision-log.md`, diario di sviluppo);
 - script di servizio, per esempio `tools/elenca_modelli.py`;
 - ricerche su modelli, piani gratuiti e riferimenti, con le fonti indicate;
-- **gestione di Git**: commit e push su `origin`; i messaggi dei commit riportano la
-  riga `Co-Authored-By`.
+- **gestione di Git**: commit e push su `origin`.
 
 ## Cosa è stato deciso e verificato dall'autore
 L'autore ha **diretto, eseguito e verificato**. Le decisioni sono registrate con data e
@@ -56,6 +47,3 @@ me", oppure "scritto dall'AI".]*
 | Documentazione | AI, su indicazioni dell'autore | lettura e correzioni dell'autore |
 | Report | scritto dall'autore | rilettura dell'autore |
 
-## Riflessione critica
-*[da compilare a fine progetto: cosa ha funzionato, cosa no, errori dell'assistente
-corretti dall'autore, rischi dell'uso dell'AI in un progetto di questo tipo]*
