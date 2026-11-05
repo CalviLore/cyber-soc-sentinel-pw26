@@ -31,8 +31,11 @@ def sdkResponse(content=None, toolCalls=None, usage=(3, 2), model="m-risposto",
     )
 
 
-def sdkToolCall(arguments, callId="c1", name="readLogs"):
-    return NS(id=callId, function=NS(name=name, arguments=arguments))
+def sdkToolCall(arguments, callId="c1", name="readLogs", extraContent=None):
+    fields = {"id": callId, "function": NS(name=name, arguments=arguments)}
+    if extraContent is not None:
+        fields["extra_content"] = extraContent
+    return NS(**fields)
 
 
 def statusError(status, headers=None):
@@ -109,6 +112,16 @@ class RispostaTest(unittest.TestCase):
         response, _ = run(client)
         self.assertEqual(response.toolCalls[0].invalidArguments, "[1, 2]")
 
+    def test_toolCallConservaExtraContentDelProvider(self):
+        # Gemini mette la thought_signature in extra_content: senza, il giro
+        # successivo di tool calling viene rifiutato con HTTP 400.
+        extra = {"google": {"thought_signature": "firma"}}
+        client, _ = makeClient([
+            sdkResponse(toolCalls=[sdkToolCall('{"limit": 5}', extraContent=extra)])
+        ])
+        response, _ = run(client)
+        self.assertEqual(response.toolCalls[0].extraContent, extra)
+
     def test_usageAssenteDiventaZero(self):
         client, _ = makeClient([sdkResponse(content="ok", usage=None)])
         response, _ = run(client)
@@ -156,6 +169,18 @@ class RichiestaTest(unittest.TestCase):
             "function": {"name": "readLogs", "arguments": '{"ip": "è"}'},
         }])
         self.assertEqual(sent[3], {"role": "tool", "content": "[]", "tool_call_id": "c1"})
+
+    def test_extraContentRimandatoNellaRichiesta(self):
+        extra = {"google": {"thought_signature": "firma"}}
+        client, sdk = makeClient([sdkResponse(content="ok")])
+        messages = [
+            Message("assistant", None, [
+                ToolCall("c1", "readLogs", {"limit": 5}, extraContent=extra)
+            ]),
+        ]
+        run(client, messages)
+        sent = sdk.requests[0]["messages"][0]["tool_calls"][0]
+        self.assertEqual(sent["extra_content"], extra)
 
     def test_messaggioToolSenzaIdEPermanente(self):
         client, sdk = makeClient([])

@@ -38,3 +38,14 @@ python tools/simulatore.py /clear /bruteforce /stato
 `/clear` riporta il DB allo stato di base; `/bruteforce`, `/injection`,
 `/multitool`... aggiungono la situazione di uno scenario. Gli IP e le
 quantita' sono generati dal seed (`/seed N`, `/ip` per vederli).
+
+## Harness agentico
+
+```bash
+python src/run_agent.py --provider gemini --request "Analizza i log e apri un ticket se serve"
+python src/run_agent.py --provider mistral --answer yes   # conferma automatica
+```
+
+Il run stampa il riassunto preso da `AgentResult` e scrive il log JSONL in
+`logs/agent-<data>.jsonl` (cartella ignorata da Git). I test:
+`python -m unittest discover -s tests`.

@@ -78,8 +78,9 @@ class OpenAICompatibleClient(LLMClient):
                     raise PermanentLLMError("messaggio tool senza toolCallId")
                 item["tool_call_id"] = msg.toolCallId
             elif msg.toolCalls:
-                item["tool_calls"] = [
-                    {
+                item["tool_calls"] = []
+                for tc in msg.toolCalls:
+                    toolCall = {
                         "id": tc.id,
                         "type": "function",
                         "function": {
@@ -88,8 +89,12 @@ class OpenAICompatibleClient(LLMClient):
                             "arguments": json.dumps(tc.arguments, ensure_ascii=False),
                         },
                     }
-                    for tc in msg.toolCalls
-                ]
+                    # Gemini (via endpoint OpenAI) pretende indietro la
+                    # thought_signature del function call: senza, il secondo
+                    # giro di tool calling fallisce con HTTP 400.
+                    if tc.extraContent:
+                        toolCall["extra_content"] = tc.extraContent
+                    item["tool_calls"].append(toolCall)
 
             sdkMessages.append(item)
         return sdkMessages
@@ -143,6 +148,14 @@ class OpenAICompatibleClient(LLMClient):
         """429, 408 e 5xx sono ritentabili; gli altri 4xx no."""
         status = exc.status_code
         detail = f"HTTP {status}: {exc}"
+        # Il corpo del provider spiega il 400 (es. thought_signature mancante
+        # in Gemini) meglio del solo codice: utile nel log e per il debug.
+        try:
+            body = (exc.response.text or "").strip()
+        except Exception:
+            body = ""
+        if body:
+            detail += f" | {body[:500]}"
         if status in (408, 429) or status >= 500:
             return TransientLLMError(detail, status, _retryAfterSeconds(exc.response))
         return PermanentLLMError(detail, status)
@@ -169,6 +182,15 @@ class OpenAICompatibleClient(LLMClient):
         toolCalls = []
         for tc in message.tool_calls or []:
             raw = tc.function.arguments or "{}"
+            # Gemini mette qui la thought_signature del function call. Va
+            # conservata e rimandata al giro successivo, altrimenti il
+            # provider rifiuta la conversazione con HTTP 400.
+            extraContent = getattr(tc, "extra_content", None)
+            if extraContent is None:
+                extraContent = (getattr(tc, "model_extra", None) or {}).get("extra_content")
+            if not isinstance(extraContent, dict):
+                extraContent = None
+
             # Un JSON rotto è un errore del modello, non del provider: non si
             # solleva, si segnala nella ToolCall e il ciclo agentico risponde al modello.
             try:
@@ -176,10 +198,13 @@ class OpenAICompatibleClient(LLMClient):
             except json.JSONDecodeError:
                 arguments = None
             if isinstance(arguments, dict):
-                toolCalls.append(ToolCall(id=tc.id, name=tc.function.name, arguments=arguments))
+                toolCalls.append(ToolCall(id=tc.id, name=tc.function.name,
+                                          arguments=arguments,
+                                          extraContent=extraContent))
             else:
                 toolCalls.append(ToolCall(id=tc.id, name=tc.function.name, arguments={},
-                                          invalidArguments=raw))
+                                          invalidArguments=raw,
+                                          extraContent=extraContent))
 
         usage = response.usage
         return LLMResponse(

@@ -9,11 +9,17 @@ class ToolCall:
     Se il modello ha mandato argomenti che non sono un JSON valido, arguments
     resta vuoto e invalidArguments contiene il testo grezzo: sta al ciclo
     agentico non eseguire il tool e dirlo al modello.
+
+    extraContent conserva i campi proprietari del provider che vanno rimandati
+    indietro nella chiamata successiva. Serve a Gemini, che mette qui la
+    thought_signature del function call: senza, il secondo giro di tool
+    calling viene rifiutato con HTTP 400.
     """
     id: str
     name: str
     arguments: dict
     invalidArguments: str | None = None
+    extraContent: dict | None = None
 
 
 @dataclass
