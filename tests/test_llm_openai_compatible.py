@@ -114,6 +114,22 @@ class RispostaTest(unittest.TestCase):
         response, _ = run(client)
         self.assertEqual(response.usage.totalTokens, 0)
 
+    def test_contenutoAListaDiBlocchiTieneSoloIlTesto(self):
+        # Forma osservata dal vivo con Mistral: un blocco thinking e uno text.
+        blocks = [
+            {"type": "thinking", "thinking": [{"type": "text", "text": "ragiono"}]},
+            {"type": "text", "text": "ok"},
+        ]
+        client, _ = makeClient([sdkResponse(content=blocks)])
+        response, _ = run(client)
+        self.assertEqual(response.content, "ok")
+
+    def test_contenutoAListaSenzaTestoDiventaStringaVuota(self):
+        blocks = [{"type": "thinking", "thinking": []}]
+        client, _ = makeClient([sdkResponse(content=blocks)])
+        response, _ = run(client)
+        self.assertEqual(response.content, "")
+
     def test_choicesVuotoERitentato(self):
         client, sdk = makeClient([sdkResponse(choices=[]), sdkResponse(content="ok")])
         response, _ = run(client)
@@ -162,6 +178,17 @@ class RichiestaTest(unittest.TestCase):
         client, sdk = makeClient([sdkResponse(content="ok")])
         run(client)
         self.assertNotIn("tools", sdk.requests[0])
+
+    def test_temperaturaZeroFissaTopP(self):
+        # Mistral rifiuta temperature=0 se top_p non e' 1 (errore 400 visto dal vivo).
+        client, sdk = makeClient([sdkResponse(content="ok")])
+        run(client)
+        self.assertEqual(sdk.requests[0]["top_p"], 1.0)
+
+    def test_temperaturaAltaNonToccaTopP(self):
+        client, sdk = makeClient([sdkResponse(content="ok")])
+        asyncio.run(client.chat([Message("user", "x")], [], temperature=0.7))
+        self.assertNotIn("top_p", sdk.requests[0])
 
     def test_temperatureEModelloPassati(self):
         client, sdk = makeClient([sdkResponse(content="ok")])

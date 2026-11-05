@@ -116,6 +116,10 @@ class OpenAICompatibleClient(LLMClient):
             "messages": sdkMessages,
             "temperature": temperature,
         }
+        # Mistral rifiuta temperature=0 se top_p non e' 1. A temperatura 0 il
+        # campionamento e' greedy, quindi top_p non cambia nulla: lo fissiamo.
+        if temperature == 0:
+            request["top_p"] = 1.0
         if tools:
             request["tools"] = self._toSdkTools(tools)
 
@@ -143,6 +147,19 @@ class OpenAICompatibleClient(LLMClient):
             return TransientLLMError(detail, status, _retryAfterSeconds(exc.response))
         return PermanentLLMError(detail, status)
 
+    @staticmethod
+    def _textOf(content: Any) -> str | None:
+        """Mistral manda il contenuto come lista di blocchi (thinking, text): tiene solo il testo."""
+        if content is None or isinstance(content, str):
+            return content
+        parts = []
+        for block in content:
+            kind = block.get("type") if isinstance(block, dict) else getattr(block, "type", None)
+            text = block.get("text") if isinstance(block, dict) else getattr(block, "text", None)
+            if kind == "text" and isinstance(text, str):
+                parts.append(text)
+        return "".join(parts)
+
     def _toLLMResponse(self, response: Any, latency: float) -> LLMResponse:
         if not response.choices:
             raise TransientLLMError("risposta senza choices")
@@ -166,7 +183,7 @@ class OpenAICompatibleClient(LLMClient):
 
         usage = response.usage
         return LLMResponse(
-            content=message.content,
+            content=self._textOf(message.content),
             toolCalls=toolCalls,
             usage=Usage(
                 promptTokens=usage.prompt_tokens if usage else 0,
