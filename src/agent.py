@@ -84,7 +84,8 @@ Regole:
    rimandata al modello nei giri successivi e consuma token.
 7. Se servono altre informazioni, chiama altri tool o chiedi all'operatore;
    non concludere a caso.
-8. Rispondi in italiano, in modo conciso e operativo.
+8. Rispondi sempre in italiano, in modo conciso e operativo. Scrivi in
+   italiano anche il ragionamento e le note intermedie.
 """
 
 
