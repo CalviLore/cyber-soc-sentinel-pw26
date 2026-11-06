@@ -21,7 +21,7 @@ non il modello, cosi' i test possono controllarlo.
 import asyncio
 import inspect
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Awaitable, Callable, TextIO
@@ -94,7 +94,9 @@ class AgentResult:
 
     giri e' il numero di chiamate al modello effettuate davvero (anche quella
     che poi e' fallita). tokenTotali e' la somma di usage.totalTokens di tutte
-    le risposte ricevute.
+    le risposte ricevute. history contiene la conversazione aggiornata
+    (system, user, assistant e tool): va passata al run successivo per
+    mantenere la memoria tra una richiesta e l'altra.
     """
     motivoArresto: str
     testoFinale: str
@@ -104,6 +106,7 @@ class AgentResult:
     toolFalliti: int = 0
     toolRifiutati: int = 0
     errore: str | None = None
+    history: list[Message] = field(default_factory=list)
 
 
 def logEvent(file: str | Path | TextIO | None, tipo: str, **dati) -> None:
@@ -258,6 +261,7 @@ async def runAgent(
     callTool: Callable[[str, dict], Any],
     userRequest: str,
     *,
+    history: list[Message] | None = None,
     maxIterations: int = MAX_ITERATIONS_DEFAULT,
     logFile: str | Path | TextIO | None = None,
     toolTimeoutSeconds: float | None = TOOL_TIMEOUT_SECONDS,
@@ -268,14 +272,23 @@ async def runAgent(
     tools: schemi dei tool (formato MCP: name, description, inputSchema).
     callTool: funzione che esegue davvero il tool; puo' essere sync o async.
     userRequest: richiesta iniziale dell'operatore.
+    history: messaggi dei run precedenti (AgentResult.history). Se vuota o
+        assente, il run parte dal system prompt; altrimenti lo riusa cosi'
+        com'e' e aggiunge in coda solo la nuova richiesta dell'operatore.
+
+    La conversazione aggiornata torna in AgentResult.history: chi vuole la
+    memoria tra piu' richieste la ripassa al run successivo.
 
     Non solleva eccezioni per errori del modello o interruzioni: restituisce
     sempre un AgentResult con il motivo di arresto.
     """
-    messages: list[Message] = [
-        Message("system", SYSTEM_PROMPT),
-        Message("user", userRequest),
-    ]
+    # Copia: la lista del chiamante non viene modificata dal run.
+    messages: list[Message] = list(history) if history else []
+    if not messages:
+        # Il system prompt apre la conversazione solo la prima volta: nei run
+        # successivi e' gia' dentro history e non va duplicato.
+        messages.append(Message("system", SYSTEM_PROMPT))
+    messages.append(Message("user", userRequest))
     schemas = _toolsByName(tools)
     toolNames = sorted(schemas)
 
@@ -313,6 +326,7 @@ async def runAgent(
                 toolFalliti=falliti,
                 toolRifiutati=rifiutati,
                 errore=errore,
+                history=messages,
             )
         except (asyncio.CancelledError, KeyboardInterrupt) as exc:
             # Ctrl+C in un programma asincrono arriva spesso come
@@ -329,6 +343,7 @@ async def runAgent(
                 toolFalliti=falliti,
                 toolRifiutati=rifiutati,
                 errore=errore,
+                history=messages,
             )
 
         tokenTotali += response.usage.totalTokens
@@ -372,6 +387,7 @@ async def runAgent(
                 toolRiusciti=riusciti,
                 toolFalliti=falliti,
                 toolRifiutati=rifiutati,
+                history=messages,
             )
 
         for tc in response.toolCalls:
@@ -497,4 +513,5 @@ async def runAgent(
         toolRiusciti=riusciti,
         toolFalliti=falliti,
         toolRifiutati=rifiutati,
+        history=messages,
     )

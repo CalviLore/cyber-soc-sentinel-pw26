@@ -124,6 +124,33 @@ class CicloBaseTest(unittest.TestCase):
         self.assertEqual(messages[1].content, "ciao")
         self.assertEqual(client.calls[0]["tools"], TOOLS)
 
+    def test_laSecondaChiamataVedeIMessaggiDellaPrima(self):
+        client = FakeLLMClient([
+            LLMResponse(content="prima risposta", usage=Usage(1, 1)),
+            LLMResponse(content="seconda risposta", usage=Usage(2, 1)),
+        ])
+
+        prima = run(client, request="prima domanda")
+        seconda = run(client, request="seconda domanda",
+                      history=prima.history)
+
+        messaggi = client.calls[1]["messages"]
+        self.assertEqual(
+            [m.role for m in messaggi],
+            ["system", "user", "assistant", "user"],
+        )
+        self.assertEqual(messaggi[0].content, SYSTEM_PROMPT)
+        self.assertEqual(messaggi[1].content, "prima domanda")
+        self.assertEqual(messaggi[2].content, "prima risposta")
+        self.assertEqual(messaggi[3].content, "seconda domanda")
+        # Il system prompt c'e' una volta sola: al secondo run non si duplica.
+        self.assertEqual(sum(m.role == "system" for m in messaggi), 1)
+        self.assertEqual(seconda.testoFinale, "seconda risposta")
+        self.assertEqual(
+            [m.role for m in seconda.history],
+            ["system", "user", "assistant", "user", "assistant"],
+        )
+
     def test_ilPromptDiSistemaDiceCheIToolSonoDati(self):
         self.assertIn("SOC", SYSTEM_PROMPT)
         self.assertIn("prompt injection", SYSTEM_PROMPT)
