@@ -108,6 +108,23 @@ class ChatTest(unittest.TestCase):
         conferme = [e for e in eventi if e["event"] == "conferma"]
         self.assertEqual([e["esito"] for e in conferme], ["N"])
 
+    def test_eventi_contiene_solo_l_ultima_richiesta(self):
+        client = FakeLLMClient([isolaIp(), LLMResponse(content="isolato"),
+                                LLMResponse(content="ok")])
+
+        async def scenario():
+            async with self.chat(client, answer="Y") as chat:
+                await chat.rispondi("isola")
+                primi = [e["event"] for e in chat.eventi]
+                await chat.rispondi("grazie")
+                secondi = [e["event"] for e in chat.eventi]
+                return primi, secondi
+
+        primi, secondi = self.run_(scenario)
+        self.assertIn("tool_chiamato", primi)
+        self.assertIn("conferma", primi)
+        self.assertEqual(secondi, ["richiesta", "risposta", "fine"])
+
     def test_dopo_un_errore_del_modello_la_chat_continua(self):
         client = FakeLLMClient([TransientLLMError("429"),
                                 LLMResponse(content="ora risponde")])

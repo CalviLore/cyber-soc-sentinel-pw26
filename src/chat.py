@@ -20,6 +20,7 @@ Tutti gli eventi della sessione finiscono nello stesso log JSONL.
 """
 import argparse
 import asyncio
+import json
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -29,16 +30,15 @@ from dotenv import dotenv_values
 from agent import (
     MAX_ITERATIONS_DEFAULT,
     TOOL_TIMEOUT_SECONDS,
-    formatSummary,
     logEvent,
     runAgent,
 )
 from llm.base import Message
 from mcp_client import McpToolClient
 from run_agent import buildClient, makeAsk
+from trascrizione import righeSessione
 
 ROOT = Path(__file__).resolve().parent.parent
-PROMPT = "sei> "
 
 
 def _faultValue(fault) -> str:
@@ -91,6 +91,7 @@ class Chat:
         self.maxIterations = maxIterations
         self.toolTimeout = toolTimeout
         self.history: list[Message] = []
+        self.eventi: list[dict] = []  # eventi dell'ultima richiesta, dal log
         self.mcp: McpToolClient | None = None
 
     async def __aenter__(self) -> "Chat":
@@ -125,6 +126,7 @@ class Chat:
         if self.mcp is None:
             raise RuntimeError("Chat non avviata: usa 'async with'")
 
+        inizioLog = self._dimensioneLog()
         result = await runAgent(
             self.client,
             self.mcp.tools,
@@ -137,7 +139,23 @@ class Chat:
         )
         # Il run restituisce la conversazione completa: e' la nuova memoria.
         self.history = result.history
+        self.eventi = self._eventiDa(inizioLog)
         return result
+
+    def _dimensioneLog(self) -> int:
+        """Byte gia' scritti nel log: serve a leggere solo gli eventi nuovi."""
+        if isinstance(self.logFile, (str, Path)) and Path(self.logFile).exists():
+            return Path(self.logFile).stat().st_size
+        return 0
+
+    def _eventiDa(self, inizio: int) -> list[dict]:
+        """Eventi del log scritti dopo `inizio` (quelli dell'ultima richiesta)."""
+        if not isinstance(self.logFile, (str, Path)) or not Path(self.logFile).exists():
+            return []
+        with open(self.logFile, "rb") as f:
+            f.seek(inizio)
+            testo = f.read().decode("utf-8", errors="replace")
+        return [json.loads(riga) for riga in testo.splitlines() if riga.strip()]
 
     def azzera(self) -> None:
         """Svuota la memoria: la prossima frase riparte dal system prompt."""
@@ -191,7 +209,7 @@ async def main(args: argparse.Namespace) -> int:
         ) as chat:
             while True:
                 try:
-                    frase = input(PROMPT)
+                    frase = input(f"{client.model}> ")
                 except EOFError:
                     print("\n(uscita)")
                     break
@@ -214,13 +232,15 @@ async def main(args: argparse.Namespace) -> int:
                     print(f"\nerrore imprevisto: {type(exc).__name__}: {exc}")
                     continue
 
+                # Passaggi dell'agente, come in un terminale: tool chiamati con
+                # i parametri, risultati, risposta. La domanda e la conferma
+                # Y/N le hai gia' viste e scritte tu, quindi non si ripetono.
                 print()
-                if result.testoFinale:
-                    print(result.testoFinale)
-                else:
-                    print("(nessun testo finale)")
-                print()
-                print(formatSummary(result))
+                for _, riga in righeSessione(frase, chat.eventi, result,
+                                             automatico=False,
+                                             mostraRichiesta=False,
+                                             mostraConferme=False):
+                    print(riga)
                 if result.errore:
                     # runAgent ha gia' fermato il run: la chat puo' continuare.
                     print("(la chat resta aperta: puoi riprovare)")
