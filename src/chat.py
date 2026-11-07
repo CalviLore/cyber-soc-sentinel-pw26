@@ -21,7 +21,10 @@ Tutti gli eventi della sessione finiscono nello stesso log JSONL.
 import argparse
 import asyncio
 import json
+import os
+import shutil
 import sys
+import textwrap
 from datetime import datetime
 from pathlib import Path
 
@@ -36,9 +39,34 @@ from agent import (
 from llm.base import Message
 from mcp_client import McpToolClient
 from run_agent import buildClient, makeAsk
-from trascrizione import righeSessione
+from interfaccia import Attesa, creaInput, mostraBanner, mostraHelp
+from modelli import ansiColore, coloreModello, costruisci, elencoModelli, interpreta
+from trascrizione import markdownInAnsi, righeSessione
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+# Colori ANSI per stile di riga (come lo screenshot del runner): il pensiero
+# del modello e i risultati dei tool in grigio, i tool in azzurro, errori in rosso.
+ANSI = {"pensiero": "90", "risultato": "90", "riepilogo": "90",
+        "tool": "94", "errore": "91", "conferma": "93"}
+
+
+def _stampa(righe, colori=True):
+    """Stampa le righe della trascrizione a colori e a capo alla larghezza del
+    terminale (senza spezzare le parole)."""
+    larghezza = max(40, shutil.get_terminal_size((100, 30)).columns - 1)
+    for stile, testo in righe:
+        codice = ANSI.get(stile) if colori else None
+        stato = (False, False)  # (grassetto, codice) di Markdown, a cavallo delle righe
+        for originale in testo.split("\n"):
+            rientro = len(originale) - len(originale.lstrip(" "))
+            for pezzo in (textwrap.wrap(originale, larghezza,
+                                        subsequent_indent=" " * rientro,
+                                        drop_whitespace=True) or [""]):
+                if colori:
+                    pezzo, stato = markdownInAnsi(pezzo, stato)
+                print(f"\033[{codice}m{pezzo}\033[0m" if codice else pezzo)
 
 
 def _faultValue(fault) -> str:
@@ -168,7 +196,9 @@ def parseArgs(argv: list[str] | None = None) -> argparse.Namespace:
         description="Chat interattiva con Cyber-SOC Sentinel"
     )
     parser.add_argument("--provider", choices=["gemini", "mistral", "nvidia", "ollama"],
-                        default="gemini")
+                        default=None,
+                        help="senza questo parametro la chat fa scegliere il modello "
+                             "da un menu (in un terminale vero) oppure usa gemini")
     parser.add_argument("--model", help="sovrascrive il modello del .env")
     parser.add_argument("--db", help="percorso SQLite (default: data/soc.db)")
     parser.add_argument("--log", help="percorso del log JSONL della sessione")
@@ -182,8 +212,30 @@ def parseArgs(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def scegliVoce(env, corrente=None):
+    """Mostra i modelli disponibili e fa scegliere un numero. None = nessuna scelta."""
+    voci = elencoModelli(env)
+    if not voci:
+        print("Nessun modello disponibile: controlla le chiavi nel .env e che Ollama sia acceso.")
+        return None
+    print("\nModelli disponibili:")
+    larghezza = max(len(v.etichetta) for v in voci)
+    for i, v in enumerate(voci, 1):
+        segno = "  (in uso)" if corrente and corrente == v.id else ""
+        nome = ansiColore(f"{v.etichetta:<{larghezza}}", coloreModello(v.id))
+        print(f"  {i:>2}. {nome}  {v.origine}{segno}")
+    voce = interpreta(input("Numero (invio per annullare): "), voci)
+    return voce
+
+
 async def main(args: argparse.Namespace) -> int:
     env = dotenv_values(ROOT / ".env")
+    if args.provider is None and not args.model and sys.stdin.isatty():
+        voce = scegliVoce(env)
+        if voce is None:
+            return 0
+        args.provider, args.model = voce.provider, voce.modello
+    args.provider = args.provider or "gemini"
     client = buildClient(args.provider, env, args.model)
 
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -191,8 +243,9 @@ async def main(args: argparse.Namespace) -> int:
                else ROOT / "logs" / f"chat-{timestamp}.jsonl")
     logPath.parent.mkdir(parents=True, exist_ok=True)
 
-    print(f"modello: {client.model}\nlog: {logPath}")
-    print("Scrivi 'esci' per chiudere, '/nuova' per azzerare la memoria.")
+    mostraBanner(client.model, args.provider, args.db or "data/soc.db", logPath)
+    leggi = creaInput(ROOT / "logs" / ".cronologia")
+    attesa = Attesa()
 
     logEvent(logPath, "sessione_inizio", provider=args.provider,
              modello=client.model)
@@ -202,14 +255,14 @@ async def main(args: argparse.Namespace) -> int:
             client,
             db=args.db,
             fault=env.get("FAULT_TIMEOUT", "0"),
-            ask=makeAsk(args.answer),
+            ask=attesa.conferma(makeAsk(args.answer)),
             logFile=logPath,
             maxIterations=args.max_iterations,
             toolTimeout=args.tool_timeout,
         ) as chat:
             while True:
                 try:
-                    frase = input(f"{client.model}> ")
+                    frase = await leggi()
                 except EOFError:
                     print("\n(uscita)")
                     break
@@ -225,22 +278,45 @@ async def main(args: argparse.Namespace) -> int:
                     chat.azzera()
                     print("(memoria azzerata: nuova conversazione)")
                     continue
+                if comando in ("/help", "help", "?"):
+                    mostraHelp()
+                    continue
+                if comando in ("/models", "/modelli", "/modello"):
+                    voce = scegliVoce(env, chat.client.model)
+                    if voce is None:
+                        continue
+                    try:
+                        nuovo = costruisci(voce, env)
+                    except ValueError as exc:
+                        print(f"Non posso usare questo modello: {exc}")
+                        continue
+                    logEvent(logPath, "cambio_modello", da=chat.client.model,
+                             a=nuovo.model)
+                    chat.client = nuovo
+                    print(f"(modello cambiato: ora {nuovo.model}; la conversazione "
+                          f"continua. Con /nuova ricominci da capo.)")
+                    continue
 
+                attesa.avvia()
                 try:
                     result = await chat.rispondi(frase)
                 except Exception as exc:  # errore imprevisto, non del modello
+                    attesa.ferma()
                     print(f"\nerrore imprevisto: {type(exc).__name__}: {exc}")
                     continue
+                finally:
+                    attesa.ferma()
 
                 # Passaggi dell'agente, come in un terminale: tool chiamati con
                 # i parametri, risultati, risposta. La domanda e la conferma
                 # Y/N le hai gia' viste e scritte tu, quindi non si ripetono.
                 print()
-                for _, riga in righeSessione(frase, chat.eventi, result,
-                                             automatico=False,
-                                             mostraRichiesta=False,
-                                             mostraConferme=False):
-                    print(riga)
+                _stampa(righeSessione(frase, chat.eventi, result,
+                                      automatico=False,
+                                      mostraRichiesta=False,
+                                      mostraConferme=False,
+                                      semplice=True))
+                print()
                 if result.errore:
                     # runAgent ha gia' fermato il run: la chat puo' continuare.
                     print("(la chat resta aperta: puoi riprovare)")
@@ -255,6 +331,7 @@ async def main(args: argparse.Namespace) -> int:
 if __name__ == "__main__":
     # Il modello puo' usare caratteri non presenti in cp1252.
     sys.stdout.reconfigure(encoding="utf-8")
+    os.system("")  # abilita i colori ANSI nel terminale di Windows
     try:
         raise SystemExit(asyncio.run(main(parseArgs())))
     except KeyboardInterrupt:

@@ -1,0 +1,51 @@
+sequenceDiagram
+    autonumber
+    actor Op as Operatore SOC
+    participant CLI as run_agent.py
+    participant H as runAgent (harness)
+    participant LLM as LLMClient
+    participant MC as McpToolClient
+    participant S as Server MCP
+    participant B as Backend + DB
+
+    Op->>CLI: --request "Analizza i log e isola gli IP ostili"
+    CLI->>MC: avvia sessione (stdio)
+    MC->>S: initialize + list_tools
+    S-->>MC: 4 tool con schema dei parametri
+    CLI->>H: runAgent(client, tools, callTool, richiesta)
+    Note over H: messages = [system, user]<br/>log JSONL: "richiesta"
+
+    loop fino a risposta finale o max iterazioni
+        H->>LLM: chat(messages, tools)
+        LLM-->>H: LLMResponse (testo oppure toolCalls) + token
+        Note over H: log "risposta" (modello, token)
+
+        alt nessuna toolCall
+            H-->>CLI: AgentResult (risposta finale)
+        else ci sono toolCalls
+            H->>H: valida: tool esiste? argomenti validi? schema rispettato?
+            alt non valida
+                H->>H: NON esegue, messaggio tool di errore al modello
+            else valida
+                H->>MC: callTool(nome, argomenti)
+                MC->>S: call_tool
+                alt tool di lettura (readLogs / checkReputation)
+                    S->>B: legge dal DB
+                else tool di scrittura (isolateIp / openTicket)
+                    S->>B: validateIsolation / validateTicket
+                    S-->>MC: elicitation "Confermi? Y/N"
+                    MC->>Op: mostra la domanda (callback ask)
+                    Op-->>MC: Y
+                    MC-->>S: conferma = Y
+                    S->>B: scrive su isolated_ips / incident_tickets
+                end
+
+                B-->>S: risultato
+                S-->>MC: risultato
+                MC-->>H: risultato (o errore / timeout)
+                Note over H: log "tool_chiamato" + "risultato"<br/>messaggio tool aggiunto a messages
+            end
+        end
+    end
+
+    CLI->>Op: formatSummary(result): motivo, giri, token, tool riusciti/falliti/rifiutati

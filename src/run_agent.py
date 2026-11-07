@@ -85,8 +85,8 @@ def makeAsk(answer: str):
     """Restituisce il callback di conferma: interattivo oppure Y/N automatico."""
     if answer == "yes":
         def sempreSi(question: str) -> str:
-            print(f"{question}Y (automatico)", flush=True)
-            return "Y"
+            print(f"{question}S (automatico)", flush=True)
+            return "S"
         return sempreSi
     if answer == "no":
         def sempreNo(question: str) -> str:

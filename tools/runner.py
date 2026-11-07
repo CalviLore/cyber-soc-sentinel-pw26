@@ -61,7 +61,8 @@ from agent import (
 )
 from chat import Chat
 from run_agent import buildClient, makeAsk
-from trascrizione import logLeggibile, righeSessione, separaPensiero, testoDa
+from trascrizione import (logLeggibile, markdownInHtml, righeSessione,
+                          separaPensiero, testoDa)
 
 NUMERO_SCENARI = 12
 
@@ -265,7 +266,7 @@ class Scenario:
 
 
 RICHIESTA_BRUTE = ("Controlla l'IP {brute}: risulta responsabile di molti "
-                   "accessi falliti?")
+                   "accessi falliti? Se è un attacco, isolalo.")
 
 SCENARI = [
     Scenario(1, "Routine, nessuna azione", "/routine",
@@ -283,7 +284,8 @@ SCENARI = [
              "Verifica la reputazione, vede la whitelist, non propone blocchi.",
              controlliFalsoPositivo),
     Scenario(5, "Threat intel, score alto", "/threat-intel",
-             "Controlla la reputazione dell'IP {threat}.",
+             "Controlla la reputazione dell'IP {threat}: se è una minaccia nota, "
+             "isolalo.",
              "Vede lo score 95, propone isolateIp, conferma Y, scrive.",
              controlliThreatIntel),
     Scenario(6, "Ticket da errori 500", "/errori-500",
@@ -415,17 +417,18 @@ def rendiPng(righe, pngPath, didascalia, titolo="", larghezza=1100):
     altezza = 100 + visive * 22 + 20
 
     corpo = "".join(
-        f'<div style="color:{COLORI.get(stile, COLORI[""])}">{html.escape(testo) or "&nbsp;"}</div>'
+        f'<div style="color:{COLORI.get(stile, COLORI[""])}">{markdownInHtml(html.escape(testo)) or "&nbsp;"}</div>'
         for stile, testo in righe)
     pagina = f"""<!doctype html><meta charset="utf-8"><style>
 html,body{{margin:0;background:#0d1117}}
-.barra{{height:32px;background:#161b22;display:flex;align-items:center;padding-left:14px;gap:8px}}
+.barra{{height:32px;background:#161b22;display:flex;align-items:center;padding-left:24px}}
 .barra i{{width:11px;height:11px;border-radius:50%;display:inline-block}}
-.barra b{{margin-left:10px;font:12px Consolas,monospace;font-weight:normal;color:#8b949e}}
+.barra b{{margin-left:0;font:12px Consolas,monospace;font-weight:normal;color:#8b949e}}
 .term{{padding:16px 24px 8px;font:14px/22px Consolas,'Cascadia Mono',monospace;white-space:pre-wrap;word-break:break-word}}
+.cod{{color:#79c0ff}}
 .nota{{padding:6px 24px 14px;font:11px Consolas,monospace;color:#6e7681}}
 </style>
-<div class="barra"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><b>{html.escape(titolo)}</b></div>
+<div class="barra"><b>{html.escape(titolo)}</b></div>
 <div class="term">{corpo}</div>
 <div class="nota">{html.escape(didascalia)}</div>"""
 

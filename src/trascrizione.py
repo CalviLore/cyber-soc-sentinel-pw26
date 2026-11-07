@@ -20,7 +20,7 @@ import re
 import textwrap
 from datetime import datetime
 
-from agent import formatSummary
+from agent import STOP_FINAL_ANSWER, formatSummary
 from llm.pensiero import separaPensiero  # noqa: F401 (usato anche dai test)
 
 LIMITE_VALORE = 60
@@ -51,6 +51,21 @@ def _blocchiPensiero(pensiero, semplice):
         return [("pensiero", "Thinking..."), ("pensiero", pensiero),
                 ("pensiero", "...done thinking."), ("", "")]
     return [("pensiero", f"✻ {pensiero}"), ("", "")]
+
+
+def riepilogoBreve(result):
+    """Riga corta sotto la risposta: token e tool. Arresto e giri compaiono solo
+    se qualcosa e' andato storto (tetto raggiunto, errore, interruzione): con
+    "risposta finale" non dicono nulla di utile. Il dettaglio resta nel log."""
+    parti = [f"token: {result.tokenTotali}"]
+    if result.toolRiusciti or result.toolFalliti or result.toolRifiutati:
+        parti.append(f"tool: {result.toolRiusciti} riusciti, "
+                     f"{result.toolFalliti} falliti, {result.toolRifiutati} rifiutati")
+    if result.motivoArresto != STOP_FINAL_ANSWER:
+        parti.insert(0, f"arresto: {result.motivoArresto} (giri: {result.giri})")
+    if result.errore:
+        parti.append(f"errore: {result.errore}")
+    return " | ".join(parti)
 
 
 def righeSessione(richiesta, eventi, result, *, modello=None, automatico=True,
@@ -111,7 +126,7 @@ def righeSessione(richiesta, eventi, result, *, modello=None, automatico=True,
             rientro = "" if semplice else "  "
             righe.append(("conferma",
                           f"{rientro}[CONFERMA] {e.get('domanda', '')} "
-                          f"[Y/N] {e['esito']}{coda}"))
+                          f"[S/N] {'S' if e['esito'] == 'Y' else e['esito']}{coda}"))
         elif tipo == "risultato" and mostraTool:
             esito = e.get("esito", "")
             stile = "risultato" if esito == "riuscito" else "errore"
@@ -131,8 +146,46 @@ def righeSessione(richiesta, eventi, result, *, modello=None, automatico=True,
     righe.append(("risposta", testo if semplice else f"● {testo}"))
     if mostraRiepilogo:
         righe.append(("", ""))
-        righe.append(("riepilogo", formatSummary(result)))
+        righe.append(("riepilogo", riepilogoBreve(result) if semplice
+                      else formatSummary(result)))
     return righe
+
+
+# ---------------------------------------------------------------------------
+# Markdown del modello, reso per la visualizzazione (il log resta intatto)
+# ---------------------------------------------------------------------------
+
+_MD = re.compile(r"\*\*(.+?)\*\*|`([^`\n]+)`", re.S)
+
+
+def markdownInHtml(testoHtml):
+    """**grassetto** e `codice` -> tag HTML. Il testo deve essere gia' escapato."""
+    def sost(m):
+        if m.group(1) is not None:
+            return f"<b>{m.group(1)}</b>"
+        return f'<span class="cod">{m.group(2)}</span>'
+    return _MD.sub(sost, testoHtml)
+
+
+def markdownInAnsi(riga, stato):
+    """Stessa resa per il terminale. stato = (grassetto, codice) all'inizio
+    della riga; restituisce (riga con codici ANSI, stato alla fine). Serve lo
+    stato perche' un **grassetto** puo' continuare sulla riga dopo (a capo)."""
+    grassetto, codice = stato
+    out, i = [], 0
+    while i < len(riga):
+        if riga.startswith("**", i) and not codice:
+            grassetto = not grassetto
+            out.append("\033[1m" if grassetto else "\033[22m")
+            i += 2
+        elif riga[i] == "`":
+            codice = not codice
+            out.append("\033[96m" if codice else "\033[39m")
+            i += 1
+        else:
+            out.append(riga[i])
+            i += 1
+    return "".join(out), (grassetto, codice)
 
 
 def testoDa(righe):

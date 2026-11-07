@@ -1,0 +1,19 @@
+sequenceDiagram
+    autonumber
+    actor Op as Operatore SOC
+    participant H as runAgent
+    participant LLM as LLMClient
+    participant MC as McpToolClient
+    participant S as Server MCP
+
+    H->>MC: callTool("isolateIp", {ip, reason})
+    MC->>S: call_tool
+    S-->>MC: elicitation "Confermi? Y/N"
+    MC->>Op: domanda
+    Op-->>MC: N
+    MC-->>S: conferma = N
+    Note over S: validazione già passata,<br/>nessuna scrittura sul DB
+    S-->>MC: {cancelled: true, message: "..."}
+    MC-->>H: risultato "cancelled" (esito N nel log)
+    H->>LLM: chat(messages con il risultato)
+    LLM-->>H: "Operazione annullata dall'operatore"

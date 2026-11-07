@@ -329,7 +329,7 @@ class RunCompletoTest(unittest.TestCase):
         righe = testo.splitlines()
         self.assertTrue(righe[0].startswith(">>> Controlla l'IP"))
         self.assertTrue(any(r.strip().startswith("[CONFERMA] Isolare l'IP")
-                            and r.endswith("[Y/N] N (automatico)") for r in righe))
+                            and r.endswith("[S/N] N (automatico)") for r in righe))
         # le righe dei tool non stanno nell'export: restano nel log.jsonl
         self.assertFalse(any(r.startswith("● isolateIp(") for r in righe))
         self.assertFalse(any("⎿" in r for r in righe))

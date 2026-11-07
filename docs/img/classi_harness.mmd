@@ -1,0 +1,61 @@
+classDiagram
+    direction TB
+    class Runner {
+        <<tools/runner.py>>
+        +eseguiScenario(scenario, client, seed) dict
+        +controlli su DB e log
+        +scriviRiepilogo()
+        +scriviConfronto()
+    }
+    class Chat {
+        <<chat.py>>
+        +history list
+        +rispondi(richiesta) AgentResult
+        +azzera()
+        +eventi() list
+    }
+    class RunAgentCLI {
+        <<run_agent.py>>
+        +buildClient(provider, env, model) LLMClient
+        +makeAsk(answer) Callable
+        +main(args) int
+    }
+    class RunAgent {
+        <<agent.py>>
+        +runAgent(client, tools, callTool, userRequest, ...) AgentResult
+        +formatSummary(result) str
+        +logEvent(file, tipo, dati)
+    }
+    class AgentResult {
+        +motivoArresto str
+        +testoFinale str
+        +giri int
+        +tokenTotali int
+        +toolRiusciti int
+        +toolFalliti int
+        +toolRifiutati int
+    }
+    class Trascrizione {
+        <<trascrizione.py>>
+        +righeSessione(richiesta, eventi, result) list
+        +logLeggibile(eventi) str
+    }
+    class McpToolClient {
+        +tools list
+        +ask Callable
+        +callTool(name, arguments) Any
+    }
+    class LLMClient {
+        <<abstract>>
+        +chat(messages, tools, temperature) LLMResponse
+    }
+    Runner ..> Chat : stesso motore della chat
+    Runner ..> Trascrizione : output.txt e screenshot
+    Chat ..> RunAgent : un giro per messaggio
+    Chat ..> McpToolClient : avviato una volta
+    Chat ..> Trascrizione : mostra i passaggi
+    RunAgentCLI ..> RunAgent : avvia
+    RunAgentCLI ..> McpToolClient : crea
+    RunAgent --> AgentResult : restituisce
+    RunAgent ..> LLMClient : chat()
+    RunAgent ..> McpToolClient : callTool()

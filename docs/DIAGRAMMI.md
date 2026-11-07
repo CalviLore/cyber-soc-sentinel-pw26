@@ -15,8 +15,8 @@ conferma Y/N dell'operatore.
 
 ```mermaid
 flowchart LR
-    op(["👤 Operatore SOC"])
-    llm(["🤖 Modello LLM"])
+    op(["Operatore SOC"])
+    llm(["Modello LLM"])
 
     subgraph sys["Cyber-SOC Sentinel"]
         direction TB
@@ -58,7 +58,7 @@ back-end.
 
 ```mermaid
 classDiagram
-    direction LR
+    direction TB
 
     %% ---------- Harness ----------
     class RunAgent {
@@ -82,6 +82,24 @@ classDiagram
         +ask Callable
         +callTool(name, arguments) Any
         -_elicit(...) conferma Y/N
+    }
+    class Chat {
+        <<chat.py>>
+        +history list
+        +rispondi(richiesta) AgentResult
+        +azzera()
+        +eventi() list
+    }
+    class Runner {
+        <<tools/runner.py>>
+        +eseguiScenario(scenario, client, seed) dict
+        +controlli DB e log
+        +scriviRiepilogo() / scriviConfronto()
+    }
+    class Trascrizione {
+        <<trascrizione.py>>
+        +righeSessione(richiesta, eventi, result) list
+        +logLeggibile(eventi) str
     }
     class RunAgentCLI {
         <<run_agent.py>>
@@ -164,6 +182,12 @@ classDiagram
     }
 
     %% ---------- Relazioni ----------
+    Chat ..> RunAgent : un giro per messaggio
+    Chat ..> McpToolClient : avviato una volta
+    Chat o-- Message : memoria della conversazione
+    Chat ..> Trascrizione : mostra i passaggi
+    Runner ..> Chat : stesso motore della chat
+    Runner ..> Trascrizione : output.txt e screenshot
     RunAgentCLI ..> RunAgent : avvia
     RunAgentCLI ..> McpToolClient : crea
     RunAgentCLI ..> LLMClient : buildClient

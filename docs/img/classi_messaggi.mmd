@@ -1,0 +1,38 @@
+classDiagram
+    direction TB
+    class LLMResponse {
+        +content str
+        +toolCalls list
+        +usage Usage
+        +model str
+        +thinking str
+        +fallback str
+        +toolDaTesto bool
+    }
+    class Usage {
+        +promptTokens int
+        +completionTokens int
+        +totalTokens int
+    }
+    class ToolCall {
+        +id str
+        +name str
+        +arguments dict
+        +invalidArguments str
+    }
+    class Message {
+        +role str
+        +content str
+        +toolCalls list
+        +toolCallId str
+    }
+    class LLMError {
+        <<exception>>
+    }
+    class TransientLLMError
+    class PermanentLLMError
+    LLMResponse *-- Usage
+    LLMResponse o-- ToolCall
+    Message o-- ToolCall
+    LLMError <|-- TransientLLMError
+    LLMError <|-- PermanentLLMError

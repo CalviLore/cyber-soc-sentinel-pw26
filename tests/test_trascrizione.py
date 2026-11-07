@@ -55,7 +55,7 @@ class TrascrizioneTest(unittest.TestCase):
         self.assertEqual(testi[3], '  ⎿ riuscito: {"total": 50, "returned": 25}')
         self.assertEqual(testi[4], '● isolateIp(ip="1.2.3.4", reason="brute force")')
         self.assertEqual(testi[5],
-                         "  [CONFERMA] Isolare l'IP 1.2.3.4? [Y/N] N (automatico)")
+                         "  [CONFERMA] Isolare l'IP 1.2.3.4? [S/N] N (automatico)")
         self.assertEqual(testi[6], "  ⎿ fallito: timeout")
         self.assertIn("● Operazione annullata.", testi)
         self.assertTrue(testi[-1].startswith("arresto: risposta finale | giri: 2"))

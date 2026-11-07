@@ -130,7 +130,7 @@ class McpToolClient:
         risponde cancelled e il modello deve avvisare l'operatore.
         """
         message = getattr(params, "message", "") or ""
-        prompt = f"\n[CONFERMA] {message} [Y/N] "
+        prompt = f"\n[CONFERMA] {message} [S/N] "
 
         conferma: bool | None = None
         for _ in range(MAX_CONFIRM_ATTEMPTS):
@@ -142,7 +142,7 @@ class McpToolClient:
             conferma = _parseAnswer(raw)
             if conferma is not None:
                 break
-            print("Rispondi Y (procedi) oppure N (annulla).")
+            print("Rispondi S (procedi) oppure N (annulla).")
 
         if conferma is None:
             logEvent(self.logFile, "conferma", domanda=message, esito="N",

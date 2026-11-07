@@ -1,0 +1,20 @@
+classDiagram
+    direction TB
+    class LLMClient {
+        <<abstract>>
+        +model str
+        +chat(messages, tools, temperature) LLMResponse
+    }
+    class OpenAICompatibleClient {
+        Gemini, Mistral, NVIDIA, Ollama
+    }
+    class FallbackClient {
+        prova i modelli in ordine
+    }
+    class FakeLLMClient {
+        per i test
+    }
+    LLMClient <|-- OpenAICompatibleClient
+    LLMClient <|-- FallbackClient
+    LLMClient <|-- FakeLLMClient
+    FallbackClient o-- "2..n" LLMClient

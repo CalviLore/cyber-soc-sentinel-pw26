@@ -1,0 +1,37 @@
+classDiagram
+    direction LR
+    class McpToolClient {
+        +tools list
+        +ask Callable
+        +callTool(name, arguments) Any
+        -_elicit(...) conferma Y/N
+    }
+    class McpServer {
+        <<mcp_server.py>>
+        +readLogs(ip, statusCode, limit) dict
+        +checkReputation(ip) dict
+        +isolateIp(ip, reason, ctx) dict
+        +openTicket(title, description, severity, relatedIp, ctx) dict
+        -askConfirmation(ctx, message) dict
+    }
+    class Backend {
+        <<backend.py>>
+        +readLogs()
+        +checkReputation()
+        +validateIsolation()
+        +isolateIp()
+        +validateTicket()
+        +openTicket()
+    }
+    class Database {
+        <<SQLite>>
+        network_logs
+        assets
+        ip_whitelist
+        threat_intel_db
+        isolated_ips
+        incident_tickets
+    }
+    McpToolClient ..> McpServer : MCP su stdio
+    McpServer ..> Backend
+    Backend ..> Database
