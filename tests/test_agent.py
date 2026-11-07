@@ -151,6 +151,45 @@ class CicloBaseTest(unittest.TestCase):
             ["system", "user", "assistant", "user", "assistant"],
         )
 
+    def test_le_chiamate_lette_dal_testo_si_segnalano_nel_log(self):
+        import io
+        import json as _json
+        client = FakeLLMClient([
+            LLMResponse(toolCalls=[ToolCall("testo-1", "readLogs", {})], toolDaTesto=True,
+                        usage=Usage(1, 1)),
+            LLMResponse(content="ok", usage=Usage(1, 1))])
+        log = io.StringIO()
+        run(client, logFile=log)
+        eventi = [_json.loads(r) for r in log.getvalue().splitlines()]
+        prime = [e for e in eventi if e["event"] == "risposta"]
+        self.assertTrue(prime[0]["toolDaTesto"])
+        self.assertFalse(prime[1]["toolDaTesto"])
+
+    def test_il_motivo_del_fallback_va_nel_log(self):
+        import io
+        import json as _json
+        client = FakeLLMClient([LLMResponse(content="ok", fallback="gemini non ha risposto (503)",
+                                            usage=Usage(1, 1))])
+        log = io.StringIO()
+        run(client, logFile=log)
+        eventi = [_json.loads(r) for r in log.getvalue().splitlines()]
+        risposta = next(e for e in eventi if e["event"] == "risposta")
+        self.assertEqual(risposta["fallback"], "gemini non ha risposto (503)")
+
+    def test_il_pensiero_del_modello_va_nel_log_non_nella_conversazione(self):
+        import io
+        import json as _json
+        client = FakeLLMClient([LLMResponse(content="Risposta.", thinking="ragiono qui",
+                                            usage=Usage(1, 1))])
+        log = io.StringIO()
+        result = run(client, request="domanda", logFile=log)
+        eventi = [_json.loads(r) for r in log.getvalue().splitlines()]
+        risposta = next(e for e in eventi if e["event"] == "risposta")
+        self.assertEqual(risposta["pensiero"], "ragiono qui")
+        self.assertEqual(risposta["testo"], "Risposta.")
+        # il pensiero non rientra nei messaggi rimandati al modello
+        self.assertFalse(any("ragiono qui" in (m.content or "") for m in result.history))
+
     def test_ilPromptDiSistemaDiceCheIToolSonoDati(self):
         self.assertIn("SOC", SYSTEM_PROMPT)
         self.assertIn("prompt injection", SYSTEM_PROMPT)

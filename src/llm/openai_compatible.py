@@ -1,11 +1,13 @@
 import asyncio
 import json
+import re
 import time
 from typing import Any
 
 import openai
 from openai import AsyncOpenAI
 
+from .pensiero import separaPensiero
 from .base import (
     LLMClient,
     LLMResponse,
@@ -33,6 +35,71 @@ def _retryAfterSeconds(response: Any) -> float | None:
         return None
 
 
+def _chiamateDalTesto(testo: str, nomi) -> tuple[list[tuple[str, dict]], str]:
+    """Cerca nel testo del modello chiamate ai tool scritte come JSON.
+
+    Alcuni modelli piccoli (phi4-mini) scrivono la chiamata come testo, per esempio
+    [{"name": "readLogs", "arguments": {"ip": "1.2.3.4"}}], invece che nel campo
+    strutturato: il provider non la riconosce e il ciclo agentico la vedrebbe come
+    risposta finale. Si accetta solo se TUTTE le voci hanno il nome di un tool che
+    esiste e gli argomenti sono un oggetto: il resto del testo (anche un JSON
+    qualsiasi) non viene toccato. Restituisce ([(nome, argomenti)], testo rimasto).
+    """
+    pulito = re.sub(r"<\|/?tool_call\|>", "", testo)
+    decoder = json.JSONDecoder()
+    i = 0
+    while i < len(pulito):
+        if pulito[i] not in "[{":
+            i += 1
+            continue
+        try:
+            valore, fine = decoder.raw_decode(pulito, i)
+        except json.JSONDecodeError:
+            i += 1
+            continue
+        voci = valore if isinstance(valore, list) else [valore]
+        chiamate = []
+        for voce in voci:
+            if not isinstance(voce, dict):
+                chiamate = []
+                break
+            nome = voce.get("name")
+            args = voce.get("arguments", voce.get("parameters", {}))
+            if isinstance(args, str):
+                try:
+                    args = json.loads(args)
+                except json.JSONDecodeError:
+                    args = None
+            if nome not in nomi or not isinstance(args, dict):
+                chiamate = []
+                break
+            chiamate.append((nome, args))
+        if chiamate:
+            return chiamate, (pulito[:i] + pulito[fine:]).strip()
+        i = fine  # un JSON che non e' una chiamata ai tool: si va oltre
+    return [], testo
+
+
+def _parlaDiPensiero(exc: Exception) -> bool:
+    """True se un errore 400 riguarda il ragionamento (modello che non lo supporta)."""
+    testo = f"{exc} {getattr(exc, 'body', '')}".lower()
+    return any(parola in testo for parola in ("thinking", "thought", "reasoning"))
+
+
+def _testoDiBlocchi(valore: Any) -> str:
+    """Testo di un blocco thinking: stringa oppure lista di blocchi {type: text}."""
+    if isinstance(valore, str):
+        return valore.strip()
+    if isinstance(valore, list):
+        testi = []
+        for b in valore:
+            testo = b.get("text") if isinstance(b, dict) else getattr(b, "text", None)
+            if isinstance(testo, str):
+                testi.append(testo.strip())
+        return "\n".join(t for t in testi if t)
+    return ""
+
+
 class OpenAICompatibleClient(LLMClient):
     """Un solo client per tutti i provider che parlano il dialetto OpenAI.
 
@@ -42,8 +109,13 @@ class OpenAICompatibleClient(LLMClient):
     puo' passare al modello successivo.
     """
 
-    def __init__(self, baseUrl: str, apiKey: str | None, model: str):
+    def __init__(self, baseUrl: str, apiKey: str | None, model: str,
+                 thinkingParams: dict | None = None):
         self.model = model
+        # Parametri che chiedono al provider di esporre il ragionamento (cambiano da
+        # provider a provider). Se il modello risponde che non li supporta si
+        # tolgono e non si rimandano piu'.
+        self.thinkingParams = dict(thinkingParams or {})
         # Ollama non controlla la chiave, ma l'SDK ne pretende una non vuota.
         # max_retries=0: i tentativi li gestiamo qui, cosi' valgono le nostre attese
         # e il FallbackClient riceve l'errore dopo MAX_ATTEMPTS e non dopo molti di piu'.
@@ -127,6 +199,7 @@ class OpenAICompatibleClient(LLMClient):
             request["top_p"] = 1.0
         if tools:
             request["tools"] = self._toSdkTools(tools)
+        request.update(self.thinkingParams)
 
         started = time.perf_counter()
         try:
@@ -136,12 +209,17 @@ class OpenAICompatibleClient(LLMClient):
         except openai.APIConnectionError as exc:
             raise TransientLLMError(f"connessione fallita: {exc}") from exc
         except openai.APIStatusError as exc:
+            if self.thinkingParams and exc.status_code == 400 and _parlaDiPensiero(exc):
+                # il modello non supporta il ragionamento esposto: si riprova senza
+                self.thinkingParams = {}
+                return await self._call(sdkMessages, tools, temperature)
             raise self._mapStatusError(exc) from exc
         except openai.OpenAIError as exc:
             raise PermanentLLMError(f"{type(exc).__name__}: {exc}") from exc
         latency = time.perf_counter() - started
 
-        return self._toLLMResponse(response, latency)
+        return self._toLLMResponse(response, latency,
+                                   {t["name"] for t in tools if "name" in t})
 
     @staticmethod
     def _mapStatusError(exc: openai.APIStatusError) -> TransientLLMError | PermanentLLMError:
@@ -161,6 +239,25 @@ class OpenAICompatibleClient(LLMClient):
         return PermanentLLMError(detail, status)
 
     @staticmethod
+    def _pensieroDi(message: Any) -> str:
+        """Ragionamento esposto dal provider: blocchi thinking (Mistral) o campo reasoning (Ollama)."""
+        parti = []
+        content = message.content
+        if isinstance(content, list):
+            for block in content:
+                kind = block.get("type") if isinstance(block, dict) else getattr(block, "type", None)
+                if kind == "thinking":
+                    interno = (block.get("thinking") if isinstance(block, dict)
+                               else getattr(block, "thinking", None))
+                    parti.append(_testoDiBlocchi(interno))
+        extra = getattr(message, "model_extra", None) or {}
+        for campo in ("reasoning", "reasoning_content"):
+            valore = getattr(message, campo, None) or extra.get(campo)
+            if isinstance(valore, str) and valore.strip():
+                parti.append(valore.strip())
+        return "\n\n".join(p for p in parti if p)
+
+    @staticmethod
     def _textOf(content: Any) -> str | None:
         """Mistral manda il contenuto come lista di blocchi (thinking, text): tiene solo il testo."""
         if content is None or isinstance(content, str):
@@ -173,7 +270,8 @@ class OpenAICompatibleClient(LLMClient):
                 parts.append(text)
         return "".join(parts)
 
-    def _toLLMResponse(self, response: Any, latency: float) -> LLMResponse:
+    def _toLLMResponse(self, response: Any, latency: float,
+                       toolNames=frozenset()) -> LLMResponse:
         if not response.choices:
             raise TransientLLMError("risposta senza choices")
         choice = response.choices[0]
@@ -206,9 +304,26 @@ class OpenAICompatibleClient(LLMClient):
                                           invalidArguments=raw,
                                           extraContent=extraContent))
 
+        toolDaTesto = False
+        testo = self._textOf(message.content)
+        pensieroTag = ""
+        if testo is not None:
+            pensieroTag, testo = separaPensiero(testo)  # Gemini/Gemma: <thought> nel testo
+            if not toolCalls and testo and toolNames:
+                # modelli che scrivono la chiamata come testo (phi4-mini)
+                daTesto, testo = _chiamateDalTesto(testo, toolNames)
+                for n, (nome, args) in enumerate(daTesto, 1):
+                    toolCalls.append(ToolCall(id=f"testo-{n}", name=nome, arguments=args))
+                toolDaTesto = bool(daTesto)
+            if not testo and toolCalls:
+                testo = None  # solo pensiero + tool: nessun testo da rimandare al modello
+        pensiero = "\n\n".join(p for p in (self._pensieroDi(message), pensieroTag) if p) or None
+
         usage = response.usage
         return LLMResponse(
-            content=self._textOf(message.content),
+            content=testo,
+            thinking=pensiero,
+            toolDaTesto=toolDaTesto,
             toolCalls=toolCalls,
             usage=Usage(
                 promptTokens=usage.prompt_tokens if usage else 0,

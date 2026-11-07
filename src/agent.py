@@ -362,6 +362,9 @@ async def runAgent(
             finishReason=response.finishReason,
             latenzaSecondi=round(response.latencySeconds, 3),
             testo=response.content,
+            pensiero=response.thinking,
+            fallback=response.fallback,
+            toolDaTesto=response.toolDaTesto,
             toolCalls=[tc.name for tc in response.toolCalls],
         )
 

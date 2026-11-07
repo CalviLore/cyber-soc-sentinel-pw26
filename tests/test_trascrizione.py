@@ -6,7 +6,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from agent import AgentResult
-from trascrizione import formattaChiamata, righeSessione, separaPensiero, testoDa
+from trascrizione import (formattaChiamata, logLeggibile, righeSessione,
+                          separaPensiero, testoDa)
 
 EVENTI = [
     {"event": "risposta", "testo": "Controllo i log dell'IP.",
@@ -96,6 +97,114 @@ class TrascrizioneTest(unittest.TestCase):
         self.assertTrue(any("[CONFERMA]" in t for t in testi))
         # niente tag nel testo mostrato
         self.assertFalse(any("<thought>" in t for t in testi))
+
+    def test_stile_semplice_come_la_cli_di_ollama(self):
+        risultato = AgentResult(
+            "risposta finale",
+            "<thought>Ho letto i log.</thought>Nessuna anomalia.", 3, 50)
+        righe = righeSessione("ciao", EVENTI_CON_MODELLO, risultato, semplice=True,
+                              mostraTool=False, mostraRiepilogo=False)
+        testi = [t for _, t in righe]
+        self.assertEqual(testi[0], ">>> ciao")  # nessun nome del modello nel prompt
+        self.assertEqual(testi[testi.index("Thinking...") + 1], "Ho letto i log.")
+        self.assertIn("...done thinking.", testi)
+        self.assertEqual(testi[-1], "Nessuna anomalia.")  # risposta senza pallino
+        self.assertFalse(any(t.startswith(("●", "✻")) for t in testi))
+
+    def test_stile_semplice_raccoglie_le_note_del_modello_in_un_blocco(self):
+        eventi = [
+            {"event": "risposta", "testo": "Controllo i log.", "toolCalls": ["readLogs"]},
+            {"event": "tool_chiamato", "tool": "readLogs", "argomenti": {}},
+            {"event": "risposta", "testo": "Ora verifico la reputazione.",
+             "toolCalls": ["checkReputation"]},
+            {"event": "conferma", "domanda": "Isolare?", "esito": "N"},
+        ]
+        risultato = AgentResult("risposta finale", "Fatto.", 3, 10)
+        testi = [t for _, t in righeSessione("ciao", eventi, risultato, semplice=True,
+                                             mostraTool=False, mostraRiepilogo=False)]
+        self.assertEqual(testi[0], ">>> ciao")
+        self.assertEqual(testi[1], "Thinking...")
+        self.assertEqual(testi[2], "Controllo i log.\nOra verifico la reputazione.")
+        self.assertEqual(testi[3], "...done thinking.")
+        self.assertEqual(testi.count("Thinking..."), 1)   # un solo blocco
+        # il blocco viene prima della conferma e della risposta
+        self.assertLess(testi.index("...done thinking."),
+                        next(i for i, t in enumerate(testi) if "[CONFERMA]" in t))
+        self.assertEqual(testi[-1], "Fatto.")
+
+    def test_il_pensiero_del_log_va_nel_blocco_grigio(self):
+        eventi = [
+            {"event": "risposta", "testo": None, "toolCalls": ["readLogs"],
+             "pensiero": "Devo leggere i log dell'IP."},
+            {"event": "tool_chiamato", "tool": "readLogs", "argomenti": {}},
+            {"event": "risposta", "testo": "Fatto.", "toolCalls": [],
+             "pensiero": "I log confermano il brute force."},
+        ]
+        risultato = AgentResult("risposta finale", "Fatto.", 2, 10)
+        testi = [t for _, t in righeSessione("ciao", eventi, risultato, semplice=True,
+                                             mostraTool=False, mostraRiepilogo=False)]
+        self.assertEqual(testi[1], "Thinking...")
+        self.assertEqual(testi[2], "Devo leggere i log dell'IP.\nI log confermano il brute force.")
+        self.assertEqual(testi[-1], "Fatto.")
+        # nello stile completo il pensiero compare con il simbolo ✻, in ordine
+        completo = [t for _, t in righeSessione("ciao", eventi, risultato)]
+        self.assertIn("✻ Devo leggere i log dell'IP.", completo)
+
+    def test_riepilogo_si_puo_nascondere(self):
+        con = [t for _, t in righeSessione("x", EVENTI, RISULTATO)]
+        senza = [t for _, t in righeSessione("x", EVENTI, RISULTATO,
+                                             mostraRiepilogo=False)]
+        self.assertTrue(con[-1].startswith("arresto:"))
+        self.assertFalse(any(t.startswith("arresto:") for t in senza))
+        self.assertEqual(senza[-1], "● Operazione annullata.")
+
+    def test_log_leggibile_una_riga_per_evento(self):
+        eventi = [
+            {"ts": "2026-11-06T15:34:48.325+00:00", "event": "richiesta", "giro": 1,
+             "nMessaggi": 2, "modello": "m1", "richiestaUtente": "Controlla."},
+            {"ts": "2026-11-06T15:34:53.524+00:00", "event": "risposta", "giro": 1,
+             "modello": "m1", "promptTokens": 100, "completionTokens": 20,
+             "totalTokens": 120, "latenzaSecondi": 2.5, "testo": None,
+             "toolCalls": ["readLogs"]},
+            {"ts": "2026-11-06T15:34:53.527+00:00", "event": "tool_chiamato",
+             "giro": 1, "tool": "readLogs", "argomenti": {"limit": 25}},
+            {"ts": "2026-11-06T15:34:53.543+00:00", "event": "risultato", "giro": 1,
+             "tool": "readLogs", "esito": "riuscito",
+             "risultato": '{"total": 200, "returned": 25, "logs": [{"id": 1}, {"id": 2}]}'},
+            {"ts": "2026-11-06T15:34:54+00:00", "event": "conferma",
+             "domanda": "Isolare?", "esito": "N"},
+            {"ts": "2026-11-06T15:34:55+00:00", "event": "risposta", "giro": 2,
+             "modello": "m1", "promptTokens": 1, "completionTokens": 1,
+             "totalTokens": 2, "latenzaSecondi": 1, "testo": "Prima riga.\n- punto uno",
+             "toolCalls": []},
+            {"ts": "2026-11-06T15:34:56+00:00", "event": "fine", "giro": 2,
+             "motivo": "risposta finale", "tokenTotali": 122},
+        ]
+        testo = logLeggibile(eventi)
+        righe = testo.splitlines()
+        self.assertTrue(righe[0].startswith("ora"))
+        self.assertTrue(any("RICHIESTA" in r and "modello m1" in r for r in righe))
+        self.assertTrue(any("«Controlla.»" in r for r in righe))
+        self.assertTrue(any("120 token (100 + 20)" in r and "chiede: readLogs" in r
+                            for r in righe))
+        self.assertTrue(any("TOOL" in r and "readLogs(limit=25)" in r for r in righe))
+        # le righe di log dentro il risultato non si stampano: restano nel .jsonl
+        self.assertTrue(any('{"total": 200, "returned": 25, "logs": […]}' in r
+                            for r in righe))
+        self.assertFalse(any('"id": 1' in r for r in righe))
+        self.assertTrue(any("CONFERMA" in r and "Isolare? → N" in r for r in righe))
+        # gli a-capo della risposta restano: ogni riga del modello sta a parte
+        self.assertTrue(any(r.strip() == "Prima riga." for r in righe))
+        self.assertTrue(any(r.strip() == "- punto uno" for r in righe))
+        self.assertTrue(righe[-1].endswith("risposta finale · 122 token"))
+
+    def test_il_log_leggibile_mostra_il_fallback(self):
+        eventi = [{"ts": "2026-11-06T15:34:53+00:00", "event": "risposta", "giro": 1,
+                   "modello": "gemma", "promptTokens": 1, "completionTokens": 1,
+                   "totalTokens": 2, "latenzaSecondi": 1, "testo": "ok", "toolCalls": [],
+                   "fallback": "gemini non ha risposto (503): sovraccarico"}]
+        testo = logLeggibile(eventi)
+        self.assertIn("FALLBACK: gemini non ha risposto (503): sovraccarico", testo)
 
     def test_senza_testo_finale(self):
         vuoto = AgentResult("modello non disponibile", "", 1, 0, errore="429")

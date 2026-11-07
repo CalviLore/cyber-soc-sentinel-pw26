@@ -38,9 +38,9 @@ def sdkToolCall(arguments, callId="c1", name="readLogs", extraContent=None):
     return NS(**fields)
 
 
-def statusError(status, headers=None):
+def statusError(status, headers=None, message=None):
     response = httpx2.Response(status, headers=headers or {}, request=REQUEST)
-    return openai.APIStatusError(f"errore {status}", response=response, body=None)
+    return openai.APIStatusError(message or f"errore {status}", response=response, body=None)
 
 
 class FakeSdk:
@@ -136,6 +136,133 @@ class RispostaTest(unittest.TestCase):
         client, _ = makeClient([sdkResponse(content=blocks)])
         response, _ = run(client)
         self.assertEqual(response.content, "ok")
+
+    def test_pensieroDaBloccoThinkingDiMistral(self):
+        blocks = [
+            {"type": "thinking", "thinking": [{"type": "text", "text": "ragiono"},
+                                              {"type": "text", "text": "ancora"}]},
+            {"type": "text", "text": "ok"},
+        ]
+        client, _ = makeClient([sdkResponse(content=blocks)])
+        response, _ = run(client)
+        self.assertEqual(response.content, "ok")
+        self.assertEqual(response.thinking, "ragiono\nancora")
+
+    def test_pensieroDalCampoReasoningDiOllama(self):
+        message = NS(content="risposta", tool_calls=None, reasoning="penso cosi'")
+        client, _ = makeClient([NS(choices=[NS(message=message, finish_reason="stop")],
+                                   usage=None, model="m")])
+        response, _ = run(client)
+        self.assertEqual(response.content, "risposta")
+        self.assertEqual(response.thinking, "penso cosi'")
+
+    def test_pensieroTraTagThoughtDiGemini(self):
+        client, _ = makeClient([sdkResponse(
+            content="<thought>valuto i log</thought>Risposta finale.")])
+        response, _ = run(client)
+        self.assertEqual(response.content, "Risposta finale.")  # niente tag nel testo
+        self.assertEqual(response.thinking, "valuto i log")
+
+    def test_solo_pensiero_e_tool_lascia_il_testo_vuoto(self):
+        client, _ = makeClient([sdkResponse(
+            content="<thought>devo leggere i log</thought>",
+            toolCalls=[sdkToolCall("{}")])])
+        response, _ = run(client)
+        self.assertIsNone(response.content)  # niente testo da rimandare al modello
+        self.assertEqual(response.thinking, "devo leggere i log")
+        self.assertEqual(len(response.toolCalls), 1)
+
+    def test_senza_pensiero_il_campo_e_vuoto(self):
+        client, _ = makeClient([sdkResponse(content="ciao")])
+        response, _ = run(client)
+        self.assertIsNone(response.thinking)
+
+    def test_parametri_del_pensiero_vanno_nella_richiesta(self):
+        client, sdk = makeClient([sdkResponse(content="ok")])
+        client.thinkingParams = {"reasoning_effort": "medium"}
+        run(client)
+        self.assertEqual(sdk.requests[0]["reasoning_effort"], "medium")
+
+    def test_modello_senza_pensiero_si_riprova_senza_parametri_e_non_si_rimandano(self):
+        client, sdk = makeClient([
+            statusError(400, message='"m" does not support thinking'),
+            sdkResponse(content="ok"), sdkResponse(content="ok2")])
+        client.thinkingParams = {"reasoning_effort": "medium"}
+        response, _ = run(client)
+        self.assertEqual(response.content, "ok")
+        self.assertIn("reasoning_effort", sdk.requests[0])
+        self.assertNotIn("reasoning_effort", sdk.requests[1])
+        run(client)  # le chiamate successive non lo mandano piu'
+        self.assertNotIn("reasoning_effort", sdk.requests[2])
+
+    def test_un_400_non_legato_al_pensiero_resta_permanente(self):
+        client, sdk = makeClient([statusError(400, message="argomenti non validi")])
+        client.thinkingParams = {"reasoning_effort": "medium"}
+        with self.assertRaises(PermanentLLMError):
+            run(client)
+        self.assertEqual(len(sdk.requests), 1)
+
+    TOOLS = [{"name": "readLogs", "description": "x", "inputSchema": {"type": "object"}},
+             {"name": "checkReputation", "description": "y", "inputSchema": {"type": "object"}}]
+
+    def test_chiamataScrittaComeTestoDiventaToolCall(self):
+        # phi4-mini: la lista JSON arriva nel testo, non nel campo strutturato
+        testo = '[{"name": "readLogs", "arguments": {"ip": "1.2.3.4", "statusCode": 401}}]'
+        client, _ = makeClient([sdkResponse(content=testo)])
+        response, _ = run(client, tools=self.TOOLS)
+        self.assertEqual(len(response.toolCalls), 1)
+        self.assertEqual(response.toolCalls[0].name, "readLogs")
+        self.assertEqual(response.toolCalls[0].arguments, {"ip": "1.2.3.4", "statusCode": 401})
+        self.assertTrue(response.toolDaTesto)
+        self.assertIsNone(response.content)  # il JSON non resta come testo
+
+    def test_chiamataNelTestoConFraseETag(self):
+        testo = ('Leggo i log.\n<|tool_call|>[{"name": "readLogs", '
+                 '"arguments": {"ip": "1.2.3.4"}}]<|/tool_call|>')
+        client, _ = makeClient([sdkResponse(content=testo)])
+        response, _ = run(client, tools=self.TOOLS)
+        self.assertEqual(response.toolCalls[0].name, "readLogs")
+        self.assertEqual(response.content, "Leggo i log.")
+
+    def test_piuChiamateEOggettoSingolo(self):
+        due = '[{"name": "readLogs", "arguments": {}}, {"name": "checkReputation", "arguments": {"ip": "1.1.1.1"}}]'
+        client, _ = makeClient([sdkResponse(content=due)])
+        response, _ = run(client, tools=self.TOOLS)
+        self.assertEqual([t.name for t in response.toolCalls], ["readLogs", "checkReputation"])
+        singolo = '{"name": "readLogs", "parameters": {"limit": 5}}'
+        client, _ = makeClient([sdkResponse(content=singolo)])
+        response, _ = run(client, tools=self.TOOLS)
+        self.assertEqual(response.toolCalls[0].arguments, {"limit": 5})
+
+    def test_nomeInesistenteONonToolNonVieneConvertito(self):
+        for testo in ('[{"name": "cancellaTutto", "arguments": {}}]',
+                      '{"risultato": 3, "note": ["a", "b"]}',
+                      'Ecco i dati: [1, 2, 3]',
+                      '[{"name": "readLogs", "arguments": "non un oggetto"}]'):
+            client, _ = makeClient([sdkResponse(content=testo)])
+            response, _ = run(client, tools=self.TOOLS)
+            self.assertEqual(response.toolCalls, [], testo)
+            self.assertFalse(response.toolDaTesto)
+            self.assertEqual(response.content, testo)
+
+    def test_conTuttiITestiMaUnoSbagliatoNonSiConvertePiente(self):
+        misto = '[{"name": "readLogs", "arguments": {}}, {"name": "inventato", "arguments": {}}]'
+        client, _ = makeClient([sdkResponse(content=misto)])
+        response, _ = run(client, tools=self.TOOLS)
+        self.assertEqual(response.toolCalls, [])
+
+    def test_seCeUnaChiamataStrutturataIlTestoNonSiTocca(self):
+        client, _ = makeClient([sdkResponse(
+            content='[{"name": "checkReputation", "arguments": {}}]',
+            toolCalls=[sdkToolCall("{}")])])
+        response, _ = run(client, tools=self.TOOLS)
+        self.assertEqual([t.name for t in response.toolCalls], ["readLogs"])
+        self.assertFalse(response.toolDaTesto)
+
+    def test_senzaToolDisponibiliNonSiConvertePiente(self):
+        client, _ = makeClient([sdkResponse(content='[{"name": "readLogs", "arguments": {}}]')])
+        response, _ = run(client)
+        self.assertEqual(response.toolCalls, [])
 
     def test_contenutoAListaSenzaTestoDiventaStringaVuota(self):
         blocks = [{"type": "thinking", "thinking": []}]

@@ -11,13 +11,21 @@ Senza domande, ad esempio per lasciarlo girare la sera:
     python tools/runner.py --provider mistral --scenari 1-3 --ripetizioni 2
     python tools/runner.py --provider ollama --model ministral-3:8b --pausa 10
 
-Risultati in risultati/<data>-<modello>/scenario_NN/run_K/:
+Piu' modelli in un lancio (stessi scenari e stessi dati per tutti, poi un file
+di confronto con le risposte una sotto l'altra):
+    python tools/runner.py --provider gemini,mistral --scenari 1-6
+
+Ogni lancio ha una cartella nuova e un seed nuovo (IP e quantita' diversi):
+    risultati/<data>_<ora>-<modello>/scenario_NN/run_K/  (ora con i secondi)
+Con --seed si ripete lo stesso caso; con --riprendi si continua l'ultimo lancio.
+Risultati in ciascuna cartella:
     log.jsonl      log strutturato del run
     scenario.json  richiesta, atteso, esito, controlli, stato del DB
     metriche.json  giri, token, secondi, modelli che hanno risposto
+    log_leggibile.txt  il log a colonne, una riga per evento, per il report
     output.txt     la sessione come la mostrerebbe la chat (ricostruita dal log)
     screenshot.png la stessa sessione resa come immagine di terminale
-e in risultati/<data>-<modello>/riepilogo.md e riepilogo.json.
+e, nella cartella del lancio, riepilogo.md e riepilogo.json.
 """
 import argparse
 import asyncio
@@ -53,7 +61,7 @@ from agent import (
 )
 from chat import Chat
 from run_agent import buildClient, makeAsk
-from trascrizione import righeSessione, testoDa
+from trascrizione import logLeggibile, righeSessione, separaPensiero, testoDa
 
 NUMERO_SCENARI = 12
 
@@ -360,6 +368,9 @@ def calcolaMetriche(result, eventi, secondi):
         "secondi": round(secondi, 1),
         "motivoArresto": result.motivoArresto,
         "modelli": modelli,
+        # perche' e' scattato il fallback (es. 503 del modello preferito), se e' scattato
+        "fallback": list(dict.fromkeys(
+            e["fallback"] for e in risposte if e.get("fallback"))),
     }
 
 
@@ -379,15 +390,16 @@ def trovaBrowser():
     return next((c for c in candidati if c and Path(c).exists()), None)
 
 
-COLORI = {"prompt": "#7ee787", "tool": "#79c0ff", "conferma": "#e3b341",
+COLORI = {"prompt": "#e6edf3", "tool": "#79c0ff", "conferma": "#e3b341",
           "risultato": "#8b949e", "errore": "#ff7b72", "ragiona": "#b1bac4",
           "pensiero": "#7d8590",
           "risposta": "#e6edf3", "riepilogo": "#6e7681", "": "#e6edf3"}
 
 
-def rendiPng(righe, pngPath, didascalia, larghezza=1100):
+def rendiPng(righe, pngPath, didascalia, titolo="", larghezza=1100):
     """Disegna la sessione come finestra di terminale e la salva in PNG.
 
+    titolo: testo nella barra della finestra (qui il nome del modello).
     Usa Chrome/Edge in modalita' headless. Restituisce True se il file e' stato
     creato, False se non c'e' un browser o il rendering e' fallito.
     """
@@ -409,10 +421,11 @@ def rendiPng(righe, pngPath, didascalia, larghezza=1100):
 html,body{{margin:0;background:#0d1117}}
 .barra{{height:32px;background:#161b22;display:flex;align-items:center;padding-left:14px;gap:8px}}
 .barra i{{width:11px;height:11px;border-radius:50%;display:inline-block}}
+.barra b{{margin-left:10px;font:12px Consolas,monospace;font-weight:normal;color:#8b949e}}
 .term{{padding:16px 24px 8px;font:14px/22px Consolas,'Cascadia Mono',monospace;white-space:pre-wrap;word-break:break-word}}
 .nota{{padding:6px 24px 14px;font:11px Consolas,monospace;color:#6e7681}}
 </style>
-<div class="barra"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i></div>
+<div class="barra"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><b>{html.escape(titolo)}</b></div>
 <div class="term">{corpo}</div>
 <div class="nota">{html.escape(didascalia)}</div>"""
 
@@ -446,8 +459,15 @@ def cartellaRun(outDir, scenario, ripetizione):
 
 async def eseguiScenario(scenario, ripetizione, client, outDir, *,
                          maxIterations=MAX_ITERATIONS_DEFAULT, toolTimeout=None,
-                         immagini=True):
-    """Esegue un run, salva i file e restituisce l'esito come dizionario."""
+                         immagini=True, seed=None):
+    """Esegue un run, salva i file e restituisce l'esito come dizionario.
+
+    seed: seme dei dati del simulatore per questo run (IP e quantita'); None
+    usa quello corrente. Il seed usato e' scritto in scenario.json.
+    """
+    seedIniziale = simulatore.SEED
+    if seed is not None:
+        simulatore.SEED = seed
     cartella = cartellaRun(outDir, scenario, ripetizione)
     cartella.mkdir(parents=True, exist_ok=True)
     logPath = cartella / "log.jsonl"
@@ -458,7 +478,8 @@ async def eseguiScenario(scenario, ripetizione, client, outDir, *,
     dbPath = tmp / "soc.db"
     esito = {
         "numero": scenario.numero, "titolo": scenario.titolo,
-        "ripetizione": ripetizione, "atteso": scenario.atteso,
+        "ripetizione": ripetizione, "seed": simulatore.SEED,
+        "atteso": scenario.atteso,
         "risposta": scenario.risposta, "modello": getattr(client, "model", ""),
     }
     metriche = {}
@@ -491,14 +512,19 @@ async def eseguiScenario(scenario, ripetizione, client, outDir, *,
         metriche = calcolaMetriche(result, eventi, time.time() - inizio)
 
         modello = (metriche["modelli"] or [esito["modello"]])[0]
-        # nello screenshot niente righe dei tool: restano nel log.jsonl
+        # nello screenshot niente righe dei tool e niente riga di riepilogo:
+        # tool nel log.jsonl, numeri in metriche.json
         righe = righeSessione(richiesta, eventi, result, modello=modello,
-                              mostraTool=False)
+                              mostraTool=False, mostraRiepilogo=False,
+                              semplice=True)
         (cartella / "output.txt").write_text(testoDa(righe), encoding="utf-8")
+        (cartella / "log_leggibile.txt").write_text(
+            logLeggibile(eventi), encoding="utf-8")
         if immagini:
             # il nome dello scenario sta gia' nel percorso del file
             esito["screenshot"] = rendiPng(
-                righe, cartella / "screenshot.png", "ricostruito da log.jsonl")
+                righe, cartella / "screenshot.png", "ricostruito da log.jsonl",
+                titolo=modello)
     except Exception as exc:  # errore del runner, non del modello: si va avanti
         esito.update(esito="non valutabile", controlli=[],
                      motivoArresto="errore del runner",
@@ -506,6 +532,7 @@ async def eseguiScenario(scenario, ripetizione, client, outDir, *,
         metriche = {"secondi": round(time.time() - inizio, 1),
                     "motivoArresto": "errore del runner"}
     finally:
+        simulatore.SEED = seedIniziale
         shutil.rmtree(tmp, ignore_errors=True)
 
     # scenario.json per ultimo: la sua presenza dice "run finito" (serve a saltarlo)
@@ -545,12 +572,13 @@ def scriviRiepilogo(outDir):
         conta[r["esito"]] = conta.get(r["esito"], 0) + 1
     righe = [f"# Riepilogo — {out.name}", "",
              "Esiti: " + ", ".join(f"{k} {v}" for k, v in sorted(conta.items())), "",
-             "| # | Scenario | Run | Esito | Giri | Token | Secondi | Modelli |",
-             "|---|---|---|---|---|---|---|---|"]
+             "| # | Scenario | Run | Seed | Esito | Giri | Token | Secondi | Modelli |",
+             "|---|---|---|---|---|---|---|---|---|"]
     for r in run:
         m = r["metriche"]
         righe.append(
-            f"| {r['numero']} | {r['titolo']} | {r['ripetizione']} | {r['esito']} "
+            f"| {r['numero']} | {r['titolo']} | {r['ripetizione']} | {r.get('seed', '-')} "
+            f"| {r['esito']} "
             f"| {m.get('giri', '-')} | {m.get('tokenTotali', '-')} "
             f"| {m.get('secondi', '-')} | {', '.join(m.get('modelli', [])) or '-'} |")
 
@@ -608,22 +636,41 @@ def scegli(domanda, opzioni):
         print(f"Scrivi un numero da 1 a {len(opzioni)}.")
 
 
+def scegliPiu(domanda, opzioni):
+    """Menu numerato a scelta multipla: '1', '1 2', '1,2' o 'tutti'. Restituisce gli indici."""
+    print(f"\n{domanda}")
+    for i, opzione in enumerate(opzioni, 1):
+        print(f"  {i}. {opzione}")
+    while True:
+        risposta = input("> ").strip().lower().replace(",", " ")
+        if risposta in ("tutti", "tutte", "entrambi", "entrambe"):
+            return list(range(len(opzioni)))
+        parti = risposta.split()
+        if parti and all(p.isdigit() and 1 <= int(p) <= len(opzioni) for p in parti):
+            return sorted({int(p) - 1 for p in parti})
+        print(f"Scrivi uno o piu' numeri da 1 a {len(opzioni)} (es. 1 2), oppure 'tutti'.")
+
+
 def scegliModello(env):
-    """Menu: online/offline, poi il modello. Restituisce (provider, modello)."""
+    """Menu: online/offline, poi uno o piu' modelli. Restituisce [(provider, modello)]."""
     if scegli("Che modello vuoi usare?", ["Online", "Offline (Ollama, sul tuo PC)"]) == 0:
-        i = scegli("Quale online?", [
+        indici = scegliPiu("Quale online? (piu' numeri per confrontarli, es. 1 2 3)", [
             f"Gemini  ({env.get('GEMINI_MODEL', '?')}, con fallback su "
             f"{env.get('GEMINI_FALLBACK_MODEL', 'nessuno')})",
             f"Mistral ({env.get('MISTRAL_MODEL', '?')})",
+            f"NVIDIA  ({env.get('NVIDIA_MODEL', '?')})",
         ])
-        return ("gemini", "mistral")[i], None
+        return [(("gemini", "mistral", "nvidia")[i], None) for i in indici]
     modelli = [("Google ", env.get("OLLAMA_MODEL_GOOGLE")),
                ("Mistral", env.get("OLLAMA_MODEL_MISTRAL"))]
-    i = scegli("Quale offline?", [f"{nome} ({m or 'manca nel .env'})"
-                                  for nome, m in modelli])
-    if not modelli[i][1]:
-        raise SystemExit("Modello offline non configurato nel .env")
-    return "ollama", modelli[i][1]
+    indici = scegliPiu("Quale offline? (piu' numeri per confrontarli, es. 1 2)",
+                       [f"{nome} ({m or 'manca nel .env'})" for nome, m in modelli])
+    scelti = []
+    for i in indici:
+        if not modelli[i][1]:
+            raise SystemExit("Modello offline non configurato nel .env")
+        scelti.append(("ollama", modelli[i][1]))
+    return scelti
 
 
 def chiediScenari():
@@ -649,8 +696,10 @@ def parseArgs(argv=None):
     p = argparse.ArgumentParser(
         description="Esegue gli scenari con un modello vero. Senza --provider "
                     "chiede modello, scenari e ripetizioni.")
-    p.add_argument("--provider", choices=["gemini", "mistral", "ollama"])
-    p.add_argument("--model", help="sovrascrive il modello del .env")
+    p.add_argument("--provider", nargs="+", metavar="PROVIDER",
+                   help="gemini, mistral, ollama; piu' provider separati da virgola "
+                        "o spazio (es. gemini,mistral) per confrontarli")
+    p.add_argument("--model", help="sovrascrive il modello del .env (con un solo provider)")
     p.add_argument("--scenari", nargs="+",
                    help="es. 1 3 7, oppure 2-6 (default: tutti)")
     p.add_argument("--ripetizioni", type=int)
@@ -659,13 +708,46 @@ def parseArgs(argv=None):
     p.add_argument("--tool-timeout", type=float,
                    help="timeout dei tool (default: 30, scenario 8: 10)")
     p.add_argument("--max-iterations", type=int, default=MAX_ITERATIONS_DEFAULT)
-    p.add_argument("--seed", type=int, default=simulatore.SEED)
+    p.add_argument("--seed", type=int,
+                   help="seme dei dati. Default: uno nuovo a ogni lancio (IP e "
+                        "quantita' diversi). Con lo stesso seed si ripete lo stesso "
+                        "caso, per confrontare due modelli sugli stessi dati")
+    p.add_argument("--dati-diversi", action="store_true",
+                   help="facoltativo: anche dentro un lancio ogni ripetizione usa "
+                        "seed+1, seed+2... (di default le ripetizioni hanno gli "
+                        "stessi dati)")
+    p.add_argument("--riprendi", action="store_true",
+                   help="continua l'ultimo lancio di questo modello (stesso seed, "
+                        "salta i run gia' fatti)")
     p.add_argument("--senza-immagini", action="store_true",
                    help="non crea screenshot.png (resta output.txt)")
+    p.add_argument("--senza-riserva", action="store_true",
+                   help="niente modello di riserva (Gemini non passa a Gemma): se il "
+                        "modello non risponde il run e' 'non valutabile'")
     p.add_argument("--rifai", action="store_true",
                    help="riesegue anche i run gia' presenti")
     p.add_argument("--out", help="cartella dei risultati")
     return p.parse_args(argv)
+
+
+def nuovoSeed():
+    """Un seed diverso a ogni lancio (dall'orologio)."""
+    return int(time.time()) % 100000
+
+
+def ultimaCartella(base, nomeModello):
+    """L'ultima cartella di lancio di questo modello, oppure None."""
+    trovate = sorted(Path(base).glob(f"*-{slug(nomeModello)}"))
+    return trovate[-1] if trovate else None
+
+
+def seedDi(cartella):
+    """Seed usato in una cartella di risultati (dal primo scenario.json), o None."""
+    for sc in sorted(Path(cartella).glob("scenario_*/run_*/scenario.json")):
+        seed = json.loads(sc.read_text(encoding="utf-8")).get("seed")
+        if seed is not None:
+            return seed
+    return None
 
 
 def slug(testo):
@@ -687,57 +769,181 @@ def stampaEsito(esito):
         print("   screenshot non creato (manca Chrome/Edge o il rendering e' fallito)")
 
 
+PROVIDER = ("gemini", "mistral", "nvidia", "ollama")
+
+
+def parseProvider(valori):
+    """'gemini,mistral' o 'gemini mistral' -> ['gemini', 'mistral'], senza doppioni."""
+    nomi = []
+    for valore in valori or []:
+        for nome in valore.replace(",", " ").split():
+            if nome not in PROVIDER:
+                raise SystemExit(f"Provider sconosciuto: {nome} "
+                                 f"(scegli tra {', '.join(PROVIDER)})")
+            if nome not in nomi:
+                nomi.append(nome)
+    return nomi
+
+
+def _hannoRisposto(r, nome):
+    """Modelli che hanno risposto davvero, se diversi da quello richiesto (fallback)."""
+    reali = r["metriche"].get("modelli") or []
+    return f" · ha risposto {', '.join(reali)}" if reali and reali != [nome] else ""
+
+
+def _cella(r, nome):
+    m = r["metriche"]
+    return (f"{r['esito']} · {m.get('giri', '-')} giri · {m.get('tokenTotali', '-')} token"
+            + _hannoRisposto(r, nome))
+
+
+def scriviConfronto(outDirs, percorso):
+    """Confronto fra modelli sugli stessi scenari e gli stessi dati.
+
+    Una tabella (esito, giri, token per modello) e, per ogni scenario, la risposta
+    finale di ciascun modello una sotto l'altra. Non scrive nulla con meno di 2 modelli.
+    """
+    perModello = {}
+    for d in outDirs:
+        run = raccogliRun(d)
+        if run:
+            nome = run[0].get("modello") or Path(d).name
+            perModello[nome] = {(r["numero"], r["ripetizione"]): r for r in run}
+    if len(perModello) < 2:
+        return None
+    modelli = list(perModello)
+    chiavi = sorted({k for runs in perModello.values() for k in runs})
+    semi = sorted({r.get("seed") for runs in perModello.values()
+                   for r in runs.values() if r.get("seed") is not None})
+
+    righe = ["# Confronto fra modelli", "",
+             "Modelli: " + ", ".join(modelli)
+             + (f" · seed {', '.join(map(str, semi))}" if semi else ""),
+             "Stessi scenari e stessi dati per tutti: cambia solo il modello.", "",
+             "| # | Scenario | Run | " + " | ".join(modelli) + " |",
+             "|---|---|---|" + "---|" * len(modelli)]
+    for n, k in chiavi:
+        qualsiasi = next(runs[(n, k)] for runs in perModello.values() if (n, k) in runs)
+        celle = [(_cella(perModello[m][(n, k)], m) if (n, k) in perModello[m] else "-")
+                 for m in modelli]
+        righe.append(f"| {n} | {qualsiasi['titolo']} | {k} | " + " | ".join(celle) + " |")
+
+    for n, k in chiavi:
+        qualsiasi = next(runs[(n, k)] for runs in perModello.values() if (n, k) in runs)
+        righe += ["", f"## Scenario {n} · {qualsiasi['titolo']} (run {k})", "",
+                  f"Richiesta: «{qualsiasi.get('richiesta', '')}»"]
+        for m in modelli:
+            r = perModello[m].get((n, k))
+            if not r:
+                continue
+            _, risposta = separaPensiero(r.get("testoFinale"))
+            risposta = (risposta or "(nessun testo finale)")[:1500]
+            righe += ["", f"### {m} · {r['esito']}{_hannoRisposto(r, m)}", ""]
+            righe += [f"> {riga}" if riga.strip() else ">" for riga in risposta.splitlines()]
+            non_superati = [c["nome"] for c in r.get("controlli", []) if not c["ok"]]
+            if non_superati:
+                righe += ["", "Controlli non superati: " + "; ".join(non_superati)]
+    percorso = Path(percorso)
+    percorso.parent.mkdir(parents=True, exist_ok=True)
+    percorso.write_text("\n".join(righe) + "\n", encoding="utf-8")
+    return percorso
+
+
 async def main(args):
     env = dotenv_values(ROOT / ".env")
-    simulatore.SEED = args.seed
-    interattivo = args.provider is None
+    interattivo = not args.provider
 
     if interattivo:
-        provider, model = scegliModello(env)
-        model = args.model or model
+        scelte = scegliModello(env)
+        if args.model and len(scelte) == 1:
+            scelte = [(scelte[0][0], args.model)]
         numeri = (parseScenari(" ".join(args.scenari)) if args.scenari
                   else chiediScenari())
         ripetizioni = args.ripetizioni or chiediRipetizioni()
     else:
-        provider, model = args.provider, args.model
+        providers = parseProvider(args.provider)
+        if args.model and len(providers) != 1:
+            raise SystemExit("--model vale solo con un provider")
+        scelte = [(p, args.model) for p in providers]
         numeri = parseScenari(" ".join(args.scenari) if args.scenari else "")
         ripetizioni = args.ripetizioni or 1
 
-    client = buildClient(provider, env, model)
-    outDir = (Path(args.out) if args.out else ROOT / "risultati" /
-              f"{datetime.now():%Y-%m-%d}-{slug(client.model)}")
+    clients = [buildClient(p, env, m, fallback=not args.senza_riserva) for p, m in scelte]
+    base = ROOT / "risultati"
+    stamp = f"{datetime.now():%Y-%m-%d_%H%M%S}"
+    outDirs = []
+    for c in clients:
+        if args.out:
+            d = Path(args.out) / (slug(c.model) if len(clients) > 1 else "")
+        elif args.riprendi and ultimaCartella(base, c.model):
+            d = ultimaCartella(base, c.model)
+        else:
+            d = base / f"{stamp}-{slug(c.model)}"
+        outDirs.append(d)
+
+    # Seed: quello indicato, oppure (riprendendo) quello del lancio da continuare,
+    # oppure uno nuovo: un lancio nuovo ha IP e link diversi dal precedente. Tutti i
+    # modelli di uno stesso lancio vedono gli stessi dati.
+    seedBase = args.seed
+    if seedBase is None and args.riprendi:
+        seedBase = next((s for s in (seedDi(d) for d in outDirs) if s is not None), None)
+    if seedBase is None:
+        seedBase = nuovoSeed()
 
     scenari = {s.numero: s for s in SCENARI}
-    lavori = [(scenari[n], k) for n in numeri for k in range(1, ripetizioni + 1)]
+    indici = range(len(clients))
+    if all(p == "ollama" for p, _ in scelte):
+        # un modello alla volta: cambiare modello in Ollama costa un ricaricamento
+        lavori = [(scenari[n], k, i) for i in indici for n in numeri
+                  for k in range(1, ripetizioni + 1)]
+    else:
+        # scenario per scenario: dopo ogni scenario hai le risposte di tutti i modelli
+        lavori = [(scenari[n], k, i) for n in numeri
+                  for k in range(1, ripetizioni + 1) for i in indici]
 
-    print(f"\nModello: {client.model} · scenari: {', '.join(map(str, numeri))} · "
-          f"{ripetizioni} ripetizione/i · {len(lavori)} run\nRisultati in: {outDir}")
+    print(f"\nModell{'o' if len(clients) == 1 else 'i'}: "
+          f"{', '.join(c.model for c in clients)} · scenari: "
+          f"{', '.join(map(str, numeri))} · {ripetizioni} ripetizione/i · "
+          f"{len(lavori)} run · seed {seedBase}")
+    for c, d in zip(clients, outDirs):
+        print(f"Risultati {c.model}: {d}")
     if interattivo and input("Via? [S/n] ").strip().lower() in ("n", "no"):
         print("Annullato.")
         return 0
 
     try:
-        for i, (scenario, k) in enumerate(lavori, 1):
+        for n, (scenario, k, i) in enumerate(lavori, 1):
+            client, outDir = clients[i], outDirs[i]
             if (cartellaRun(outDir, scenario, k) / "scenario.json").exists() \
                     and not args.rifai:
-                print(f"\n[{i}/{len(lavori)}] scenario {scenario.numero} run {k}: "
-                      "gia' fatto, salto (usa --rifai per rifarlo)")
+                print(f"\n[{n}/{len(lavori)}] scenario {scenario.numero} run {k} "
+                      f"({client.model}): gia' fatto, salto (usa --rifai per rifarlo)")
                 continue
-            print(f"\n[{i}/{len(lavori)}] Scenario {scenario.numero} · "
-                  f"{scenario.titolo} (run {k})")
+            # dentro un lancio i dati sono gli stessi (la differenza fra le
+            # ripetizioni e' il ragionamento del modello); fra due lanci cambiano
+            seed = seedBase + k - 1 if args.dati_diversi else seedBase
+            print(f"\n[{n}/{len(lavori)}] Scenario {scenario.numero} · "
+                  f"{scenario.titolo} · {client.model} (run {k}, seed {seed})")
             esito = await eseguiScenario(
                 scenario, k, client, outDir, maxIterations=args.max_iterations,
                 toolTimeout=args.tool_timeout,
-                immagini=not args.senza_immagini)
+                immagini=not args.senza_immagini, seed=seed)
             stampaEsito(esito)
             if esito.get("motivoArresto") == STOP_INTERRUPTED:
                 print("\nInterrotto: salvo quello che c'e'.")
                 break
-            if args.pausa and i < len(lavori):
+            if args.pausa and n < len(lavori):
                 await asyncio.sleep(args.pausa)
     finally:
-        scriviRiepilogo(outDir)
-        print(f"\nRiepilogo: {Path(outDir) / 'riepilogo.md'}")
+        for d in outDirs:
+            scriviRiepilogo(d)
+            print(f"\nRiepilogo: {Path(d) / 'riepilogo.md'}")
+        if len(outDirs) > 1:
+            confronto = scriviConfronto(
+                outDirs, (Path(args.out) / "confronto.md") if args.out
+                else base / f"{stamp}-confronto.md")
+            if confronto:
+                print(f"Confronto fra i modelli: {confronto}")
     return 0
 
 

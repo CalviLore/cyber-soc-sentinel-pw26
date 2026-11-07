@@ -57,6 +57,30 @@ class FallbackTest(unittest.TestCase):
         ])
         self.assertEqual(chat(client).content, "dal terzo")
 
+    def test_laRispostaDellaRiservaDicePercheEScattato(self):
+        primo = FakeLLMClient([TransientLLMError("troppe richieste", 429)],
+                              model="gemini")
+        secondo = FakeLLMClient([LLMResponse(content="ok", model="gemma")],
+                                model="gemma")
+        response = chat(FallbackClient([primo, secondo]))
+        self.assertIn("gemini non ha risposto (429)", response.fallback)
+        self.assertIn("troppe richieste", response.fallback)
+
+    def test_seRispondeIlPrimoNonCeNessunaNota(self):
+        primo = FakeLLMClient([LLMResponse(content="ok")], model="gemini")
+        secondo = FakeLLMClient([], model="gemma")
+        self.assertIsNone(chat(FallbackClient([primo, secondo])).fallback)
+
+    def test_conPiuRiserveLaNotaElencaTutteLeFallite(self):
+        client = FallbackClient([
+            FakeLLMClient([TransientLLMError("a", 503)], model="m1"),
+            FakeLLMClient([TransientLLMError("b")], model="m2"),
+            FakeLLMClient([LLMResponse(content="dal terzo")], model="m3"),
+        ])
+        nota = chat(client).fallback
+        self.assertIn("m1 non ha risposto (503)", nota)
+        self.assertIn("m2 non ha risposto (errore)", nota)
+
     def test_permanentNonFaScattareIlFallback(self):
         primo = FakeLLMClient([PermanentLLMError("400", 400)])
         secondo = FakeLLMClient([LLMResponse(content="dal secondo")])

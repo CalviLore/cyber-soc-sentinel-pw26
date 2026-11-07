@@ -4,6 +4,8 @@ Il modello e' FakeLLMClient (nessun token): qui si prova il runner, non il
 modello. Il server MCP e il simulatore sono quelli veri, su un DB temporaneo.
 """
 import asyncio
+import contextlib
+import io
 import json
 import sys
 import tempfile
@@ -138,6 +140,111 @@ class ControlliTest(unittest.TestCase):
         self.assertEqual(runner.valuta(fine, [runner.Controllo("a", False)]), "fallito")
 
 
+class PiuModelliTest(unittest.TestCase):
+    def test_parse_provider_con_virgola_o_spazio(self):
+        self.assertEqual(runner.parseProvider(["gemini,mistral"]), ["gemini", "mistral"])
+        self.assertEqual(runner.parseProvider(["gemini", "mistral"]), ["gemini", "mistral"])
+        self.assertEqual(runner.parseProvider(["mistral,mistral"]), ["mistral"])
+        with self.assertRaises(SystemExit):
+            runner.parseProvider(["gemini,foo"])
+
+    def test_menu_a_scelta_multipla(self):
+        from unittest import mock
+        for digitato, atteso in (("1", [0]), ("1 2", [0, 1]), ("2,1", [0, 1]),
+                                 ("entrambi", [0, 1]), ("tutti", [0, 1])):
+            with mock.patch("builtins.input", side_effect=[digitato]),                     contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(runner.scegliPiu("Quale?", ["a", "b"]), atteso, digitato)
+        # input non valido, poi valido: richiede
+        with mock.patch("builtins.input", side_effect=["9", "x", "2"]),                 contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(runner.scegliPiu("Quale?", ["a", "b"]), [1])
+
+
+class ConfrontoTest(unittest.TestCase):
+    """Due modelli finti sullo stesso scenario e gli stessi dati -> file di confronto."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.base = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def corri(self, nome, mosse, cartella):
+        client = FakeLLMClient(mosse, model=nome)
+        asyncio.run(asyncio.wait_for(runner.eseguiScenario(
+            scenario(10), 1, client, cartella, immagini=False, seed=7), timeout=90))
+
+    def test_confronto_con_le_risposte_di_entrambi(self):
+        a, b = self.base / "a", self.base / "b"
+        self.corri("modello-A", [LLMResponse(content="Mi occupo solo di sicurezza.",
+                                             usage=Usage(5, 5))], a)
+        self.corri("modello-B", [LLMResponse(content="<thought>ragiono</thought>"
+                                                     "Una poesia? No, grazie.",
+                                             usage=Usage(7, 7))], b)
+        percorso = runner.scriviConfronto([a, b], self.base / "confronto.md")
+        testo = percorso.read_text(encoding="utf-8")
+        self.assertIn("Modelli: modello-A, modello-B · seed 7", testo)
+        self.assertIn("| 10 | Fuori ambito | 1 | passato · 1 giri · 10 token "
+                      "| passato · 1 giri · 14 token |", testo)
+        self.assertIn("### modello-A · passato", testo)
+        self.assertIn("> Mi occupo solo di sicurezza.", testo)
+        self.assertIn("> Una poesia? No, grazie.", testo)
+        self.assertNotIn("ragiono", testo)  # il pensiero non va nel confronto
+
+    def test_il_confronto_dice_chi_ha_risposto_davvero_se_c_e_stato_un_fallback(self):
+        a, b = self.base / "a", self.base / "b"
+        self.corri("modello-A", [LLMResponse(content="Solo sicurezza.", model="riserva-X",
+                                             usage=Usage(5, 5))], a)
+        self.corri("modello-B", [LLMResponse(content="Solo sicurezza.", model="modello-B",
+                                             usage=Usage(5, 5))], b)
+        testo = runner.scriviConfronto([a, b], self.base / "confronto.md").read_text(
+            encoding="utf-8")
+        self.assertIn("passato · 1 giri · 10 token · ha risposto riserva-X", testo)
+        self.assertIn("### modello-A · passato · ha risposto riserva-X", testo)
+        # nessuna nota quando ha risposto il modello richiesto
+        self.assertNotIn("modello-B · passato · ha risposto", testo)
+
+    def test_con_un_solo_modello_non_scrive_il_confronto(self):
+        a = self.base / "a"
+        self.corri("modello-A", [LLMResponse(content="Solo sicurezza.")], a)
+        self.assertIsNone(runner.scriviConfronto([a], self.base / "confronto.md"))
+        self.assertFalse((self.base / "confronto.md").exists())
+
+
+class SeedECartelleTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.base = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def scrivi(self, nome, seed):
+        cartella = self.base / nome / "scenario_01" / "run_1"
+        cartella.mkdir(parents=True)
+        (cartella / "scenario.json").write_text(json.dumps({"seed": seed}),
+                                                encoding="utf-8")
+
+    def test_il_seed_nuovo_e_un_numero_valido_per_il_simulatore(self):
+        seed = runner.nuovoSeed()
+        self.assertIsInstance(seed, int)
+        self.assertTrue(0 <= seed < 100000)
+
+    def test_ultima_cartella_del_modello(self):
+        self.scrivi("2026-11-06_1000-gemini-3.6-flash", 11)
+        self.scrivi("2026-11-06_1730-gemini-3.6-flash", 22)
+        self.scrivi("2026-11-06_1800-mistral-large-4", 33)
+        ultima = runner.ultimaCartella(self.base, "gemini-3.6-flash")
+        self.assertEqual(ultima.name, "2026-11-06_1730-gemini-3.6-flash")
+        self.assertIsNone(runner.ultimaCartella(self.base, "gemma4:e4b"))
+
+    def test_il_seed_si_rilegge_dalla_cartella(self):
+        self.scrivi("2026-11-06_1730-gemini-3.6-flash", 22)
+        cartella = self.base / "2026-11-06_1730-gemini-3.6-flash"
+        self.assertEqual(runner.seedDi(cartella), 22)
+        self.assertIsNone(runner.seedDi(self.base / "non-esiste"))
+
+
 class RunCompletoTest(unittest.TestCase):
     """Un run vero (server MCP + simulatore) con un modello finto."""
 
@@ -148,11 +255,11 @@ class RunCompletoTest(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def esegui(self, numero, mosse, ripetizione=1):
+    def esegui(self, numero, mosse, ripetizione=1, seed=None):
         client = FakeLLMClient(mosse, model="finto")
         return asyncio.run(asyncio.wait_for(
             runner.eseguiScenario(scenario(numero), ripetizione, client, self.out,
-                                  toolTimeout=10), timeout=90))
+                                  toolTimeout=10, seed=seed), timeout=90))
 
     def isolaBrute(self):
         return LLMResponse(
@@ -174,6 +281,25 @@ class RunCompletoTest(unittest.TestCase):
         self.assertEqual(metriche["giri"], 2)
         self.assertEqual(metriche["tokenTotali"], 30)
         self.assertEqual(metriche["modelli"], [])  # il finto non scrive il campo
+
+    def test_ogni_seed_ha_ip_diversi_e_il_seed_viene_ripristinato(self):
+        iniziale = simulatore.SEED
+        ipA = simulatore.ips()["brute"]
+        simulatore.SEED = iniziale + 1
+        ipB = simulatore.ips()["brute"]
+        simulatore.SEED = iniziale
+        self.assertNotEqual(ipA, ipB)
+
+        mosse = [LLMResponse(toolCalls=[ToolCall(
+                     "c1", "isolateIp", {"ip": ipB, "reason": "brute force"})],
+                     usage=Usage(1, 1)),
+                 LLMResponse(content="Isolato.", usage=Usage(1, 1))]
+        esito = self.esegui(2, mosse, ripetizione=2, seed=iniziale + 1)
+        self.assertEqual(esito["seed"], iniziale + 1)
+        self.assertIn(ipB, esito["richiesta"])
+        self.assertEqual(esito["esito"], "passato", esito["controlli"])
+        self.assertEqual(esito["statoDb"]["isolated_ips"], [ipB])
+        self.assertEqual(simulatore.SEED, iniziale)  # il seed torna com'era
 
     def test_scenario_2_conferma_si_scrive_nel_db(self):
         esito = self.esegui(2, [self.isolaBrute(),
@@ -201,14 +327,15 @@ class RunCompletoTest(unittest.TestCase):
         testo = (runner.cartellaRun(self.out, scenario(3), 1) / "output.txt"
                  ).read_text(encoding="utf-8")
         righe = testo.splitlines()
-        self.assertTrue(righe[0].startswith("finto> Controlla l'IP"))
+        self.assertTrue(righe[0].startswith(">>> Controlla l'IP"))
         self.assertTrue(any(r.strip().startswith("[CONFERMA] Isolare l'IP")
                             and r.endswith("[Y/N] N (automatico)") for r in righe))
         # le righe dei tool non stanno nell'export: restano nel log.jsonl
         self.assertFalse(any(r.startswith("● isolateIp(") for r in righe))
         self.assertFalse(any("⎿" in r for r in righe))
         self.assertIn("Annullato dall'operatore.", testo)
-        self.assertIn("arresto: risposta finale | giri: 2 | token: 30", testo)
+        # la riga di riepilogo non sta nell'export: i numeri sono in metriche.json
+        self.assertNotIn("arresto:", testo)
 
     @unittest.skipUnless(runner.trovaBrowser(), "serve Chrome o Edge")
     def test_screenshot_png_viene_creato(self):

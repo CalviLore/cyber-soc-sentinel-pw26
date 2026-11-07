@@ -24,17 +24,33 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_REQUEST = "Analizza i log di rete e riporta le anomalie che trovi."
 
 
-def buildClient(provider: str, env: dict, model: str | None = None):
-    """Costruisce il client del provider scelto, leggendo base URL e chiave dal .env."""
+# Come chiedere al provider di esporre il ragionamento. Mistral lo manda da solo
+# (blocco thinking). Se un modello non lo supporta il client toglie i parametri.
+GEMINI_PENSIERO = {"extra_body": {"extra_body": {"google": {
+    "thinking_config": {"include_thoughts": True}}}}}
+OLLAMA_PENSIERO = {"reasoning_effort": "medium"}
+
+
+def buildClient(provider: str, env: dict, model: str | None = None,
+                fallback: bool = True):
+    """Costruisce il client del provider scelto, leggendo base URL e chiave dal .env.
+
+    fallback=False: niente modello di riserva (Gemini non passa a Gemma): se il
+    modello non risponde il run fallisce invece di cambiare modello in silenzio.
+
+    PENSIERO=0 nel .env non chiede il ragionamento ai modelli (meno token e tempo).
+    """
+    pensiero = env.get("PENSIERO", "1") != "0"
     if provider == "gemini":
         baseUrl, key = env.get("GEMINI_BASE_URL"), env.get("GEMINI_API_KEY")
         primario = model or env.get("GEMINI_MODEL")
         riserva = env.get("GEMINI_FALLBACK_MODEL")
         if not (baseUrl and key and primario):
             raise SystemExit("Mancano GEMINI_BASE_URL, GEMINI_API_KEY o GEMINI_MODEL nel .env")
-        clients = [OpenAICompatibleClient(baseUrl, key, primario)]
-        if riserva and not model:
-            clients.append(OpenAICompatibleClient(baseUrl, key, riserva))
+        params = GEMINI_PENSIERO if pensiero else None
+        clients = [OpenAICompatibleClient(baseUrl, key, primario, params)]
+        if riserva and not model and fallback:
+            clients.append(OpenAICompatibleClient(baseUrl, key, riserva, params))
         return FallbackClient(clients) if len(clients) > 1 else clients[0]
 
     if provider == "mistral":
@@ -45,12 +61,22 @@ def buildClient(provider: str, env: dict, model: str | None = None):
             raise SystemExit("Mancano MISTRAL_BASE_URL, MISTRAL_API_KEY o MISTRAL_MODEL nel .env")
         return OpenAICompatibleClient(baseUrl, key, nome)
 
+    if provider == "nvidia":
+        # NVIDIA NIM (build.nvidia.com): endpoint compatibile OpenAI, chiave nvapi-...
+        baseUrl = env.get("NVIDIA_BASE_URL") or "https://integrate.api.nvidia.com/v1"
+        key = env.get("NVIDIA_API_KEY")
+        nome = model or env.get("NVIDIA_MODEL")
+        if not (key and nome):
+            raise SystemExit("Mancano NVIDIA_API_KEY o NVIDIA_MODEL nel .env")
+        return OpenAICompatibleClient(baseUrl, key, nome)
+
     if provider == "ollama":
         baseUrl = env.get("OLLAMA_BASE_URL")
         nome = model or env.get("OLLAMA_MODEL_GOOGLE")
         if not (baseUrl and nome):
             raise SystemExit("Mancano OLLAMA_BASE_URL o un modello Ollama nel .env")
-        return OpenAICompatibleClient(baseUrl, None, nome)
+        return OpenAICompatibleClient(baseUrl, None, nome,
+                                      OLLAMA_PENSIERO if pensiero else None)
 
     raise SystemExit(f"Provider sconosciuto: {provider}")
 
@@ -72,7 +98,7 @@ def makeAsk(answer: str):
 
 def parseArgs(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Un run dell'harness Cyber-SOC Sentinel")
-    parser.add_argument("--provider", choices=["gemini", "mistral", "ollama"],
+    parser.add_argument("--provider", choices=["gemini", "mistral", "nvidia", "ollama"],
                         default="gemini")
     parser.add_argument("--model", help="sovrascrive il modello del .env")
     parser.add_argument("--request", default=DEFAULT_REQUEST)

@@ -167,7 +167,7 @@ def parseArgs(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Chat interattiva con Cyber-SOC Sentinel"
     )
-    parser.add_argument("--provider", choices=["gemini", "mistral", "ollama"],
+    parser.add_argument("--provider", choices=["gemini", "mistral", "nvidia", "ollama"],
                         default="gemini")
     parser.add_argument("--model", help="sovrascrive il modello del .env")
     parser.add_argument("--db", help="percorso SQLite (default: data/soc.db)")

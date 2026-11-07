@@ -64,6 +64,16 @@ class LLMResponse:
     model: str = ""
     finishReason: str = ""
     latencySeconds: float = 0.0
+    # Ragionamento esposto dal provider (Mistral: blocco thinking; Ollama: campo
+    # reasoning; Gemini/Gemma: testo tra <thought>). Non rientra nella conversazione
+    # rimandata al modello: va solo nel log e nell'export.
+    thinking: str | None = None
+    # Perche' ha risposto un modello di riserva: chi non ha risposto e con quale errore.
+    # Lo scrive il FallbackClient; resta None se ha risposto il modello preferito.
+    fallback: str | None = None
+    # True se le chiamate ai tool non sono arrivate strutturate dal provider ma sono
+    # state lette dal testo del modello (es. phi4-mini scrive [{"name": ...}]).
+    toolDaTesto: bool = False
 
     @property
     def hasToolCalls(self) -> bool:

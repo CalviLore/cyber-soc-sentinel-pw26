@@ -26,12 +26,19 @@ class FallbackClient(LLMClient):
     async def chat(self, messages: list[Message], tools: list[dict],
                    temperature: float = 0.0) -> LLMResponse:
         lastError: TransientLLMError | None = None
+        saltati: list[str] = []
 
         for client in self.clients:
             try:
-                return await client.chat(messages, tools, temperature)
+                response = await client.chat(messages, tools, temperature)
             except TransientLLMError as exc:
                 lastError = exc
+                stato = exc.statusCode if exc.statusCode is not None else "errore"
+                saltati.append(f"{client.model} non ha risposto ({stato}): {str(exc)[:150]}")
+                continue
+            if saltati:  # ha risposto una riserva: si registra perche'
+                response.fallback = "; ".join(saltati)
+            return response
 
         # clients non e' vuota (controllato in __init__), quindi qui lastError c'e'.
         raise lastError

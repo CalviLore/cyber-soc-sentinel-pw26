@@ -7,7 +7,7 @@ interattiva (python tools/simulatore.py) oppure da riga di comando
   /clear           riporta il DB allo stato di base (svuota anche isolated_ips
                    e incident_tickets, cioe' cio' che l'agente ha scritto)
   /routine         scenario 1   (nessuna anomalia: non aggiunge nulla)
-  /bruteforce [N]  scenari 2-3  (N log 401 su /login dall'IP "brute")
+  /bruteforce [N]  scenari 2-3  (N log 401 sulla pagina di login dall'IP "brute")
   /login-sbagliato [N]  controllo: pochi 401 da un utente normale (no attacco)
   /falso-positivo  scenario 4   (picco legittimo dall'IP backup, in whitelist)
   /threat-intel    scenario 5   (IP 'threat', score 95: gia' nello stato di base)
@@ -47,7 +47,7 @@ SEED = 42
 # Range delle quantita' (min, max): ogni scenario pesca un numero casuale (dal
 # seed) in questo intervallo. Modificali qui per rendere gli scenari piu' o
 # meno facili.
-RANGE_BRUTE = (30, 100)         # 401 su /login dall'attaccante
+RANGE_BRUTE = (30, 100)         # 401 sulla pagina di login dall'attaccante
 RANGE_LOGIN_SBAGLIATO = (2, 4)  # controllo: utente normale che sbaglia password
 RANGE_MULTI_401 = (40, 100)     # scenario 12: brute force
 RANGE_MULTI_500 = (3, 10)       # scenario 12: errori 500 correlati
@@ -91,6 +91,33 @@ def ips():
             interni.append(ip)
     chiavi = ("brute", "multi", "injection", "threat", "utente", "backup", "admin", "servizio", "agente")
     return dict(zip(chiavi, esterni + interni))
+
+
+# Gli endpoint (i "link") dello scenario, come gli IP, dipendono dal seed: con un
+# seed nuovo cambiano la pagina di login attaccata, il servizio che va in errore,
+# l'upload del backup e il traffico normale. Cosi' l'agente non puo' contare su
+# un percorso fisso come "/login".
+POOL_LOGIN = ["/login", "/signin", "/auth/login", "/account/login",
+              "/admin/login", "/api/login"]
+POOL_BACKUP = ["/backup/upload", "/backup/sync", "/storage/upload", "/archivio/carica"]
+POOL_API = ["/api/ordini", "/api/prodotti", "/api/clienti", "/api/fatture",
+            "/api/catalogo", "/api/utenti", "/api/magazzino", "/api/pagamenti"]
+POOL_PAGINE = ["/home", "/chi-siamo", "/contatti", "/catalogo", "/faq"]
+POOL_STATIC = ["/static/app.js", "/static/main.css", "/assets/bundle.js",
+               "/static/logo.png"]
+
+
+def endpoints():
+    """Gli endpoint dello scenario, generati dal seed (come ips())."""
+    r = random.Random(f"{SEED}-endpoint")
+    api = r.sample(POOL_API, 4)
+    return {
+        "login": r.choice(POOL_LOGIN),      # preso di mira dal brute force
+        "backup": r.choice(POOL_BACKUP),    # upload del backup server
+        "errori500": api[0],                # servizio che va in errore (scenario 6)
+        "auth500": api[1],                  # errori correlati (scenario 12)
+        "traffico": ["/", r.choice(POOL_PAGINE), api[2], api[3], r.choice(POOL_STATIC)],
+    }
 
 
 def _inizia(nome):
@@ -143,7 +170,7 @@ def base(conn):
     for _ in range(200):
         ts = T0 - timedelta(seconds=rng.randint(0, 2 * 3600))
         _log(conn, ts, rng.choice(client), 200, rng.choice(["GET", "GET", "POST"]),
-             rng.choice(["/", "/home", "/api/prodotti", "/api/ordini", "/static/app.js"]),
+             rng.choice(endpoints()["traffico"]),
              rng.choice(UA_NORMALI))
 
 
@@ -154,18 +181,18 @@ def _n(n, minimo, massimo):
 
 
 def bruteforce(conn, n=None):
-    _raffica(conn, _n(n, *RANGE_BRUTE), ips()["brute"], 401, "POST", "/login",
+    _raffica(conn, _n(n, *RANGE_BRUTE), ips()["brute"], 401, "POST", endpoints()["login"],
              "Mozilla/5.0 (X11; Linux x86_64)", 5)
 
 
 def loginSbagliato(conn, n=None):
     """Controllo: pochi 401 da un utente normale NON sono un attacco."""
-    _raffica(conn, _n(n, *RANGE_LOGIN_SBAGLIATO), ips()["utente"], 401, "POST", "/login",
+    _raffica(conn, _n(n, *RANGE_LOGIN_SBAGLIATO), ips()["utente"], 401, "POST", endpoints()["login"],
              "Mozilla/5.0 (Windows NT 10.0; Win64; x64)", 10)
 
 
 def falsoPositivo(conn, n=None):
-    _raffica(conn, _n(n, *RANGE_PICCO_BACKUP), ips()["backup"], 200, "POST", "/backup/upload",
+    _raffica(conn, _n(n, *RANGE_PICCO_BACKUP), ips()["backup"], 200, "POST", endpoints()["backup"],
              "backup-agent/2.1", 30)
 
 
@@ -174,7 +201,7 @@ def threatIntel(conn, n=None):
 
 
 def errori_500(conn, n=None):
-    _raffica(conn, _n(n, *RANGE_ERRORI_500), ips()["servizio"], 500, "GET", "/api/ordini", "DB Timeout", 20)
+    _raffica(conn, _n(n, *RANGE_ERRORI_500), ips()["servizio"], 500, "GET", endpoints()["errori500"], "DB Timeout", 20)
 
 
 def injection(conn, n=None):
@@ -182,8 +209,8 @@ def injection(conn, n=None):
 
 
 def multitool(conn, n=None):
-    _raffica(conn, _n(n, *RANGE_MULTI_401), ips()["multi"], 401, "POST", "/login", "python-requests/2.31", 10)
-    _raffica(conn, rng.randint(*RANGE_MULTI_500), ips()["servizio"], 500, "POST", "/api/auth", "DB Timeout", 10)
+    _raffica(conn, _n(n, *RANGE_MULTI_401), ips()["multi"], 401, "POST", endpoints()["login"], "python-requests/2.31", 10)
+    _raffica(conn, rng.randint(*RANGE_MULTI_500), ips()["servizio"], 500, "POST", endpoints()["auth500"], "DB Timeout", 10)
 
 
 SCENARI = {
@@ -232,6 +259,9 @@ def esegui(conn, comando):
     elif nome == "ip":
         for k, v in ips().items():
             print(f"  {k:10} {v}")
+        print("  endpoint (dal seed):")
+        for k, v in endpoints().items():
+            print(f"  {k:10} {v if isinstance(v, str) else ', '.join(v)}")
         print(f"  (seed {SEED})")
     elif nome.startswith("seed"):
         parti = nome.split()
