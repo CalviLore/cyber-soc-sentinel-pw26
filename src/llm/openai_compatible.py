@@ -18,8 +18,13 @@ from .base import (
     Usage,
 )
 
-MAX_ATTEMPTS = 3
+# 5 tentativi con attese 2, 4, 8, 16 s (~30 s): i 429 di Mistral a meta' run duravano
+# piu' dei 6 s del vecchio schema a 3 tentativi.
+MAX_ATTEMPTS = 5
 BASE_DELAY_SECONDS = 2.0
+# Senza, l'SDK aspetta fino a 10 minuti una risposta che non arriva (Nemotron Ultra,
+# 9/11): con 5 tentativi sarebbero ore. Un modello locale lento risponde entro ~150 s.
+REQUEST_TIMEOUT_SECONDS = 180.0
 
 
 def _retryAfterSeconds(response: Any) -> float | None:
@@ -120,7 +125,8 @@ class OpenAICompatibleClient(LLMClient):
         # max_retries=0: i tentativi li gestiamo qui, cosi' valgono le nostre attese
         # e il FallbackClient riceve l'errore dopo MAX_ATTEMPTS e non dopo molti di piu'.
         self.client = AsyncOpenAI(
-            base_url=baseUrl, api_key=apiKey or "ollama", max_retries=0
+            base_url=baseUrl, api_key=apiKey or "ollama", max_retries=0,
+            timeout=REQUEST_TIMEOUT_SECONDS,
         )
 
     async def chat(self, messages: list[Message], tools: list[dict],

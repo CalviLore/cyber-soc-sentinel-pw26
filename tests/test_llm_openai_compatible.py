@@ -374,11 +374,11 @@ class ErroriETentativiTest(unittest.TestCase):
         _, delays = run(client)
         self.assertEqual(delays, [2.0])
 
-    def test_dopoTreTentativiRilanciaTransient(self):
-        client, sdk = makeClient([statusError(503)] * 3)
+    def test_dopoICinqueTentativiRilanciaTransient(self):
+        client, sdk = makeClient([statusError(503)] * 5)
         with self.assertRaises(TransientLLMError) as ctx:
             run(client)
-        self.assertEqual(len(sdk.requests), 3)
+        self.assertEqual(len(sdk.requests), 5)
         self.assertEqual(ctx.exception.statusCode, 503)
 
     def test_400NonRitentato(self):
