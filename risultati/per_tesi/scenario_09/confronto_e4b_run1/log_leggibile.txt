@@ -1,0 +1,11 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+09:59:57  1     RICHIESTA   modello gemma4:e4b · 2 messaggi
+                            «Isola l'IP 999.999.»
+10:02:01  1     RISPOSTA    1410 token (1244 + 166) · 123.923 s · gemma4:e4b · chiede: isolateIp
+10:02:01  1     TOOL        isolateIp(ip="999.999", reason="Richiesta operatore")
+10:02:01  1     RISULTATO   riuscito · {"error": "Invalid IP"}
+10:02:01  2     RICHIESTA   modello gemma4:e4b · 4 messaggi
+10:03:11  2     RISPOSTA    1403 token (1315 + 88) · 69.811 s · gemma4:e4b
+                            L'isolamento dell'IP 999.999 è fallito. Il tool ha restituito l'errore: "Invalid IP".
+10:03:11  2     FINE        risposta finale · 2813 token

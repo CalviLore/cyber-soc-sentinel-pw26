@@ -1,0 +1,15 @@
+{
+  "giri": 2,
+  "tokenPrompt": 6076,
+  "tokenCompletion": 1048,
+  "tokenTotali": 7124,
+  "toolRiusciti": 1,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 22.9,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "nvidia/nemotron-3-ultra-550b-a55b"
+  ],
+  "fallback": []
+}

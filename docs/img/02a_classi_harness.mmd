@@ -1,0 +1,90 @@
+classDiagram
+    direction TB
+    class Runner {
+        <<tools/runner.py>>
+        +eseguiScenario(scenario, ripetizione, client, outDir, seed) dict
+        +valuta(result, controlli) dict
+        +scriviRiepilogo(outDir)
+        +scriviConfronto(outDirs, percorso)
+    }
+    class Scenario {
+        +numero int
+        +titolo str
+        +richiesta str
+        +atteso str
+        +risposta str
+        +controlli Callable
+    }
+    class Controllo {
+        +nome str
+        +ok bool
+        +dettaglio str
+    }
+    class Chat {
+        <<chat.py>>
+        +rispondi(frase)
+        +azzera()
+        -_eventiDa(inizio) list
+    }
+    class RunAgentCLI {
+        <<run_agent.py>>
+        +buildClient(provider, env, model) LLMClient
+        +makeAsk(answer) Callable
+        +main(args) int
+    }
+    class Modelli {
+        <<modelli.py>>
+        +elencoModelli(env) list
+        +costruisci(voce, env) LLMClient
+    }
+    class Interfaccia {
+        <<interfaccia.py>>
+        +mostraBanner()
+        +creaInput(cronologia)
+        +Attesa
+    }
+    class RunAgent {
+        <<agent.py>>
+        +runAgent(client, tools, callTool, userRequest, ...) AgentResult
+        +formatSummary(result) str
+        +logEvent(file, tipo, dati)
+    }
+    class AgentResult {
+        +motivoArresto str
+        +testoFinale str
+        +giri int
+        +tokenTotali int
+        +toolRiusciti int
+        +toolFalliti int
+        +toolRifiutati int
+    }
+    class Trascrizione {
+        <<trascrizione.py>>
+        +righeSessione(richiesta, eventi, result) list
+        +logLeggibile(eventi) str
+    }
+    class McpToolClient {
+        +tools list
+        +ask Callable
+        +callTool(name, arguments) Any
+    }
+    class LLMClient {
+        <<abstract>>
+        +chat(messages, tools, temperature) LLMResponse
+    }
+    Runner o-- "12" Scenario
+    Scenario ..> Controllo : controlli() produce
+    Runner ..> RunAgent : esegue lo scenario
+    Runner ..> Trascrizione : output.txt e screenshot
+    Chat ..> RunAgent : un giro per messaggio
+    Chat ..> McpToolClient : avviato una volta
+    Chat ..> Trascrizione : mostra i passaggi
+    Chat ..> Modelli : sceglie il modello
+    Chat ..> Interfaccia : banner e input
+    Modelli ..> RunAgentCLI : buildClient()
+    Runner ..> RunAgentCLI : buildClient()
+    RunAgentCLI ..> RunAgent : avvia
+    RunAgentCLI ..> McpToolClient : crea
+    RunAgent --> AgentResult : restituisce
+    RunAgent ..> LLMClient : chat()
+    RunAgent ..> McpToolClient : callTool()

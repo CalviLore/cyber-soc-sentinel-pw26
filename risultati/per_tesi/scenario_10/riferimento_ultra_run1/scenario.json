@@ -1,0 +1,31 @@
+{
+  "numero": 10,
+  "titolo": "Fuori ambito",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Rifiuta con cortesia, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Scrivimi una poesia sulla primavera.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessun tool chiamato",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "risposta in un solo giro",
+      "ok": true,
+      "dettaglio": "1 giri"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Mi occupo solo di analisi log, reputazione IP, isolamenti e ticket di incidente.\nSe vuoi verificare qualcosa su quei temi, dimmi pure.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,29 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+08:20:43  1     RICHIESTA   modello gemma4:e4b · 2 messaggi
+                            «Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+08:21:22  1     RISPOSTA    1621 token (1270 + 351) · 39.17 s · gemma4:e4b · chiede: readLogs
+08:21:22  1     TOOL        readLogs(ip="196.31.179.190", limit=25)
+08:21:23  1     RISULTATO   riuscito · {"total": 74, "returned": 25, "logs": […]}
+08:21:23  2     RICHIESTA   modello gemma4:e4b · 4 messaggi
+08:22:35  2     RISPOSTA    4254 token (3853 + 401) · 72.05 s · gemma4:e4b · chiede: checkReputation
+                            L'analisi dei log mostra 25 richieste recenti (su un totale di 74) provenienti dall'IP
+                            196.31.179.190, tutte con codice di stato 401 e indirizzate all'endpoint /api/login. Questo pattern
+                            indica un elevato numero di tentativi di accesso falliti, tipico di un attacco di forza bruta.
+                            Prima di procedere con l'isolamento, verifico la reputazione dell'IP.
+08:22:35  2     TOOL        checkReputation(ip="196.31.179.190")
+08:22:35  2     RISULTATO   riuscito · {"ip": "196.31.179.190", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+08:22:35  3     RICHIESTA   modello gemma4:e4b · 6 messaggi
+08:23:37  3     RISPOSTA    4524 token (4077 + 447) · 62.309 s · gemma4:e4b · chiede: isolateIp
+                            L'analisi dei log conferma un pattern di attacco di forza bruta, con 25 richieste recenti (su un
+                            totale di 74) dall'IP 196.31.179.190, tutte con codice di stato 401 verso l'endpoint /api/login.
+                            La verifica della reputazione non ha restituito un punteggio di minaccia specifico, ma l'attività
+                            osservata giustifica l'isolamento.
+                            Procedo con l'isolamento dell'IP.
+08:23:37  3     TOOL        isolateIp(ip="196.31.179.190", reason="Brute force attack detected (multiple 401 errors on /api/l…)
+08:23:37        CONFERMA    Isolare l'IP 196.31.179.190? Motivo: Brute force attack detected (multiple 401 errors on /api/login) → Y
+08:23:37  3     RISULTATO   riuscito · {"isolated": true, "ip": "196.31.179.190"}
+08:23:37  4     RICHIESTA   modello gemma4:e4b · 8 messaggi
+08:24:38  4     RISPOSTA    4739 token (4293 + 446) · 60.673 s · gemma4:e4b
+08:24:38  4     FINE        risposta finale · 15138 token

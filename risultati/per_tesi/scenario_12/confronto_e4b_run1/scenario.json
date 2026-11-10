@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "gemma4:e4b",
+  "richiesta": "Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['174.159.87.125']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Ho completato l'indagine.\n\nFatti osservati:\n- L'IP 174.159.87.125 non è in whitelist né è un asset critico.\n- I log mostrano 25 richieste recenti (su 52 totali) con codice di stato 401, tutte dirette all'endpoint /api/login. Questo indica un tentativo di attacco brute force.\n\nAzioni eseguite:\n- L'IP 174.159.87.125 è stato isolato con la motivazione: Tentativo di attacco brute force/credential stuffing (molteplici 401 su /api/login).\n- È stato aperto un ticket di incidente (ID 1) con gravità Alta per notificare il team di sicurezza.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "174.159.87.125"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Tentativo di attacco brute force rilevato",
+        "descrizione": "L'IP 174.159.87.125 sta eseguendo numerosi tentativi di accesso falliti (401) all'endpoint /api/login. L'IP è stato isolato.",
+        "gravita": "Alta",
+        "ip_correlato": "174.159.87.125",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-10T10:26:17",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

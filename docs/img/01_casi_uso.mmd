@@ -1,0 +1,27 @@
+flowchart LR
+    op(["Operatore SOC"])
+    llm(["Modello LLM"])
+
+    subgraph sys["Cyber-SOC Sentinel"]
+        direction TB
+        uc1("Chiedere un compito<br/>in linguaggio naturale")
+        uc2("Leggere i log di rete")
+        uc3("Verificare la reputazione<br/>di un IP")
+        uc4("Isolare un IP")
+        uc5("Aprire un ticket<br/>di incidente")
+        uc6("Confermare o negare<br/>un'azione di scrittura")
+        uc7("Consultare il log JSONL<br/>e il riassunto del run")
+    end
+
+    op --- uc1
+    op --- uc6
+    op --- uc7
+    llm --- uc2
+    llm --- uc3
+    llm --- uc4
+    llm --- uc5
+
+    uc1 -.->|include| uc2
+    uc4 -.->|include| uc6
+    uc5 -.->|include| uc6
+    uc3 -.->|extend| uc1

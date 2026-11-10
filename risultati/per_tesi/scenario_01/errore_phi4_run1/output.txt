@@ -1,0 +1,3 @@
+>>> Controlla se ci sono anomalie nel traffico recente.
+
+Per favore fornisci un indirizzo IP specifico o i codici di stato HTTP di interesse, così posso controllare per anomalie nel traffico recente.

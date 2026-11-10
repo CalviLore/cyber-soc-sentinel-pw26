@@ -1,0 +1,32 @@
+sequenceDiagram
+    autonumber
+    actor Op as Operatore SOC
+    participant H as runAgent (harness)
+    participant MCP as McpToolClient
+    participant Srv as Server MCP
+    participant DB as Backend + DB
+
+    H->>MCP: callTool(nome, argomenti)
+    MCP->>Srv: call_tool (stdio, timeout 30 s)
+
+    alt tool di sola lettura (readLogs / checkReputation)
+        Srv->>DB: SELECT su network_logs / threat_intel_db / assets
+        DB-->>Srv: record trovati
+    else tool di scrittura (isolateIp / openTicket)
+        Srv->>DB: validateIsolation / validateTicket
+        Srv->>MCP: elicitation "Confermi?" (ctx.elicit)
+        MCP->>Op: mostra la domanda [S/N] (callback ask)
+        Op-->>MCP: S oppure N
+        Note over MCP: log "conferma" (esito Y/N)<br/>dopo 3 risposte non valide = rifiuto
+        MCP-->>Srv: ElicitResult (confirm = True / False)
+
+        alt Operatore conferma (S)
+            Srv->>DB: INSERT su isolated_ips / incident_tickets
+            DB-->>Srv: conferma scrittura
+        else Operatore rifiuta (N)
+            Note over Srv: nessuna scrittura<br/>restituisce "cancelled"
+        end
+    end
+
+    Srv-->>MCP: risultato JSON (o errore)
+    MCP-->>H: risultato decodificato

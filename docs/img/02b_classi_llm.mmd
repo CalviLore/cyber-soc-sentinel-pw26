@@ -1,0 +1,28 @@
+classDiagram
+    direction TB
+    class LLMClient {
+        <<abstract>>
+        +model str
+        +chat(messages, tools, temperature) LLMResponse
+    }
+    class OpenAICompatibleClient {
+        Gemini, Mistral, NVIDIA, Ollama
+        5 tentativi su errori temporanei
+        legge il tool scritto come testo
+    }
+    class FallbackClient {
+        prova i modelli in ordine
+        scatta solo su errori temporanei
+    }
+    class FakeLLMClient {
+        risposte preparate, per i test
+    }
+    class Pensiero {
+        <<pensiero.py>>
+        +separaPensiero(testo)
+    }
+    LLMClient <|-- OpenAICompatibleClient
+    LLMClient <|-- FallbackClient
+    LLMClient <|-- FakeLLMClient
+    FallbackClient o-- "2..n" LLMClient
+    OpenAICompatibleClient ..> Pensiero : toglie i tag thought/think

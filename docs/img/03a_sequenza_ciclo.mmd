@@ -1,0 +1,34 @@
+sequenceDiagram
+    autonumber
+    actor Op as Operatore SOC
+    participant RA as run_agent.py
+    participant H as runAgent (harness)
+    participant LLM as LLMClient
+    participant MCP as McpToolClient
+
+    Op->>RA: --request "Analizza i log e isola gli IP ostili"
+    RA->>MCP: avvia sessione stdio (initialize + list_tools)
+    MCP-->>RA: 4 tool con schema dei parametri
+    RA->>H: runAgent(client, tools, callTool, richiesta)
+    Note over H: messages = [system, user]<br/>log JSONL: "richiesta"
+
+    loop Fino a risposta finale o max 10 iterazioni
+        H->>LLM: chat(messages, tools)
+        LLM-->>H: LLMResponse (testo o toolCalls) + token
+        Note over H: log "risposta" (modello, token)
+
+        alt nessuna toolCall
+            H-->>RA: AgentResult (risposta finale)
+        else ci sono toolCalls
+            H->>H: valida: tool esiste? JSON e schema validi?
+            alt non valida
+                Note over H: NON esegue, aggiunge errore a messages<br/>log esito "rifiutato"
+            else valida
+                H->>MCP: callTool(nome, argomenti) [vedi sequenza_tool]
+                MCP-->>H: risultato del tool (o errore / timeout)
+                Note over H: log "tool_chiamato" + "risultato"<br/>aggiunge messaggio tool a messages
+            end
+        end
+    end
+
+    RA->>Op: formatSummary(result) + risposta finale
