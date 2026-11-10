@@ -74,7 +74,7 @@ classDiagram
     }
     Runner o-- "12" Scenario
     Scenario ..> Controllo : controlli() produce
-    Runner ..> RunAgent : esegue lo scenario
+    Runner ..> Chat : stesso motore della chat
     Runner ..> Trascrizione : output.txt e screenshot
     Chat ..> RunAgent : un giro per messaggio
     Chat ..> McpToolClient : avviato una volta

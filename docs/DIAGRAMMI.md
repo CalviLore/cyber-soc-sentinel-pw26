@@ -1,17 +1,31 @@
 # Diagrammi UML
 
-Tre diagrammi richiesti dalla traccia (PW 26), in Mermaid: si vedono su GitHub e
-nell'anteprima Markdown di VS Code (`Ctrl+Shift+V`). Lo schema ER è in [er.md](er.md).
+I diagrammi richiesti dalla traccia (PW 26), in Mermaid: si vedono su GitHub e
+nell'anteprima Markdown di VS Code (`Ctrl+Shift+V`). Ogni diagramma ha il sorgente
+`.mmd` e l'immagine `.png` in [`img/`](img/), con la stessa numerazione delle figure del
+report. Lo schema ER (Figura 4) è in [er.md](er.md).
 
-I nomi di classi, funzioni e file sono quelli del codice in `src/`.
+I nomi di classi, funzioni e file sono quelli del codice in `src/` e `tools/`.
+
+| Figura | Cosa mostra | File in `img/` |
+|---|---|---|
+| 1 | Casi d'uso | `01_casi_uso` |
+| 2a | Classi: harness (Runner, Chat, RunAgent) | `02a_classi_harness` |
+| 2b | Classi: livello modello (client LLM) | `02b_classi_llm` |
+| 2c | Classi: messaggi, risposte ed errori | `02c_classi_messaggi` |
+| 2d | Classi: server MCP, back-end, database | `02d_classi_server` |
+| 3a | Sequenza: il ciclo agentico (runAgent) | `03a_sequenza_ciclo` |
+| 3b | Sequenza: esecuzione di un tool MCP e conferma umana | `03b_sequenza_tool` |
+| 3c | Sequenza: variante con conferma negata | `03c_sequenza_conferma_negata` |
+| 4 | Schema ER | [er.md](er.md) |
 
 ---
 
-## 1. Diagramma dei casi d'uso
+## Figura 1 — Diagramma dei casi d'uso
 
 L'operatore SOC chiede un compito in linguaggio naturale. Il modello (attore
 secondario) sceglie i tool; le due azioni che scrivono sul DB passano per la
-conferma Y/N dell'operatore.
+conferma dell'operatore.
 
 ```mermaid
 flowchart LR
@@ -43,27 +57,72 @@ flowchart LR
     uc3 -.->|extend| uc1
 ```
 
+*Figura 1: sorgente [`img/01_casi_uso.mmd`](img/01_casi_uso.mmd), immagine [`img/01_casi_uso.png`](img/01_casi_uso.png).*
+
 **Come si legge.** L'operatore avvia il compito (`uc1`) e può rispondere alle
 conferme (`uc6`) e rileggere il log (`uc7`). Il modello usa i quattro tool. Isolare
-un IP e aprire un ticket **includono sempre** la conferma: senza un "Y" non si
+un IP e aprire un ticket **includono sempre** la conferma: senza un sì esplicito non si
 scrive nulla (fail closed).
 
 ---
 
-## 2. Diagramma delle classi (server MCP + harness)
+## Figura 2 — Diagramma delle classi (server MCP + harness)
 
-Tre blocchi: **harness** (`agent.py`, `mcp_client.py`, `run_agent.py`), **livello
-modello** (`llm/`, sostituibile senza toccare il resto) e **server MCP** con il
-back-end.
+Tre blocchi: **harness** (`agent.py`, `mcp_client.py`, `run_agent.py`, `chat.py`, `tools/runner.py`),
+**livello modello** (`llm/`, sostituibile senza toccare il resto) e **server MCP** con il
+back-end. Il diagramma è diviso in quattro figure per restare leggibile.
+
+### Figura 2a — Harness
 
 ```mermaid
 classDiagram
     direction TB
-
-    %% ---------- Harness ----------
+    class Runner {
+        <<tools/runner.py>>
+        +eseguiScenario(scenario, ripetizione, client, outDir, seed) dict
+        +valuta(result, controlli) dict
+        +scriviRiepilogo(outDir)
+        +scriviConfronto(outDirs, percorso)
+    }
+    class Scenario {
+        +numero int
+        +titolo str
+        +richiesta str
+        +atteso str
+        +risposta str
+        +controlli Callable
+    }
+    class Controllo {
+        +nome str
+        +ok bool
+        +dettaglio str
+    }
+    class Chat {
+        <<chat.py>>
+        +rispondi(frase)
+        +azzera()
+        -_eventiDa(inizio) list
+    }
+    class RunAgentCLI {
+        <<run_agent.py>>
+        +buildClient(provider, env, model) LLMClient
+        +makeAsk(answer) Callable
+        +main(args) int
+    }
+    class Modelli {
+        <<modelli.py>>
+        +elencoModelli(env) list
+        +costruisci(voce, env) LLMClient
+    }
+    class Interfaccia {
+        <<interfaccia.py>>
+        +mostraBanner()
+        +creaInput(cronologia)
+        +Attesa
+    }
     class RunAgent {
         <<agent.py>>
-        +runAgent(client, tools, callTool, userRequest, maxIterations, logFile, toolTimeoutSeconds) AgentResult
+        +runAgent(client, tools, callTool, userRequest, ...) AgentResult
         +formatSummary(result) str
         +logEvent(file, tipo, dati)
     }
@@ -75,55 +134,103 @@ classDiagram
         +toolRiusciti int
         +toolFalliti int
         +toolRifiutati int
-        +errore str
-    }
-    class McpToolClient {
-        +tools list
-        +ask Callable
-        +callTool(name, arguments) Any
-        -_elicit(...) conferma Y/N
-    }
-    class Chat {
-        <<chat.py>>
-        +history list
-        +rispondi(richiesta) AgentResult
-        +azzera()
-        +eventi() list
-    }
-    class Runner {
-        <<tools/runner.py>>
-        +eseguiScenario(scenario, client, seed) dict
-        +controlli DB e log
-        +scriviRiepilogo() / scriviConfronto()
     }
     class Trascrizione {
         <<trascrizione.py>>
         +righeSessione(richiesta, eventi, result) list
         +logLeggibile(eventi) str
     }
-    class RunAgentCLI {
-        <<run_agent.py>>
-        +buildClient(provider, env, model) LLMClient
-        +makeAsk(answer) Callable
-        +main(args) int
+    class McpToolClient {
+        +tools list
+        +ask Callable
+        +callTool(name, arguments) Any
     }
+    class LLMClient {
+        <<abstract>>
+        +chat(messages, tools, temperature) LLMResponse
+    }
+    Runner o-- "12" Scenario
+    Scenario ..> Controllo : controlli() produce
+    Runner ..> Chat : stesso motore della chat
+    Runner ..> Trascrizione : output.txt e screenshot
+    Chat ..> RunAgent : un giro per messaggio
+    Chat ..> McpToolClient : avviato una volta
+    Chat ..> Trascrizione : mostra i passaggi
+    Chat ..> Modelli : sceglie il modello
+    Chat ..> Interfaccia : banner e input
+    Modelli ..> RunAgentCLI : buildClient()
+    Runner ..> RunAgentCLI : buildClient()
+    RunAgentCLI ..> RunAgent : avvia
+    RunAgentCLI ..> McpToolClient : crea
+    RunAgent --> AgentResult : restituisce
+    RunAgent ..> LLMClient : chat()
+    RunAgent ..> McpToolClient : callTool()
+```
 
-    %% ---------- Livello modello ----------
+*Figura 2a: sorgente [`img/02a_classi_harness.mmd`](img/02a_classi_harness.mmd), immagine [`img/02a_classi_harness.png`](img/02a_classi_harness.png).*
+
+### Figura 2b — Livello modello
+
+```mermaid
+classDiagram
+    direction TB
     class LLMClient {
         <<abstract>>
         +model str
-        +chat(messages, tools, temperature)* LLMResponse
+        +chat(messages, tools, temperature) LLMResponse
     }
     class OpenAICompatibleClient {
-        +chat(messages, tools, temperature) LLMResponse
+        Gemini, Mistral, NVIDIA, Ollama
+        5 tentativi su errori temporanei
+        legge il tool scritto come testo
     }
     class FallbackClient {
-        +chat(messages, tools, temperature) LLMResponse
+        prova i modelli in ordine
+        scatta solo su errori temporanei
     }
     class FakeLLMClient {
-        +moves list
-        +calls list
-        +chat(messages, tools, temperature) LLMResponse
+        risposte preparate, per i test
+    }
+    class Pensiero {
+        <<pensiero.py>>
+        +separaPensiero(testo)
+    }
+    LLMClient <|-- OpenAICompatibleClient
+    LLMClient <|-- FallbackClient
+    LLMClient <|-- FakeLLMClient
+    FallbackClient o-- "2..n" LLMClient
+    OpenAICompatibleClient ..> Pensiero : toglie i tag thought/think
+```
+
+*Figura 2b: sorgente [`img/02b_classi_llm.mmd`](img/02b_classi_llm.mmd), immagine [`img/02b_classi_llm.png`](img/02b_classi_llm.png).*
+
+### Figura 2c — Messaggi, risposte ed errori
+
+```mermaid
+classDiagram
+    direction TB
+    class LLMResponse {
+        +content str
+        +toolCalls list
+        +usage Usage
+        +model str
+        +finishReason str
+        +latencySeconds float
+        +thinking str
+        +fallback str
+        +toolDaTesto bool
+    }
+    class Usage {
+        +promptTokens int
+        +completionTokens int
+        +totalTokens int
+    }
+    class ToolCall {
+        +id str
+        +name str
+        +arguments dict
+        +invalidArguments str
+        +extraContent dict
     }
     class Message {
         +role str
@@ -131,31 +238,34 @@ classDiagram
         +toolCalls list
         +toolCallId str
     }
-    class ToolCall {
-        +id str
-        +name str
-        +arguments dict
-        +invalidArguments str
-    }
-    class LLMResponse {
-        +content str
-        +toolCalls list
-        +usage Usage
-        +model str
-        +hasToolCalls bool
-    }
-    class Usage {
-        +promptTokens int
-        +completionTokens int
-        +totalTokens int
-    }
     class LLMError {
         <<exception>>
+        +statusCode int
     }
-    class TransientLLMError
+    class TransientLLMError {
+        +retryAfterSeconds float
+    }
     class PermanentLLMError
+    LLMResponse *-- Usage
+    LLMResponse o-- ToolCall
+    Message o-- ToolCall
+    LLMError <|-- TransientLLMError
+    LLMError <|-- PermanentLLMError
+```
 
-    %% ---------- Server MCP + back-end ----------
+*Figura 2c: sorgente [`img/02c_classi_messaggi.mmd`](img/02c_classi_messaggi.mmd), immagine [`img/02c_classi_messaggi.png`](img/02c_classi_messaggi.png).*
+
+### Figura 2d — Server MCP, back-end e database
+
+```mermaid
+classDiagram
+    direction LR
+    class McpToolClient {
+        +tools list
+        +ask Callable
+        +callTool(name, arguments) Any
+        -_elicit(...) conferma Y/N
+    }
     class McpServer {
         <<mcp_server.py>>
         +readLogs(ip, statusCode, limit) dict
@@ -168,8 +278,10 @@ classDiagram
         <<backend.py>>
         +readLogs()
         +checkReputation()
-        +validateIsolation() / isolateIp()
-        +validateTicket() / openTicket()
+        +validateIsolation()
+        +isolateIp()
+        +validateTicket()
+        +openTicket()
     }
     class Database {
         <<SQLite>>
@@ -180,110 +292,119 @@ classDiagram
         isolated_ips
         incident_tickets
     }
-
-    %% ---------- Relazioni ----------
-    Chat ..> RunAgent : un giro per messaggio
-    Chat ..> McpToolClient : avviato una volta
-    Chat o-- Message : memoria della conversazione
-    Chat ..> Trascrizione : mostra i passaggi
-    Runner ..> Chat : stesso motore della chat
-    Runner ..> Trascrizione : output.txt e screenshot
-    RunAgentCLI ..> RunAgent : avvia
-    RunAgentCLI ..> McpToolClient : crea
-    RunAgentCLI ..> LLMClient : buildClient
-    RunAgent ..> LLMClient : chat()
-    RunAgent ..> McpToolClient : callTool()
-    RunAgent --> AgentResult : restituisce
-    RunAgent o-- Message : memoria
-    RunAgent ..> ToolCall : valida ed esegue
-
-    LLMClient <|-- OpenAICompatibleClient
-    LLMClient <|-- FallbackClient
-    LLMClient <|-- FakeLLMClient
-    FallbackClient o-- "2..n" LLMClient : prova in ordine
-    LLMClient ..> LLMResponse
-    LLMResponse *-- Usage
-    LLMResponse o-- ToolCall
-    Message o-- ToolCall
-    LLMError <|-- TransientLLMError
-    LLMError <|-- PermanentLLMError
-
     McpToolClient ..> McpServer : MCP su stdio
     McpServer ..> Backend
     Backend ..> Database
 ```
 
+*Figura 2d: sorgente [`img/02d_classi_server.mmd`](img/02d_classi_server.mmd), immagine [`img/02d_classi_server.png`](img/02d_classi_server.png).*
+
 **Punti chiave per la discussione.**
-- `RunAgent` conosce solo l'interfaccia `LLMClient`: Gemini, Mistral, Ollama, il
-  fallback e il finto per i test sono intercambiabili.
+- `RunAgent` conosce solo l'interfaccia `LLMClient`: Gemini, Mistral, NVIDIA, Ollama, il
+  fallback e il finto per i test sono intercambiabili (Figura 2b).
 - `callTool` è passata da fuori: in test è un finto, in produzione è
   `McpToolClient.callTool`.
-- La conferma Y/N parte dal **server** (`askConfirmation`, elicitation MCP) e
-  l'harness la inoltra al callback `ask`: a mano `input`, in automatico `yes`/`no`.
+- La conferma parte dal **server** (`askConfirmation`, elicitation MCP) e l'harness la
+  inoltra al callback `ask`: a mano `input` (risposte S/Y o N), in automatico `yes`/`no`.
+- `Runner` e `Chat` usano lo stesso motore (`RunAgent`): i test non provano una copia
+  del codice, ma quello che si usa a mano.
 
 ---
 
-## 3. Diagramma di sequenza: un ciclo agentico completo
+## Figura 3 — Diagramma di sequenza
 
-Scenario: l'operatore chiede di analizzare i log e, se serve, isolare un IP. Si
-vedono due giri con tool di lettura, poi la scrittura con conferma, poi la risposta
-finale. Sotto, la variante con conferma negata.
+Il ciclo agentico è diviso in due diagrammi da cinque colonne ciascuno, più la variante
+con conferma negata. Il primo mostra cosa fa l'harness, il secondo cosa succede dentro un
+tool.
+
+### Figura 3a — Il ciclo agentico (`runAgent`)
+
+Avvio della sessione, ciclo con al massimo 10 iterazioni, chiamata al modello,
+validazione dei parametri prima di eseguire e delega a `callTool`.
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor Op as Operatore SOC
-    participant CLI as run_agent.py
+    participant RA as run_agent.py
     participant H as runAgent (harness)
     participant LLM as LLMClient
-    participant MC as McpToolClient
-    participant S as Server MCP
-    participant B as Backend + DB
+    participant MCP as McpToolClient
 
-    Op->>CLI: --request "Analizza i log e isola gli IP ostili"
-    CLI->>MC: avvia sessione (stdio)
-    MC->>S: initialize + list_tools
-    S-->>MC: 4 tool con schema dei parametri
-    CLI->>H: runAgent(client, tools, callTool, richiesta)
+    Op->>RA: --request "Analizza i log e isola gli IP ostili"
+    RA->>MCP: avvia sessione stdio (initialize + list_tools)
+    MCP-->>RA: 4 tool con schema dei parametri
+    RA->>H: runAgent(client, tools, callTool, richiesta)
     Note over H: messages = [system, user]<br/>log JSONL: "richiesta"
 
-    loop fino a risposta finale o max iterazioni
+    loop Fino a risposta finale o max 10 iterazioni
         H->>LLM: chat(messages, tools)
-        LLM-->>H: LLMResponse (testo oppure toolCalls) + token
+        LLM-->>H: LLMResponse (testo o toolCalls) + token
         Note over H: log "risposta" (modello, token)
 
         alt nessuna toolCall
-            H-->>CLI: AgentResult (risposta finale)
+            H-->>RA: AgentResult (risposta finale)
         else ci sono toolCalls
-            H->>H: valida: tool esiste? argomenti validi? schema rispettato?
+            H->>H: valida: tool esiste? JSON e schema validi?
             alt non valida
-                H->>H: NON esegue, messaggio tool di errore al modello
+                Note over H: NON esegue, aggiunge errore a messages<br/>log esito "rifiutato"
             else valida
-                H->>MC: callTool(nome, argomenti)
-                MC->>S: call_tool
-                alt tool di lettura (readLogs / checkReputation)
-                    S->>B: legge dal DB
-                else tool di scrittura (isolateIp / openTicket)
-                    S->>B: validateIsolation / validateTicket
-                    S-->>MC: elicitation "Confermi? Y/N"
-                    MC->>Op: mostra la domanda (callback ask)
-                    Op-->>MC: Y
-                    MC-->>S: conferma = Y
-                    S->>B: scrive su isolated_ips / incident_tickets
-                end
-
-                B-->>S: risultato
-                S-->>MC: risultato
-                MC-->>H: risultato (o errore / timeout)
-                Note over H: log "tool_chiamato" + "risultato"<br/>messaggio tool aggiunto a messages
+                H->>MCP: callTool(nome, argomenti) [vedi sequenza_tool]
+                MCP-->>H: risultato del tool (o errore / timeout)
+                Note over H: log "tool_chiamato" + "risultato"<br/>aggiunge messaggio tool a messages
             end
         end
     end
 
-    CLI->>Op: formatSummary(result): motivo, giri, token, tool riusciti/falliti/rifiutati
+    RA->>Op: formatSummary(result) + risposta finale
 ```
 
-### Variante: conferma negata
+*Figura 3a: sorgente [`img/03a_sequenza_ciclo.mmd`](img/03a_sequenza_ciclo.mmd), immagine [`img/03a_sequenza_ciclo.png`](img/03a_sequenza_ciclo.png).*
+
+### Figura 3b — Esecuzione di un tool MCP e conferma umana
+
+Cosa succede dentro `callTool`: il protocollo MCP con timeout di 30 s, il bivio tra tool di
+lettura e di scrittura, la conferma S/N dell'operatore (dopo 3 risposte non valide vale come
+rifiuto) e la scrittura sul DB solo se confermata.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Op as Operatore SOC
+    participant H as runAgent (harness)
+    participant MCP as McpToolClient
+    participant Srv as Server MCP
+    participant DB as Backend + DB
+
+    H->>MCP: callTool(nome, argomenti)
+    MCP->>Srv: call_tool (stdio, timeout 30 s)
+
+    alt tool di sola lettura (readLogs / checkReputation)
+        Srv->>DB: SELECT su network_logs / threat_intel_db / assets
+        DB-->>Srv: record trovati
+    else tool di scrittura (isolateIp / openTicket)
+        Srv->>DB: validateIsolation / validateTicket
+        Srv->>MCP: elicitation "Confermi?" (ctx.elicit)
+        MCP->>Op: mostra la domanda [S/N] (callback ask)
+        Op-->>MCP: S oppure N
+        Note over MCP: log "conferma" (esito Y/N)<br/>dopo 3 risposte non valide = rifiuto
+        MCP-->>Srv: ElicitResult (confirm = True / False)
+
+        alt Operatore conferma (S)
+            Srv->>DB: INSERT su isolated_ips / incident_tickets
+            DB-->>Srv: conferma scrittura
+        else Operatore rifiuta (N)
+            Note over Srv: nessuna scrittura<br/>restituisce "cancelled"
+        end
+    end
+
+    Srv-->>MCP: risultato JSON (o errore)
+    MCP-->>H: risultato decodificato
+```
+
+*Figura 3b: sorgente [`img/03b_sequenza_tool.mmd`](img/03b_sequenza_tool.mmd), immagine [`img/03b_sequenza_tool.png`](img/03b_sequenza_tool.png).*
+
+### Figura 3c — Variante: conferma negata
 
 ```mermaid
 sequenceDiagram
@@ -306,3 +427,12 @@ sequenceDiagram
     H->>LLM: chat(messages con il risultato)
     LLM-->>H: "Operazione annullata dall'operatore"
 ```
+
+*Figura 3c: sorgente [`img/03c_sequenza_conferma_negata.mmd`](img/03c_sequenza_conferma_negata.mmd), immagine [`img/03c_sequenza_conferma_negata.png`](img/03c_sequenza_conferma_negata.png).*
+
+---
+
+## Figura 4 — Schema ER
+
+Vedi [er.md](er.md): sei tabelle (`network_logs`, `assets`, `ip_whitelist`,
+`threat_intel_db`, `isolated_ips`, `incident_tickets`).
