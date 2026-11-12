@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:29:31  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Scrivimi una poesia sulla primavera.»
+07:29:34  1     RISPOSTA    1517 token (1390 + 127) · 2.785 s · mistral-large-4
+                            Non posso aiutarti con poesie: sono l'assistente del SOC e mi occupo solo di log di rete,
+                            reputazione IP, isolamenti e ticket di incidente.
+                            Cosa vuoi verificare oggi?
+07:29:34  1     FINE        risposta finale · 1517 token

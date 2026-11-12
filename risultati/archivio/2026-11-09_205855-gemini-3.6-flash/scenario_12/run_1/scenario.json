@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 1,
+  "seed": 888434,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "gemini-3.6-flash",
+  "richiesta": "Indaga sull'IP 130.125.124.87 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['130.125.124.87']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Dettagli dell'indagine sull'IP 130.125.124.87:\n\nFatti osservati:\n- L'IP 130.125.124.87 ha effettuato 78 richieste HTTP POST verso l'endpoint /auth/login.\n- Tutte le richieste hanno restituito codice di stato HTTP 401 (Non autorizzato).\n- Le richieste sono avvenute in un arco di tempo ristretto con User-Agent python-requests/2.31.\n- L'IP non risulta presente in whitelist ne' tra gli asset critici dell'organizzazione.\n\nValutazione:\n- Il comportamento e' riconducibile a un attacco di brute force o credential stuffing in corso contro il servizio di autenticazione.\n\nAzioni intraprese:\n- Isolamento IP: l'IP 130.125.124.87 e' stato isolato con successo.\n- Ticket d'incidente: aperto il ticket ID 1 con gravita' Alta e assegnato al team di sicurezza.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "130.125.124.87"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Attacco Brute Force rilevato da IP 130.125.124.87",
+        "descrizione": "L'IP 130.125.124.87 ha effettuato 78 tentativi di autenticazione falliti (HTTP 401) verso l'endpoint /auth/login tramite uno script Python (User-Agent: python-requests/2.31), riconducibili a un attacco di brute force.",
+        "gravita": "Alta",
+        "ip_correlato": "130.125.124.87",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-09T21:03:07",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

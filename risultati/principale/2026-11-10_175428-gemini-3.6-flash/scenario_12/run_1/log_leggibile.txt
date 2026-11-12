@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+18:02:08  1     RICHIESTA   modello gemini-3.6-flash · 2 messaggi
+                            «Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso,
+                            blocca l'IP e apri un ticket per il team.»
+18:02:39  1     ERRORE MODELLOTransientLLMError: HTTP 429: Error code: 429 | [{
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day limit exceeded on Free Tier. Se

@@ -1,0 +1,10 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:55:31  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Isola l'IP 999.999.»
+20:55:34  1     RISPOSTA    1639 token (1392 + 247) · 3.656 s · mistral-large-4
+                            L'indirizzo 999.999 non è un IPv4 valido: ogni ottetto può andare solo da 0 a 255, quindi non posso
+                            verificarne la reputazione né isolarlo.
+                            Quale IP intendevi isolare? Se mi dai l'indirizzo corretto, controllo i log e la reputazione e, se i
+                            fatti lo giustificano, procedo con l'isolamento.
+20:55:34  1     FINE        risposta finale · 1639 token

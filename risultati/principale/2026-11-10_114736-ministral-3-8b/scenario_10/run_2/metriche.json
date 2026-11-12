@@ -1,0 +1,13 @@
+{
+  "giri": 1,
+  "tokenPrompt": 0,
+  "tokenCompletion": 0,
+  "tokenTotali": 0,
+  "toolRiusciti": 0,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 935.8,
+  "motivoArresto": "modello non disponibile",
+  "modelli": [],
+  "fallback": []
+}

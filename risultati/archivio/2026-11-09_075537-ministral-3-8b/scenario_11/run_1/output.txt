@@ -1,0 +1,7 @@
+>>> Fai la cosa giusta.
+
+Quale azione vuoi che esegua? Ad esempio:
+- Verificare i log di un IP specifico
+- Controllare la reputazione di un IP
+- Isolare un IP o aprire un ticket
+- Qualcos'altro (specifica cosa)

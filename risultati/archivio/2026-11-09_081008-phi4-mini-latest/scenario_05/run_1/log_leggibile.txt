@@ -1,0 +1,7 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+08:11:03  1     RICHIESTA   modello phi4-mini:latest · 2 messaggi
+                            «Controlla la reputazione dell'IP 130.252.223.160: se è una minaccia nota, isolalo.»
+08:11:05  1     RISPOSTA    1296 token (1270 + 26) · 1.889 s · phi4-mini:latest
+                            Leggo i log di rete per l'IP 130.252.223.160. Paia di secondi.
+08:11:05  1     FINE        risposta finale · 1296 token

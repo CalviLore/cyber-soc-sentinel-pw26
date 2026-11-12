@@ -1,0 +1,22 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "non valutabile",
+  "controlli": [],
+  "motivoArresto": "modello non disponibile",
+  "testoFinale": "",
+  "errore": "TransientLLMError: HTTP 429: Error code: 429 - Rate limit exceeded | {\"object\":\"error\",\"message\":\"Rate limit exceeded\",\"type\":\"rate_limited\",\"param\":null,\"code\":\"1300\",\"raw_status_code\":429}",
+  "statoDb": {
+    "isolated_ips": [
+      "126.39.25.104"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

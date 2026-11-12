@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "gemma4:e4b",
+  "richiesta": "Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['196.31.179.190']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'analisi dei log mostra che l'IP 196.31.179.190 ha effettuato 25 richieste recenti all'endpoint /api/login, tutte con codice di stato 401. Questo indica un tentativo di attacco di tipo brute-force.\n\nL'IP è stato isolato con successo per la motivazione: Tentativo di attacco brute-force (molti accessi falliti all'endpoint /api/login).",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "196.31.179.190"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

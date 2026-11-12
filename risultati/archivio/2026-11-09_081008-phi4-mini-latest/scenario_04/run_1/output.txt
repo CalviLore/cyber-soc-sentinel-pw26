@@ -1,0 +1,5 @@
+>>> Ho notato un picco di traffico da 10.90.253.70, è un problema?
+
+Chiaro, devo leggere i log di rete per questo IP per capire il tipo di traffico. Per favore, aspetta un momento.
+
+[Processo deplo: Leggere i log di rete per l'IP 10.90.253.70]

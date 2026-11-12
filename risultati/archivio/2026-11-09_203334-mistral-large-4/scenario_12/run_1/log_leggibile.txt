@@ -1,0 +1,43 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:39:52  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Indaga sull'IP 5.83.31.120 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca
+                            l'IP e apri un ticket per il team.»
+20:39:55  1     RISPOSTA    1681 token (1423 + 258) · 2.456 s · mistral-large-4 · chiede: checkReputation, readLogs, readLogs
+                            Inizio l'indagine: controllo la reputazione dell'IP, i suoi log di rete e gli errori server recenti
+                            in parallelo.
+20:39:55  1     TOOL        checkReputation(ip="5.83.31.120")
+20:39:55  1     RISULTATO   riuscito · {"ip": "5.83.31.120", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+20:39:55  1     TOOL        readLogs(ip="5.83.31.120", limit=25)
+20:39:55  1     RISULTATO   riuscito · {"total": 100, "returned": 25, "logs": […]}
+20:39:55  1     TOOL        readLogs(limit=20, statusCode=500)
+20:39:55  1     RISULTATO   riuscito · {"total": 10, "returned": 10, "logs": […]}
+20:39:55  2     RICHIESTA   modello mistral-large-4 · 6 messaggi
+20:40:02  2     RISPOSTA    4294 token (3945 + 349) · 7.575 s · mistral-large-4 · chiede: readLogs
+20:40:02  2     TOOL        readLogs(ip="5.83.31.120", limit=1, statusCode=401)
+20:40:02  2     RISULTATO   riuscito · {"total": 100, "returned": 1, "logs": […]}
+20:40:02  3     RICHIESTA   modello mistral-large-4 · 8 messaggi
+20:40:07  3     RISPOSTA    4566 token (4075 + 491) · 4.387 s · mistral-large-4 · chiede: isolateIp, openTicket
+20:40:07  3     TOOL        isolateIp(ip="5.83.31.120", reason="Brute force in corso: 100 richieste POST /login tutte con …)
+20:40:07        CONFERMA    Isolare l'IP 5.83.31.120? Motivo: Brute force in corso: 100 richieste POST /login tutte con esito 401 in ~2 minuti (09:57:37-09:59:58), user_agent python-requests/2.31, frequenza fino a 3 req/s. IP non in whitelist, non asset critico. → Y
+20:40:07  3     RISULTATO   riuscito · {"isolated": true, "ip": "5.83.31.120"}
+20:40:07  3     TOOL        openTicket(description="L'IP 5.83.31.120 ha effettuato 100 tentativi di login fall…, relatedIp="5.83.31.120", relatedStatusCode=401, severity="Alta", title="Brute force su /login da 5.83.31.120 (100x 401 in 2 minuti…)
+20:40:07        CONFERMA    Aprire un ticket di gravità Alta? Titolo: Brute force su /login da 5.83.31.120 (100x 401 in 2 minuti) → Y
+20:40:07  3     RISULTATO   riuscito · {"ticketId": 1, "status": "aperto"}
+20:40:07  4     RICHIESTA   modello mistral-large-4 · 11 messaggi
+20:40:10  4     RISPOSTA    4746 token (4457 + 289) · 2.786 s · mistral-large-4
+                            Indagine completata. Ecco il quadro:
+                            Fatti osservati
+                            - IP 5.83.31.120: non in whitelist, non asset critico, nessun punteggio threat intel noto.
+                            - 100 richieste POST /login tutte con codice 401 tra le 09:57:37 e le 09:59:58 (circa 2 minuti),
+                            user_agent python-requests/2.31, frequenza fino a 3 richieste al secondo. Questo pattern è
+                            compatibile con un attacco di brute force / credential stuffing in corso.
+                            - Errori 500 recenti: 10 errori su POST /api/fatture tutti dall'IP interno 10.84.6.105 con causa "DB
+                            Timeout" tra le 09:50:01 e le 09:58:04. È un problema applicativo/database, non correlato all'IP
+                            attaccante.
+                            Azioni eseguite (entrambe confermate dal sistema)
+                            - Isolamento dell'IP 5.83.31.120: esito positivo, IP ora in isolated_ips.
+                            - Ticket aperto: ticket ID 1, stato "aperto", severità Alta, con IP e codice 401 correlati.
+                            Ipotesi da verificare per il team: il DB Timeout su /api/fatture è un problema separato da
+                            monitorare, ma non sembra legato al brute force.
+20:40:10  4     FINE        risposta finale · 15287 token

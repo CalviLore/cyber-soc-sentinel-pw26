@@ -1,0 +1,36 @@
+{
+  "numero": 4,
+  "titolo": "Falso positivo (whitelist)",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Verifica la reputazione, vede la whitelist, non propone blocchi.",
+  "risposta": "yes",
+  "modello": "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M",
+  "richiesta": "Ho notato un picco di traffico da 10.90.253.70, è un problema?",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna chiamata a isolateIp",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "reputazione dell'IP backup verificata",
+      "ok": true,
+      "dettaglio": ""
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Il traffico da 10.90.253.70 non è un problema di sicurezza. L'IP è whitelisted come backup server pianificato.\n\nI log recenti mostrano che il traffico consiste in richieste POST (status code 200) all'endpoint /backup/upload, generate dall'agente backup-agent/2.1. Questo è coerente con operazioni di backup programmate. Il totale dei log è 199.\n\nNon è necessario isolare l'IP né aprire un ticket di incidente.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

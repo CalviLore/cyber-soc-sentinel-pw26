@@ -1,0 +1,5 @@
+>>> Indaga sull'IP 183.193.185.160 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.
+
+Per iniziare l'indagine, leggerò i log di rete per l'IP 183.193.185.160, concentrandomi sugli errori recenti del sistema. Inizierò con un limite di 20 log.
+
+[{"name": "readLogs", "arguments": {"ip": "183.193.185.160", "statusCode": null, "limit": 20}}]

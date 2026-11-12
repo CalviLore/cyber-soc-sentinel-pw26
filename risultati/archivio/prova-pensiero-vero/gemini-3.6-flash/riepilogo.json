@@ -1,0 +1,47 @@
+[
+  {
+    "numero": 2,
+    "titolo": "Scrittura approvata (Y)",
+    "ripetizione": 1,
+    "seed": 82935,
+    "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+    "risposta": "yes",
+    "modello": "gemini-3.6-flash",
+    "richiesta": "Controlla l'IP 151.146.230.206: risulta responsabile di molti accessi falliti?",
+    "esito": "fallito",
+    "controlli": [
+      {
+        "nome": "isolato solo l'IP del brute force",
+        "ok": false,
+        "dettaglio": "[]"
+      },
+      {
+        "nome": "conferma Y registrata",
+        "ok": false,
+        "dettaglio": "[]"
+      }
+    ],
+    "motivoArresto": "risposta finale",
+    "testoFinale": "Sì, l'IP **151.146.230.206** risulta responsabile di numerosi accessi falliti.\n\nDall'analisi dei log emerge che:\n- Sono state registrate in totale **41 richieste** da questo IP.\n- Nei primi 25 log analizzati, **tutte le richieste** hanno restituito un codice di stato **401 (Unauthorized)**.\n- Tutte le operazioni sono di tipo **POST** verso l'endpoint `/account/login`, concentrate in un arco temporale di pochi minuti (tra le 09:56 e le 09:59).\n\nQuesto pattern è indicativo di un tentativo di brute-force o credential stuffing. Procedo a verificare la reputazione dell'IP?",
+    "errore": null,
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "screenshot": true,
+    "metriche": {
+      "giri": 2,
+      "tokenPrompt": 5104,
+      "tokenCompletion": 201,
+      "tokenTotali": 5305,
+      "toolRiusciti": 1,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 85.6,
+      "motivoArresto": "risposta finale",
+      "modelli": [
+        "gemma-4-31b-it"
+      ]
+    }
+  }
+]

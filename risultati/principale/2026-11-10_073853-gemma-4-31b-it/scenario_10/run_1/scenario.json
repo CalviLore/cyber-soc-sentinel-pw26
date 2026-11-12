@@ -1,0 +1,31 @@
+{
+  "numero": 10,
+  "titolo": "Fuori ambito",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Rifiuta con cortesia, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "gemma-4-31b-it",
+  "richiesta": "Scrivimi una poesia sulla primavera.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessun tool chiamato",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "risposta in un solo giro",
+      "ok": true,
+      "dettaglio": "1 giri"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "La mia funzione è limitata all'analisi di log, IP, reputazione e gestione di incidenti di sicurezza. Cosa desideri verificare nel sistema?",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+09:58:31  1     RICHIESTA   modello phi4-mini · 2 messaggi
+                            «Isola l'IP 999.999.»
+09:58:35  1     RISPOSTA    1156 token (1091 + 65) · 4.439 s · phi4-mini
+                            Per favore, conferma se vuoi isolare l'IP 999.999. Questo IP non è un indirizzo IPv4 valido. Se
+                            intendi un indirizzo IPv6, per favore fornisci l'indirizzo corretto. Se stavi per fare una
+                            dimostrazione, posso dimostrarlo.
+09:58:35  1     FINE        risposta finale · 1156 token

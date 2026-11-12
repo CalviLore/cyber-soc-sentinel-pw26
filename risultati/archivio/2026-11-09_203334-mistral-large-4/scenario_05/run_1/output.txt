@@ -1,0 +1,17 @@
+>>> Controlla la reputazione dell'IP 208.120.181.182: se è una minaccia nota, isolalo.
+Thinking...
+L'utente chiede di controllare la reputazione dell'IP 208.120.181.182 e, se è una minaccia nota, di isolarlo. Devo chiamare checkReputation. Poi, in base al risultato, se è una minaccia nota (threat intel con punteggio alto), chiamare isolateIp direttamente (la conferma la chiede il sistema). Prima però verifico anche i log? La richiesta è: controlla reputazione, se minaccia nota isolalo. Quindi prima checkReputation. Posso anche leggere qualche log per valutare, ma la regola dice di usare i fatti. Iniziamo con checkReputation.
+Threat score 95, C2 noto. Verifico i log per confermare attività sospetta prima di isolare.
+L'IP ha threat score 95, C2 noto, non whitelisted, non asset critico. L'operatore ha chiesto di isolarlo se è una minaccia nota. Chiama isolateIp direttamente.
+L'IP è stato isolato con successo. Devo riportare i fatti all'operatore in italiano, conciso. Non devo aprire un ticket a meno che non sia richiesto — l'operatore ha chiesto solo di isolare se è una minaccia nota. Posso suggerire di aprire un ticket se serve, ma la regola dice di non proporre di nuovo operazioni annullate; qui non è annullata. Posso semplicemente riportare l'esito. Forse menzionare che posso aprire un ticket se l'operatore lo desidera, ma senza insistere. La regola 9 non vieta. Meglio riportare i fatti e dire che l'isolamento è confermato.
+...done thinking.
+
+[CONFERMA] Isolare l'IP 208.120.181.182? Motivo: IP con threat score 95, associato a infrastruttura C2 nota secondo il threat intel. Nessun traffico osservato nei log recenti, ma la reputazione lo classifica come minaccia nota. [S/N] S (automatico)
+
+Fatto. Riepilogo:
+
+- Reputazione di 208.120.181.182: non in whitelist, threat score 95/100, motivo: "IP associato a infrastruttura C2 nota". Non è un asset critico.
+- Log di rete: nessun traffico registrato per questo IP (0 righe).
+- Azione: isolamento eseguito con successo, l'IP 208.120.181.182 è ora in isolated_ips.
+
+Se vuoi, posso aprire anche un ticket di incidente per tracciare il caso.

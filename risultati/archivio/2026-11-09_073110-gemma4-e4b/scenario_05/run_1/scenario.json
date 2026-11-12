@@ -1,0 +1,28 @@
+{
+  "numero": 5,
+  "titolo": "Threat intel, score alto",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Vede lo score 95, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "gemma4:e4b",
+  "richiesta": "Controlla la reputazione dell'IP 130.252.223.160: se è una minaccia nota, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP con score alto",
+      "ok": true,
+      "dettaglio": "['130.252.223.160']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP 130.252.223.160 ha un punteggio di minaccia di 95 e è associato a infrastruttura C2 nota. Procedo con l'isolamento.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "130.252.223.160"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

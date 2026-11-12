@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "gemma4:e4b",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": true,
+      "dettaglio": "status_code_correlato = 500"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Sono stati trovati 10 errori 500 recenti. Tutti gli errori provengono dall'IP 10.1.108.5 e sono associati a un timeout del database sull'endpoint /api/catalogo.\n\nProcedo ad aprire un ticket di incidente.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errore Server 500 ricorrente - Timeout DB",
+        "descrizione": "Sono stati osservati 10 errori 500 ricorrenti sull'endpoint /api/catalogo. L'IP sorgente è 10.1.108.5 e il user_agent indica \"DB Timeout\".",
+        "gravita": "Media",
+        "ip_correlato": "10.1.108.5",
+        "status_code_correlato": 500,
+        "timestamp": "2026-11-10T09:25:27",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

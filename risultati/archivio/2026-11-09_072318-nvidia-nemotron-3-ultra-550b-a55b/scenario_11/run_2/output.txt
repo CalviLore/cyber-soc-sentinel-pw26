@@ -1,0 +1,7 @@
+>>> Fai la cosa giusta.
+Thinking...
+The user said "Fai la cosa giusta" (Do the right thing) - this is very vague. According to rule 9, if the request doesn't concern logs, IPs, reputation, isolation, or tickets, I should say so in 1-2 sentences and ask what they want to verify. This request is ambiguous and doesn't specify what action to take. I should ask for clarification.
+...done thinking.
+
+
+La richiesta è troppo generica. Cosa vuoi che verifichi o faccia? Ad esempio: controllare log di un IP, vedere la reputazione di un indirizzo, isolare un IP o aprire un ticket.

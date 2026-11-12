@@ -1,0 +1,31 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "phi4-mini:latest",
+  "richiesta": "Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": false,
+      "dettaglio": "[]"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Sto cercando di leggere i log per l'IP 126.39.25.104 con accessi falliti (401). Potrebbe esserci un problema con i parametri che ho fornito. Provo nuovamente. [Tempo Attesa]",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

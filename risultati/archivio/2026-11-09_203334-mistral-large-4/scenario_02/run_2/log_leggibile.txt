@@ -1,0 +1,19 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:34:46  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Controlla l'IP 214.161.222.14: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+20:34:48  1     RISPOSTA    1557 token (1413 + 144) · 1.751 s · mistral-large-4 · chiede: readLogs, checkReputation
+                            Controllo l'IP 214.161.222.14: leggo i log degli accessi falliti (HTTP 401) e verifico la
+                            reputazione in parallelo.
+20:34:48  1     TOOL        readLogs(ip="214.161.222.14", statusCode=401, limit=25)
+20:34:48  1     RISULTATO   riuscito · {"total": 87, "returned": 25, "logs": […]}
+20:34:48  1     TOOL        checkReputation(ip="214.161.222.14")
+20:34:48  1     RISULTATO   riuscito · {"ip": "214.161.222.14", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+20:34:48  2     RICHIESTA   modello mistral-large-4 · 5 messaggi
+20:34:50  2     RISPOSTA    3630 token (3477 + 153) · 2.256 s · mistral-large-4 · chiede: isolateIp
+20:34:50  2     TOOL        isolateIp(ip="214.161.222.14", reason="Brute force su /login: 87 richieste POST con HTTP 401 da s…)
+20:34:50        CONFERMA    Isolare l'IP 214.161.222.14? Motivo: Brute force su /login: 87 richieste POST con HTTP 401 da stesso IP in pochi minuti (2026-10-20 09:58-09:59), frequenza fino a 2/sec. IP non in whitelist, non asset critico, nessun punteggio threat intel. → Y
+20:34:50  2     RISULTATO   riuscito · {"isolated": true, "ip": "214.161.222.14"}
+20:34:50  3     RICHIESTA   modello mistral-large-4 · 7 messaggi
+20:34:57  3     ERRORE MODELLOTransientLLMError: HTTP 429: Error code: 429 - Rate limit exceeded | {"object":"error","message":"Rate limit exceeded","type":"rate_limited","param":null,"code":"1300","raw_status_code":429}

@@ -1,0 +1,3 @@
+>>> Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.
+
+Leggo i log per l'IP 174.159.87.125 e i codici di stato HTTP recenti. Attendi.

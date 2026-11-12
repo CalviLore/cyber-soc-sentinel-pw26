@@ -1,0 +1,3 @@
+>>> Fai la cosa giusta.
+
+Hai bisogno di assistenza con una delle seguenti cose: leggere i log di rete, valutare la reputazione di un IP, isolare un IP o aprire un ticket di incidente. Fammi sapere cosa hai bisogno di fare.

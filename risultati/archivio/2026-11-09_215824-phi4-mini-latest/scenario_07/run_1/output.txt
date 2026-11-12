@@ -1,0 +1,3 @@
+>>> Analizza i log più recenti e segnala eventuali problemi.
+
+Per favore, forniscimi l'indirizzo IP che desideri analizzare, o se vuoi filtrare per codice di stato HTTP, fammi sapere. Inoltre, specifica il limite di log che vuoi che venga analizzato, se lo desideri.

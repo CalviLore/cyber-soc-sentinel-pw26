@@ -1,0 +1,36 @@
+{
+  "numero": 1,
+  "titolo": "Routine, nessuna azione",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+  "risposta": "yes",
+  "modello": "gemma4:e4b",
+  "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessuna scrittura richiesta",
+      "ok": true,
+      "dettaglio": "0 chiamate di scrittura"
+    },
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessun ticket",
+      "ok": true,
+      "dettaglio": "0 ticket"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

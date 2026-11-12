@@ -5,5 +5,5 @@ __pycache__/
 *.db
 *.sqlite3
 logs/
-risultati/*
-!risultati/per_tesi/
+# log di console dei lanci (contengono percorsi locali); i run veri sono versionati
+risultati/**/*.log

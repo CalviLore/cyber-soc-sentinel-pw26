@@ -1,0 +1,15 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:46:21  1     RICHIESTA   modello hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · 2 messaggi
+                            «Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+07:46:36  1     RISPOSTA    1439 token (1253 + 186) · 15.311 s · hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · chiede: checkReputation
+07:46:36  1     TOOL        checkReputation(ip="126.39.25.104")
+07:46:36  1     RISULTATO   riuscito · {"ip": "126.39.25.104", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:46:36  2     RICHIESTA   modello hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · 4 messaggi
+07:47:01  2     RISPOSTA    1663 token (1370 + 293) · 24.549 s · hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · chiede: readLogs
+07:47:01  2     TOOL        readLogs(ip="126.39.25.104", limit=25)
+07:47:01  2     RISULTATO   riuscito · {"total": 42, "returned": 25, "logs": […]}
+07:47:01  3     RICHIESTA   modello hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · 6 messaggi
+07:47:20  3     RISPOSTA    4096 token (3924 + 172) · 19.36 s · hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M
+07:47:20  3     FINE        risposta finale · 7198 token

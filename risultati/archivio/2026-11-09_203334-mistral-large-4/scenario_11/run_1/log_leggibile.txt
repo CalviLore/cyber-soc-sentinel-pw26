@@ -1,0 +1,10 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:39:41  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Fai la cosa giusta.»
+20:39:44  1     RISPOSTA    1595 token (1388 + 207) · 2.622 s · mistral-large-4
+                            Non ho abbastanza contesto per capire quale azione intendi: non mi hai indicato un IP, un evento o
+                            un log da verificare.
+                            Cosa vuoi che controlli? Per esempio: un indirizzo IP sospetto, un picco di errori 401/500, o un
+                            ticket da aprire?
+20:39:44  1     FINE        risposta finale · 1595 token

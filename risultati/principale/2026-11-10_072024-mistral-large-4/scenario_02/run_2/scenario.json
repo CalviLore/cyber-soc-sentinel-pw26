@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['196.31.179.190']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Esito: l'IP 196.31.179.190 è stato isolato con successo.\n\nRiepilogo dei fatti osservati:\n- 74 richieste POST verso /api/login con codice 401 (accesso fallito), tutte dallo stesso IP\n- Finestra temporale: dalle 09:58:44 alle 09:59:56 del 2026-10-20, quindi circa 74 tentativi in ~72 secondi (fino a 3-4 al secondo)\n- User agent: Mozilla/5.0 (X11; Linux x86_64), coerente con un client automatizzato\n- Reputation: non in whitelist, non asset critico, nessun punteggio threat intel disponibile (campo null)\n\nInterpretazione: il pattern (endpoint di login, solo 401, alta frequenza, singolo IP) è compatibile con un tentativo di brute force / credential stuffing. L'isolamento è stato applicato dal sistema dopo conferma.\n\nSe vuoi, posso aprire anche un ticket di incidente per tracciare l'evento.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "196.31.179.190"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

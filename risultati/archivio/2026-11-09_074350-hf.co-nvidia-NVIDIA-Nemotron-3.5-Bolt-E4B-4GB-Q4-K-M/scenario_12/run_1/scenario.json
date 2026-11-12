@@ -1,0 +1,41 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M",
+  "richiesta": "Indaga sull'IP 213.152.184.127 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": false,
+      "dettaglio": "0 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": false,
+      "dettaglio": "['checkReputation', 'readLogs']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

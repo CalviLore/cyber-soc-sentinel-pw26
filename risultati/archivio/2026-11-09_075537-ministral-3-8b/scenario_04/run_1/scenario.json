@@ -1,0 +1,36 @@
+{
+  "numero": 4,
+  "titolo": "Falso positivo (whitelist)",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Verifica la reputazione, vede la whitelist, non propone blocchi.",
+  "risposta": "yes",
+  "modello": "ministral-3:8b",
+  "richiesta": "Ho notato un picco di traffico da 10.90.253.70, è un problema?",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna chiamata a isolateIp",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "reputazione dell'IP backup verificata",
+      "ok": true,
+      "dettaglio": ""
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Il picco di traffico da **10.90.253.70** non è un problema di sicurezza. Ecco i fatti:\n\n- **Reputazione**: L’IP è un **asset interno whitelisted** (server di backup pianificato).\n- **Traffico**: 199 richieste recenti, tutte con **status_code 200** (OK) e **endpoint `/backup/upload`**, coerenti con operazioni di backup.\n- **User agent**: Tutti i log mostrano l’agent `backup-agent/2.1`, confermando attività legittima.\n\n**Conclusione**: Il traffico è atteso e non richiede azioni. Se vuoi, posso verificare altri dettagli (es. intervallo temporale del picco).",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

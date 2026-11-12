@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:37:51  1     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 2 messaggi
+                            «Fai la cosa giusta.»
+07:37:53  1     RISPOSTA    1883 token (1769 + 114) · 2.844 s · nvidia/nemotron-3-ultra-550b-a55b
+                            La richiesta è troppo generica. Cosa vuoi che verifichi: log di un IP, reputazione, isolamento o
+                            apertura ticket?
+07:37:53  1     FINE        risposta finale · 1883 token

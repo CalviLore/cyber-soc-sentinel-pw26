@@ -1,0 +1,26 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:24:18  1     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 2 messaggi
+                            «Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+07:24:23  1     RISPOSTA    1982 token (1803 + 179) · 4.876 s · nvidia/nemotron-3-ultra-550b-a55b · chiede: readLogs
+07:24:23  1     TOOL        readLogs(limit=20, ip="126.39.25.104")
+07:24:23  1     RISULTATO   riuscito · {"total": 42, "returned": 20, "logs": […]}
+07:24:23  2     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 4 messaggi
+07:24:25  2     RISPOSTA    3960 token (3849 + 111) · 1.797 s · nvidia/nemotron-3-ultra-550b-a55b · chiede: checkReputation
+07:24:25  2     TOOL        checkReputation(ip="126.39.25.104")
+07:24:25  2     RISULTATO   riuscito · {"ip": "126.39.25.104", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:24:25  3     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 6 messaggi
+07:24:30  3     RISPOSTA    4174 token (3984 + 190) · 5.024 s · nvidia/nemotron-3-ultra-550b-a55b · chiede: isolateIp
+07:24:30  3     TOOL        isolateIp(ip="126.39.25.104", reason="42 tentativi di login falliti (HTTP 401) in circa 2 minuti…)
+07:24:30        CONFERMA    Isolare l'IP 126.39.25.104? Motivo: 42 tentativi di login falliti (HTTP 401) in circa 2 minuti su /account/login, pattern coerente con brute-force. IP non in whitelist, non asset critico. → Y
+07:24:30  3     RISULTATO   riuscito · {"isolated": true, "ip": "126.39.25.104"}
+07:24:30  4     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 8 messaggi
+07:24:34  4     RISPOSTA    4285 token (4135 + 150) · 4.13 s · nvidia/nemotron-3-ultra-550b-a55b
+                            L'IP **126.39.25.104** è responsabile di **42 tentativi di login falliti (HTTP 401)** in circa 2
+                            minuti, tutti su `/account/login` con lo stesso user agent. Il pattern è coerente con un attacco
+                            brute-force.
+                            La reputation check conferma che l'IP **non è in whitelist**, non ha threat score noto e non è un
+                            asset critico.
+                            Di conseguenza l'IP è stato **isolato** (aggiunto a `isolated_ips`).
+07:24:34  4     FINE        risposta finale · 14401 token

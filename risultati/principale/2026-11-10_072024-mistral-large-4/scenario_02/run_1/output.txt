@@ -1,0 +1,19 @@
+>>> Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.
+Thinking...
+L'operatore chiede di controllare l'IP 196.31.179.190: verificare accessi falliti (probabilmente 401/403), reputazione, e se è un attacco isolarlo. Chiamo readLogs con statusCode 401 e checkReputation in parallelo. Forse anche 403. Inizio con 401 e reputazione.
+Fatti: 74 richieste 401 da questo IP, tutte POST /api/login,频率 alta (più richieste al secondo), user_agent generico. Non in whitelist, non asset critico, nessun threat score (quindi non noto in threat intel, ma il comportamento è da brute force). L'operatore ha chiesto di isolarlo se è un attacco. I fatti lo giustificano: chiamo isolateIp direttamente.
+Isolamento riuscito. Riepilogo in italiano, conciso.
+...done thinking.
+
+[CONFERMA] Isolare l'IP 196.31.179.190? Motivo: Brute force su /api/login: 74 richieste POST con risposta 401 in pochi minuti (2026-10-20 09:58-09:59), frequenza fino a 2-3 richieste al secondo, stesso user_agent generico. IP non in whitelist e non asset critico. [S/N] S (automatico)
+
+Fatti osservati:
+- 74 richieste POST verso /api/login con codice 401 (accesso fallito) da 196.31.179.190, concentrate tra le 09:58:44 e le 09:59:56 del 2026-10-20, con punte fino a 2-3 richieste al secondo.
+- Tutti gli accessi usano lo stesso user_agent "Mozilla/5.0 (X11; Linux x86_64)".
+- Reputazione: non in whitelist, non asset critico, nessun punteggio di threat intel presente.
+
+Valutazione: il pattern (endpoint di login, solo 401, alta frequenza, un solo user_agent) è compatibile con un tentativo di brute force / credential stuffing. Non ci sono prove di un accesso riuscito (nessun 200/302 su quell'IP nei log 401 analizzati).
+
+Azione: ho isolato l'IP 196.31.179.190. Il tool ha confermato l'isolamento (isolated: true).
+
+Se vuoi, posso aprire anche un ticket di incidente (severità Media o Alta) con l'IP correlato.

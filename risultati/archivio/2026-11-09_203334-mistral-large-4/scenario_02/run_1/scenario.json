@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 901869,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Controlla l'IP 214.161.222.14: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['214.161.222.14']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Esito: l'IP 214.161.222.14 è stato isolato con successo.\n\nFatti osservati:\n- 87 richieste POST verso /login con codice 401 (accesso fallito), tutte dallo stesso IP.\n- Finestra temporale molto ristretta: dalle 09:58:26 alle 09:59:59 (circa 90 secondi), con punte di 2 richieste al secondo.\n- Stesso user agent per tutte le richieste: Mozilla/5.0 (X11; Linux x86_64).\n- Reputazione: non in whitelist, non asset critico, nessun punteggio di threat intel presente (quindi non noto, ma il comportamento è sospetto).\n\nValutazione: il pattern (alta frequenza di 401 sullo stesso endpoint di login da un'unica fonte) è compatibile con un tentativo di brute force o credential stuffing. Non è una prova certa di attacco, ma la densità e la regolarità delle richieste giustificano l'isolamento precauzionale.\n\nAzione eseguita: isolateIp ha restituito isolated: true per 214.161.222.14.\n\nSe vuoi, posso aprire anche un ticket di incidente (severità Media o Alta) con questi dettagli.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "214.161.222.14"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

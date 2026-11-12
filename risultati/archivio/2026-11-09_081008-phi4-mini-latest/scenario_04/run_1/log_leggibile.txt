@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+08:10:56  1     RICHIESTA   modello phi4-mini:latest · 2 messaggi
+                            «Ho notato un picco di traffico da 10.90.253.70, è un problema?»
+08:11:00  1     RISPOSTA    1319 token (1265 + 54) · 3.662 s · phi4-mini:latest
+                            Chiaro, devo leggere i log di rete per questo IP per capire il tipo di traffico. Per favore, aspetta
+                            un momento.
+                            [Processo deplo: Leggere i log di rete per l'IP 10.90.253.70]
+08:11:00  1     FINE        risposta finale · 1319 token

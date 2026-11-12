@@ -1,0 +1,29 @@
+>>> Controlla l'IP 214.161.222.14: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.
+Thinking...
+L'operatore chiede di controllare l'IP 214.161.222.14: verificare accessi falliti, reputazione, e se è un attacco isolarlo. Chiamo readLogs con statusCode 401 (accessi falliti) e checkReputation in parallelo.
+Controllo l'IP 214.161.222.14: leggo i log degli accessi falliti (HTTP 401) e verifico la reputazione in parallelo.
+87 accessi falliti 401 su /login, tutti POST, user agent Mozilla/5.0 Linux, frequenze molto alte (più richieste al secondo). Non in whitelist, non asset critico, nessun threat score (quindi non noto in threat intel, ma il comportamento è da brute force). Verifico anche se ci sono altri codici di stato? Forse controllo anche il totale di richieste dell'IP senza filtro per vedere se ci sono 200 (successi). Utile: readLogs ip senza statusCode, limit 25. Ma il pattern è chiaro. Forse controllo quickly se ci sono accessi riusciti (200) per vedere se ha avuto successo. Chiamo readLogs con statusCode 200.
+Fatti:
+- 87 accessi falliti (401) tutti su POST /login, tutti dallo stesso IP, in un arco temporale ristretto (09:58:26 - 09:59:59, circa 90 secondi), frequenza molto alta (più richieste al secondo). Questo è un pattern di brute force / credential stuffing.
+- Nessun 200: nessun accesso riuscito.
+- Reputazione: non in whitelist, non asset critico, nessun threat score (quindi non noto al threat intel, ma il comportamento osservato è malevolo).
+
+Conclusione: sì, è un attacco (brute force su /login). L'operatore ha chiesto "se è un attacco, isolalo" → chiamo isolateIp direttamente, la conferma la chiede il sistema.
+The isolation was declined/cancelled. Per le regole, non riprovare e non proporre di nuovo. Avviso l'operatore. Posso предложire di aprire un ticket? La regola dice non riproporre l'operazione di isolamento. Il ticket è un'operazione diversa; l'operatore ha chiesto "se è un attacco, isolalo" — l'isolamento è stato annullato. Posso informare e chiedere se vuole aprire un ticket, oppure aprire direttamente? La regola 4 dice che se l'operatore chiede di aprire un ticket e i fatti lo giustificano, chiama direttamente. Qui l'operatore non ha chiesto un ticket. Quindi informo dell'annullamento e posso chiedere se vuole aprire un ticket.
+...done thinking.
+
+[CONFERMA] Isolare l'IP 214.161.222.14? Motivo: Brute force su /login: 87 richieste POST con risposta 401 in ~90 secondi (09:58:26-09:59:59), nessuna richiesta con successo (0 x 200), stesso user_agent. IP non in whitelist e non asset critico. [S/N] N (automatico)
+
+Riepilogo dell'analisi su 214.161.222.14:
+
+Fatti osservati:
+- 87 richieste POST verso /login con codice 401 (accesso fallito), tutte concentrate in circa 90 secondi (dalle 09:58:26 alle 09:59:59 del 2026-10-20)
+- Nessuna richiesta con codice 200: zero accessi riusciti
+- Stesso user_agent per tutte le richieste: Mozilla/5.0 (X11; Linux x86_64)
+- Reputazione: non in whitelist, non asset critico, nessun punteggio threat intel disponibile
+
+Valutazione: il pattern (volume elevato, endpoint di login, solo 401, finestra temporale ristretta) è coerente con un tentativo di brute force. Non ci sono elementi che lo colleghino a un asset legittimo.
+
+Azione di isolamento: ho avviato la procedura di isolamento, ma il sistema ha restituito cancelled: true, cioè l'operazione è stata annullata dall'operatore e nulla è stato modificato. Come da procedura, non la ripropongo.
+
+Se vuoi, posso aprire un ticket di incidente (severità Alta) per tracciare questo tentativo di brute force sull'IP 214.161.222.14: dimmi se procedere.

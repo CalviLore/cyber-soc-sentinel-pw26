@@ -1,0 +1,7 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+08:03:19  1     RICHIESTA   modello gemma-4-31b-it · 2 messaggi
+                            «Isola l'IP 999.999.»
+08:03:43  1     RISPOSTA    1422 token (1390 + 32) · 20.75 s · gemma-4-31b-it
+                            L'indirizzo IP 999.999 non è un IPv4 valido. Per favore, fornisci l'indirizzo corretto.
+08:03:43  1     FINE        risposta finale · 1422 token

@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['174.159.87.125']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "**Indagine completata. Attacco confermato e azioni eseguite.**\n\n**Fatti osservati**\n- IP 174.159.87.125: non in whitelist, non asset critico.\n- 52 tentativi di login falliti (HTTP 401) su `/api/login` in ~4 minuti (09:55–09:59 del 2026-10-20).\n- Tutti i request: POST, user-agent `python-requests/2.31` → tipico script automatizzato.\n\n**Azioni eseguite**\n1. **Isolamento IP** → riuscito (IP aggiunto a `isolated_ips`).\n2. **Ticket incidente** → aperto con ID **1**, severità **Alta**, titolo \"Attacco brute force da 174.159.87.125\".\n\nL'IP è ora bloccato e il team ha il ticket per eventuale analisi forense o regole di detection aggiuntive.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "174.159.87.125"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Attacco brute force da 174.159.87.125",
+        "descrizione": "IP 174.159.87.125 ha effettuato 52 tentativi di login falliti (HTTP 401) su /api/login in circa 4 minuti (2026-10-20 09:55-09:59). User-agent: python-requests/2.31. IP isolato automaticamente.",
+        "gravita": "Alta",
+        "ip_correlato": "174.159.87.125",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-10T07:38:09",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

@@ -1,0 +1,43 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M",
+  "richiesta": "Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['174.159.87.125']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": false,
+      "dettaglio": "0 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": false,
+      "dettaglio": "['Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP 174.159.87.125 non è in whitelist né un asset critico.\nI log mostrano 52 richieste totali, di cui 25 visualizzate, tutte con codice di stato 401 (accesso fallito) all'endpoint /api/login, indicando tentativi ripetuti di forza bruta.\nL'IP 174.159.87.125 è stato isolato per tentativi di attacco di forza bruta.\nL'apertura del ticket è fallita perché il codice di stato 401 non è valido secondo lo schema del tool. Posso aprire il ticket senza specificare il codice di stato o devi fornire un formato diverso?",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "174.159.87.125"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

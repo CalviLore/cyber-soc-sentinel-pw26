@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M",
+  "richiesta": "Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['196.31.179.190']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP 196.31.179.190 non è segnalato come pericoloso dal threat intel. I log mostrano un totale di 74 accessi falliti (codice 401) all'endpoint /api/login. Questo indica un tentativo di attacco brute-force. L'IP 196.31.179.190 è stato isolato con la motivazione Molti tentativi di accesso falliti (74 log totali) all'endpoint /api/login con codice 401, indicativo di attacco brute-force.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "196.31.179.190"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

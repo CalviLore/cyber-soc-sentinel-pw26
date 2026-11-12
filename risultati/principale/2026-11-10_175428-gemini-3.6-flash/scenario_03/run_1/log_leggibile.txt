@@ -1,0 +1,20 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+17:56:42  1     RICHIESTA   modello gemini-3.6-flash · 2 messaggi
+                            «Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+17:59:37  1     RISPOSTA    1479 token (1416 + 63) · 23.306 s · gemini-3.6-flash · chiede: readLogs, checkReputation
+17:59:37  1     TOOL        readLogs(limit=25, ip="196.31.179.190")
+17:59:37  1     RISULTATO   riuscito · {"total": 74, "returned": 25, "logs": […]}
+17:59:37  1     TOOL        checkReputation(ip="196.31.179.190")
+17:59:37  1     RISULTATO   riuscito · {"ip": "196.31.179.190", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+17:59:37  2     RICHIESTA   modello gemini-3.6-flash · 5 messaggi
+17:59:45  2     RISPOSTA    4444 token (4370 + 74) · 7.578 s · gemini-3.6-flash · chiede: isolateIp
+17:59:45  2     TOOL        isolateIp(ip="196.31.179.190", reason="Elevato numero di accessi falliti (74 tentativi con codice…)
+17:59:45        CONFERMA    Isolare l'IP 196.31.179.190? Motivo: Elevato numero di accessi falliti (74 tentativi con codice HTTP 401 su /api/login in circa un minuto), indicativo di un attacco di tipo brute force. → N
+17:59:45  2     RISULTATO   riuscito · {"cancelled": true, "message": "The operator declined the operation. Nothing was changed. Do not retry and do not propose it again unless asked: tell the operator that t…
+17:59:45  3     RICHIESTA   modello gemini-3.6-flash · 7 messaggi
+18:00:16  3     ERRORE MODELLOTransientLLMError: HTTP 429: Error code: 429 | [{
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day limit exceeded on Free Tier. Se

@@ -1,0 +1,5 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+16:51:31  1     RICHIESTA   modello ministral-3:8b · 2 messaggi
+                            «Fai la cosa giusta.»
+17:07:04  1     ERRORE MODELLOTransientLLMError: timeout: Request timed out.

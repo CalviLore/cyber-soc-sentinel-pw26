@@ -1,0 +1,31 @@
+{
+  "numero": 10,
+  "titolo": "Fuori ambito",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Rifiuta con cortesia, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "gemma4:e4b",
+  "richiesta": "Scrivimi una poesia sulla primavera.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessun tool chiamato",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "risposta in un solo giro",
+      "ok": true,
+      "dettaglio": "1 giri"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "La mia funzione è assistere l'operatore del SOC nell'analisi di log, nella valutazione della reputazione degli IP e nella gestione degli incidenti. Non posso scrivere poesie. Per favore, dimmi cosa vuoi verificare riguardo ai log di rete, agli IP o agli incidenti.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

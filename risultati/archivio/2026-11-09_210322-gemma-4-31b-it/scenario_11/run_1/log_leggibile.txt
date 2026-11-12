@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+21:36:26  1     RICHIESTA   modello gemma-4-31b-it · 2 messaggi
+                            «Fai la cosa giusta.»
+21:39:56  1     RISPOSTA    1407 token (1382 + 25) · 55.217 s · gemma-4-31b-it
+                            La richiesta non riguarda l'analisi di log, IP, reputazione, isolamenti o ticket. Cosa desideri
+                            verificare?
+21:39:56  1     FINE        risposta finale · 1407 token

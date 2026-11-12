@@ -1,0 +1,15 @@
+{
+  "giri": 2,
+  "tokenPrompt": 4680,
+  "tokenCompletion": 399,
+  "tokenTotali": 5079,
+  "toolRiusciti": 3,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 132.7,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "ministral-3:8b"
+  ],
+  "fallback": []
+}

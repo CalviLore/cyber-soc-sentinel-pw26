@@ -1,0 +1,2 @@
+{"ts": "2026-11-09T20:34:54.028+00:00", "event": "richiesta", "giro": 1, "nMessaggi": 2, "tools": ["checkReputation", "isolateIp", "openTicket", "readLogs"], "modello": "gemma-4-31b-it", "richiestaUtente": "Scrivimi una poesia sulla primavera."}
+{"ts": "2026-11-09T20:36:03.990+00:00", "event": "errore_modello", "giro": 1, "errore": "TransientLLMError: HTTP 500: Error code: 500 | [{\n  \"error\": {\n    \"code\": 500,\n    \"message\": \"Internal error encountered.\",\n    \"status\": \"INTERNAL\"\n  }\n}\n]"}

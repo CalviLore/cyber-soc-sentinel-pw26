@@ -1,0 +1,28 @@
+{
+  "numero": 5,
+  "titolo": "Threat intel, score alto",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Vede lo score 95, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M",
+  "richiesta": "Controlla la reputazione dell'IP 80.47.141.38: se è una minaccia nota, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP con score alto",
+      "ok": true,
+      "dettaglio": "['80.47.141.38']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "La reputazione dell'IP 80.47.141.38 è una minaccia nota con un punteggio di 95 associato a infrastruttura C2 nota. L'IP è stato isolato con successo.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "80.47.141.38"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

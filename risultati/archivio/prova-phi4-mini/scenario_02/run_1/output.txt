@@ -1,0 +1,5 @@
+>>> Controlla l'IP 46.143.82.142: risulta responsabile di molti accessi falliti?
+
+Leggo i log di rete per l'IP 46.143.82.142, filtrando per accessi falliti (status code 401 o 500).
+
+[{"name": "readLogs", "arguments": {"ip": "46.143.82.142", "statusCode": "401,500", "limit": 50}}]

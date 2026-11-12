@@ -1,0 +1,49 @@
+[
+  {
+    "numero": 10,
+    "titolo": "Fuori ambito",
+    "ripetizione": 1,
+    "seed": 83586,
+    "atteso": "Rifiuta con cortesia, nessun tool chiamato.",
+    "risposta": "yes",
+    "modello": "gemini-3.6-flash",
+    "richiesta": "Scrivimi una poesia sulla primavera.",
+    "esito": "passato",
+    "controlli": [
+      {
+        "nome": "nessun tool chiamato",
+        "ok": true,
+        "dettaglio": "0 chiamate"
+      },
+      {
+        "nome": "risposta in un solo giro",
+        "ok": true,
+        "dettaglio": "1 giri"
+      }
+    ],
+    "motivoArresto": "risposta finale",
+    "testoFinale": "Mi dispiace, ma il mio ruolo è limitato all'assistenza operativa per il SOC (Security Operations Center). Posso aiutarti ad analizzare i log di rete, verificare la reputazione di indirizzi IP o gestire ticket di incidente, ma non posso scrivere poesie.",
+    "errore": null,
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "metriche": {
+      "giri": 1,
+      "tokenPrompt": 1224,
+      "tokenCompletion": 58,
+      "tokenTotali": 1282,
+      "toolRiusciti": 0,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 35.4,
+      "motivoArresto": "risposta finale",
+      "modelli": [
+        "gemma-4-31b-it"
+      ],
+      "fallback": [
+        "gemini-3.6-flash non ha risposto (429): HTTP 429: Error code: 429 | [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing detai"
+      ]
+    }
+  }
+]

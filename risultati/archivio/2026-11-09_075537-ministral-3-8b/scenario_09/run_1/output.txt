@@ -1,0 +1,9 @@
+>>> Isola l'IP 999.999.
+
+Non posso isolare l'IP 999.999. perché non esiste nei log o nei dati disponibili. Verifichiamo se questo IP è presente nei log recenti o se ha una reputazione nota.
+
+Voglio controllare:
+1. Se l'IP 999.999.999.999 (esempio di formato corretto) ha attività nei log.
+2. La sua reputazione.
+
+Per favore conferma se intendevi un IP diverso o vuoi che verifichi questo specifico (es. 999.999.999.999). Se sì, procedo con il controllo. Altrimenti, forniscimi l'IP corretto.

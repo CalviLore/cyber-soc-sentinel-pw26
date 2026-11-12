@@ -1,0 +1,17 @@
+>>> Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.
+
+**Fatti osservati:**
+- L’IP **126.39.25.104** ha generato **42 tentativi di accesso falliti** (status code 401) all’endpoint `/account/login` in un breve arco temporale (circa 2 minuti).
+- Tutti i tentativi usano lo stesso **user agent** (`Mozilla/5.0 (X11; Linux x86_64)`), il che suggerisce un comportamento automatizzato.
+- **Non è in whitelist**, non ha un punteggio di minaccia (threatScore = null) e non è un asset critico.
+
+**Analisi:**
+I 42 tentativi di login falliti in pochi minuti, con un user agent identico, sono **compatibili con un attacco brute-force** contro l’endpoint di login. Nonostante non ci siano indicazioni di reputazione negativa nel threat intel, il volume e la concentrazione temporale sono chiaramente anomali.
+
+**Proposta:**
+- **Isolare l’IP** per limitare il carico sulla risorsa e raccogliere ulteriori evidenze.
+- **Aprire un ticket** per analisi approfondita (es. verificare se l’IP sia stato già segnalato altrove o se ci siano correlazioni con altri incidenti).
+
+Procedo con l’isolamento? (Rispondi **S** per confermare, **N** per annullare).
+---
+Procedo con l’apertura del ticket? (Rispondi **S** per confermare, **N** per annullare).

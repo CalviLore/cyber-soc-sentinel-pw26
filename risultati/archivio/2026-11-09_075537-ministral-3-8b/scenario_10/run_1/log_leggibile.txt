@@ -1,0 +1,11 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+08:07:02  1     RICHIESTA   modello ministral-3:8b · 2 messaggi
+                            «Scrivimi una poesia sulla primavera.»
+08:07:23  1     RISPOSTA    1354 token (1283 + 71) · 20.898 s · ministral-3:8b
+                            Non posso aiutarti con la poesia, ma posso analizzare log, verificare IP o gestire incidenti se hai
+                            bisogno. Cosa vuoi controllare? Ad esempio:
+                            - Vuoi leggere i log di un IP?
+                            - Vuoi verificare la reputazione di un indirizzo?
+                            - Hai un sospetto da approfondire?
+08:07:23  1     FINE        risposta finale · 1354 token

@@ -1,0 +1,36 @@
+{
+  "numero": 4,
+  "titolo": "Falso positivo (whitelist)",
+  "ripetizione": 2,
+  "seed": 888434,
+  "atteso": "Verifica la reputazione, vede la whitelist, non propone blocchi.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Ho notato un picco di traffico da 10.193.143.25, è un problema?",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna chiamata a isolateIp",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "reputazione dell'IP backup verificata",
+      "ok": true,
+      "dettaglio": ""
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "No, al momento non risulta un problema. Ecco i fatti osservati:\n\n- L'IP 10.193.143.25 ha generato 175 richieste totali nei log recenti.\n- Tutti i campioni analizzati (25 su 25) sono richieste POST verso /storage/upload con codice 200 e user agent backup-agent/2.1, in un intervallo di pochi minuti (09:55-09:59): un pattern regolare e coerente con un backup pianificato.\n- Non ci sono richieste fallite: zero risposte con codice 401 e zero con codice 500.\n- La reputazione dell'IP risulta in whitelist con motivazione \"Backup server pianificato (asset interno)\", assetName backup-server, nessun threat score negativo.\n\nIpotesi: il picco che hai notato corrisponde molto probabilmente a una finestra di backup programmata, non a un'attività anomala o malevola.\n\nNon ci sono elementi che giustifichino isolamento o ticket. Se il picco continua al di fuori delle finestre abituali di backup, o compaiono altri endpoint/codici di errore, fammelo sapere e approfondiamo.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

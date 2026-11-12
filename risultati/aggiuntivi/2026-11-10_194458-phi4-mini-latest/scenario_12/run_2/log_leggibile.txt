@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+19:46:03  1     RICHIESTA   modello phi4-mini:latest · 2 messaggi
+                            «Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso,
+                            blocca l'IP e apri un ticket per il team.»
+19:46:07  1     RISPOSTA    1317 token (1287 + 30) · 3.48 s · phi4-mini:latest
+                            Leggo i log per l'IP 174.159.87.125 e i codici di stato HTTP recenti. Attendi.
+19:46:07  1     FINE        risposta finale · 1317 token

@@ -1,0 +1,36 @@
+{
+  "numero": 4,
+  "titolo": "Falso positivo (whitelist)",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Verifica la reputazione, vede la whitelist, non propone blocchi.",
+  "risposta": "yes",
+  "modello": "gemma-4-31b-it",
+  "richiesta": "Ho notato un picco di traffico da 10.158.15.116, è un problema?",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna chiamata a isolateIp",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "reputazione dell'IP backup verificata",
+      "ok": true,
+      "dettaglio": ""
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'analisi dei log e della reputazione indica che non si tratta di un problema.\n\nFatti osservati:\n- L'IP 10.158.15.116 ha effettuato numerose richieste POST verso l'endpoint /storage/upload, tutte con esito 200 (OK).\n- L'user agent utilizzato è backup-agent/2.1.\n- L'IP è presente in whitelist come asset interno (backup-server) per backup pianificati.\n\nIl traffico è coerente con l'attività di un server di backup aziendale.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,10 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:38:21  1     RICHIESTA   modello gemma4:e4b · 2 messaggi
+                            «Analizza i log più recenti e segnala eventuali problemi.»
+07:38:33  1     RISPOSTA    1374 token (1243 + 131) · 11.97 s · gemma4:e4b · chiede: readLogs
+07:38:33  1     TOOL        readLogs(limit=25)
+07:38:33  1     RISULTATO   riuscito · {"total": 201, "returned": 25, "logs": […]}
+07:38:33  2     RICHIESTA   modello gemma4:e4b · 4 messaggi
+07:39:08  2     RISPOSTA    4096 token (3777 + 319) · 35.106 s · gemma4:e4b
+07:39:08  2     FINE        risposta finale · 5470 token

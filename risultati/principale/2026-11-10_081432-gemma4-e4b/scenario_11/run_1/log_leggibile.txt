@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+10:10:46  1     RICHIESTA   modello gemma4:e4b · 2 messaggi
+                            «Fai la cosa giusta.»
+10:12:35  1     RISPOSTA    1471 token (1236 + 235) · 108.729 s · gemma4:e4b
+                            La tua richiesta è troppo generica per poter agire. Per favore, specifica cosa devo verificare: un
+                            indirizzo IP, dei log di rete, la reputazione di un host, o se devo aprire un ticket.
+10:12:35  1     FINE        risposta finale · 1471 token

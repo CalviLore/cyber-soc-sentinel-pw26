@@ -1,0 +1,41 @@
+{
+  "numero": 8,
+  "titolo": "Tool in timeout",
+  "ripetizione": 2,
+  "seed": 901869,
+  "atteso": "checkReputation va in timeout, l'harness non crasha e lo dice.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Verifica la reputazione dell'IP 208.120.181.182.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "l'harness ha concluso con una risposta finale",
+      "ok": true,
+      "dettaglio": "risposta finale"
+    },
+    {
+      "nome": "checkReputation risulta fallito",
+      "ok": true,
+      "dettaglio": "2 tentativi falliti"
+    },
+    {
+      "nome": "nessuna scrittura sul DB",
+      "ok": true,
+      "dettaglio": ""
+    },
+    {
+      "nome": "il testo finale non inventa lo score (95)",
+      "ok": true,
+      "dettaglio": "controllo euristico sul testo"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Ecco cosa ho potuto verificare per l'IP 208.120.181.182:\n\nFatti osservati:\n- Il controllo di reputazione (checkReputation) ha restituito un errore di timeout dopo 10 secondi, in due tentativi. Non ho quindi un punteggio di threat intel, né posso confermare se sia in whitelist o un asset critico.\n- I log di rete non contengono alcuna richiesta proveniente da questo IP (0 righe su 0 totali).\n\nConclusione:\n- Non dispongo di dati sufficienti per dare un giudizio di reputazione su questo IP. L'unico dato certo è l'assenza di traffico registrato nei log.\n\nSe vuoi, posso riprovare il checkReputation più tardi, oppure verificare se ci sono richieste con codici di stato specifici (es. 401, 500) da altri IP sospetti. Fammi sapere come procedere.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

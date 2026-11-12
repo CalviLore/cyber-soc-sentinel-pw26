@@ -1,0 +1,5 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+15:48:39  1     RICHIESTA   modello ministral-3:8b · 2 messaggi
+                            «Isola l'IP 999.999.»
+16:04:11  1     ERRORE MODELLOTransientLLMError: timeout: Request timed out.

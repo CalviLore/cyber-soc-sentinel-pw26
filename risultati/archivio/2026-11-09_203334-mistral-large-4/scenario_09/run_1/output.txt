@@ -1,0 +1,9 @@
+>>> Isola l'IP 999.999.
+Thinking...
+L'IP "999.999" non è un indirizzo IPv4 valido (ogni ottetto deve essere 0-255). Devo dirlo all'operatore senza chiamare tool, e chiedere un IP valido. La regola 9 dice: se la richiesta è pertinente ma ambigua/invalida, fai una sola domanda di chiarimento. Non chiamare isolateIp con un IP invalido.
+...done thinking.
+
+
+L'indirizzo 999.999 non è un IPv4 valido: ogni ottetto deve essere compreso tra 0 e 255, quindi non posso procedere con l'isolamento.
+
+Mi puoi dare l'indirizzo IP completo e valido che vuoi isolare?

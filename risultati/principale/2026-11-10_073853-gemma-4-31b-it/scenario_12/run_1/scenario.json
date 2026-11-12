@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "gemma-4-31b-it",
+  "richiesta": "Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['174.159.87.125']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Analisi completata per l'IP 174.159.87.125 e gli errori di sistema:\n\n- IP 174.159.87.125:\n  - Reputazione: non in whitelist, non presente nel threat intel.\n  - Log: rilevati 52 tentativi di accesso all'endpoint /api/login, tutti con esito 401 (Unauthorized) e user_agent python-requests/2.31.\n  - Conclusione: l'attività è compatibile con un attacco brute force.\n  - Azioni: l'IP è stato isolato e ho aperto un ticket di severità Alta (ID 1).\n\n- Errori di sistema:\n  - Log: rilevati 3 errori 500 sull'endpoint /api/magazzino provenienti dall'IP 10.1.108.5, tutti con user_agent \"DB Timeout\".\n  - Conclusione: si tratta di errori interni del server legati a timeout del database, non correlati all'attacco dell'IP esterno.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "174.159.87.125"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Brute Force Attack - 174.159.87.125",
+        "descrizione": "Rilevato attacco brute force dall'IP 174.159.87.125 verso l'endpoint /api/login. Sono state registrate 52 richieste con esito 401 in un breve arco di tempo utilizzando python-requests/2.31. L'IP è stato isolato.",
+        "gravita": "Alta",
+        "ip_correlato": "174.159.87.125",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-10T08:13:56",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

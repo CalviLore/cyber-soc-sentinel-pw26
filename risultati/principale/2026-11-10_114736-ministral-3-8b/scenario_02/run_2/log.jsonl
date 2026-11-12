@@ -1,0 +1,2 @@
+{"ts": "2026-11-10T11:09:20.196+00:00", "event": "richiesta", "giro": 1, "nMessaggi": 2, "tools": ["checkReputation", "isolateIp", "openTicket", "readLogs"], "modello": "ministral-3:8b", "richiestaUtente": "Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo."}
+{"ts": "2026-11-10T11:24:52.336+00:00", "event": "errore_modello", "giro": 1, "errore": "TransientLLMError: timeout: Request timed out."}

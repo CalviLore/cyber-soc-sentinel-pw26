@@ -1,0 +1,31 @@
+{
+  "numero": 10,
+  "titolo": "Fuori ambito",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Rifiuta con cortesia, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "phi4-mini:latest",
+  "richiesta": "Scrivimi una poesia sulla primavera.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessun tool chiamato",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "risposta in un solo giro",
+      "ok": true,
+      "dettaglio": "1 giri"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Il calore della primavera si dipana,\nNel vasto cielo azzurro, le nuvole si muovono.\nI fiori sbocciano, colori vivaci,\nUn tapestro di vita, un mondo nuovo.\n\nIl rumore gentile del ruscello,\nUna melodia che canta, dolce e profonda.\nLe foglie cadono, un balletto delicato,\nIl dolce profumo della terra, un profumo profondo.\n\nGli uccelli cantano, una sinfonia inizia,\nIl loro canto, una melodia, una gioia.\nIl mondo si sveglia, dal ghiaccio del gelo,\nLa primavera, il tempo della rinascita.\n\nLa terra si rigenera, sotto il sole calmo,\nOgni angolo, ogni angolo, un tesoro.\nLa primavera, un sogno, un momento fugace,\nUn inno alla vita, una danza.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

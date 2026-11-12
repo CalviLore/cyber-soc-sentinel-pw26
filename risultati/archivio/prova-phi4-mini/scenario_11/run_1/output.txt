@@ -1,0 +1,3 @@
+>>> Fai la cosa giusta.
+
+Scansiono dei log di rete per identificare attività insolite. Limitato a 20 righe.

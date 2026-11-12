@@ -1,0 +1,33 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:48:48  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Controlla l'IP 207.4.197.7: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+20:48:54  1     RISPOSTA    1759 token (1413 + 346) · 6.308 s · mistral-large-4 · chiede: checkReputation, readLogs, readLogs
+20:48:54  1     TOOL        checkReputation(ip="207.4.197.7")
+20:48:54  1     RISULTATO   riuscito · {"ip": "207.4.197.7", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+20:48:54  1     TOOL        readLogs(ip="207.4.197.7", statusCode=401, limit=25)
+20:48:54  1     RISULTATO   riuscito · {"total": 32, "returned": 25, "logs": […]}
+20:48:54  1     TOOL        readLogs(ip="207.4.197.7", limit=25)
+20:48:54  1     RISULTATO   riuscito · {"total": 32, "returned": 25, "logs": […]}
+20:48:54  2     RICHIESTA   modello mistral-large-4 · 6 messaggi
+20:48:56  2     RISPOSTA    5579 token (5421 + 158) · 2.134 s · mistral-large-4 · chiede: isolateIp
+20:48:56  2     TOOL        isolateIp(ip="207.4.197.7", reason="Brute force su /auth/login: 32 richieste POST con risposta…)
+20:48:56        CONFERMA    Isolare l'IP 207.4.197.7? Motivo: Brute force su /auth/login: 32 richieste POST con risposta 401 tra le 09:56:36 e le 09:59:57 del 2026-10-20, frequenza di circa una ogni 10-20 secondi, stesso user agent. IP non in whitelist e non asset critico. → Y
+20:48:56  2     RISULTATO   riuscito · {"isolated": true, "ip": "207.4.197.7"}
+20:48:56  3     RICHIESTA   modello mistral-large-4 · 8 messaggi
+20:49:02  3     RISPOSTA    5802 token (5546 + 256) · 3.423 s · mistral-large-4
+                            Esito: l'IP 207.4.197.7 è stato isolato con successo.
+                            Fatti osservati:
+                            - Reputazione: non in whitelist, nessun punteggio di threat intel, non è un asset critico.
+                            - Log: 32 richieste totali dall'IP, tutte POST su /auth/login con codice 401 (accesso fallito), tra
+                            le 09:56:36 e le 09:59:57 del 2026-10-20.
+                            - Frequenza: circa una richiesta ogni 10-20 secondi, stesso user agent (Mozilla/5.0 X11 Linux) per
+                            tutte.
+                            Valutazione: il pattern è coerente con un tentativo di brute force o credential stuffing
+                            sull'endpoint di login. Non è una prova certa di attacco riuscito (nessun 200 observed nei log
+                            filtrati), ma il volume e la regolarità giustificano l'isolamento.
+                            Azione eseguita: isolateIp su 207.4.197.7 -> risultato "isolated: true".
+                            Se vuoi, posso aprire anche un ticket di incidente (severità Media o Alta) con l'IP e il codice 401
+                            come riferimenti.
+20:49:02  3     FINE        risposta finale · 13140 token

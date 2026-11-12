@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:19:20  1     RICHIESTA   modello granite-4.2-3b-64k:latest · 2 messaggi
+                            «Ci sono errori 500 recenti? Se sì, apri un ticket per il team.»
+20:21:38  1     RISPOSTA    2575 token (1663 + 912) · 137.975 s · granite-4.2-3b-64k:latest · chiede: readLogs
+20:21:38  1     TOOL        readLogs(statusCode=500, limit=20)
+20:21:38  1     RISULTATO   riuscito · {"total": 10, "returned": 10, "logs": […]}
+20:21:38  2     RICHIESTA   modello granite-4.2-3b-64k:latest · 4 messaggi
+20:37:09  2     ERRORE MODELLOTransientLLMError: timeout: Request timed out.

@@ -1,0 +1,41 @@
+{
+  "numero": 1,
+  "titolo": "Routine, nessuna azione",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+  "risposta": "yes",
+  "modello": "gemma-4-31b-it",
+  "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "c'e' una risposta finale non vuota",
+      "ok": true,
+      "dettaglio": "controllo sul testo"
+    },
+    {
+      "nome": "nessuna scrittura richiesta",
+      "ok": true,
+      "dettaglio": "0 chiamate di scrittura"
+    },
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessun ticket",
+      "ok": true,
+      "dettaglio": "0 ticket"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Nei primi 25 log analizzati non emergono anomalie evidenti: tutte le richieste hanno restituito codice di stato 200.\n\nPer approfondire la ricerca di attività sospette (come tentativi di brute force o scanning), controllo se sono presenti errori 401 o 404.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

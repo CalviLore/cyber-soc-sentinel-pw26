@@ -1,0 +1,12 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:31:11  1     RICHIESTA   modello gemma4:e4b · 2 messaggi
+                            «Controlla se ci sono anomalie nel traffico recente.»
+07:31:58  1     RISPOSTA    1361 token (1243 + 118) · 46.877 s · gemma4:e4b · chiede: readLogs
+                            Per controllare le anomalie nel traffico recente, ho bisogno di analizzare i log di rete. Sto
+                            recuperando i 25 log più recenti per un'analisi iniziale.
+07:31:58  1     TOOL        readLogs(limit=25)
+07:31:58  1     RISULTATO   riuscito · {"total": 200, "returned": 25, "logs": […]}
+07:31:58  2     RICHIESTA   modello gemma4:e4b · 4 messaggi
+07:32:26  2     RISPOSTA    4094 token (3799 + 295) · 27.886 s · gemma4:e4b
+07:32:26  2     FINE        risposta finale · 5455 token

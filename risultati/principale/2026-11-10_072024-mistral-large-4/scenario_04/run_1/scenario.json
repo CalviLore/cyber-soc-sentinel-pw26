@@ -1,0 +1,36 @@
+{
+  "numero": 4,
+  "titolo": "Falso positivo (whitelist)",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Verifica la reputazione, vede la whitelist, non propone blocchi.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Ho notato un picco di traffico da 10.158.15.116, è un problema?",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna chiamata a isolateIp",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "reputazione dell'IP backup verificata",
+      "ok": true,
+      "dettaglio": ""
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "No, al momento non risulta un problema di sicurezza. Ecco i fatti osservati:\n\n- Volume: 158 richieste totali da 10.158.15.116.\n- Tipo di traffico: nelle 25 righe più recenti (09:55-09:59) tutte sono POST su /storage/upload con codice 200 e user_agent backup-agent/2.1. La frequenza è alta (più richieste al minuto, es. due nello stesso secondo alle 09:56:11), da qui il picco.\n- Errori: nessun 401 e nessun 500 registrato per questo IP.\n- Reputazione: l'IP è in whitelist come \"Backup server pianificato (asset interno)\", assetName backup-server, non asset critico, nessun punteggio di threat intel negativo.\n\nConclusione: il picco è coerente con l'esecuzione di un backup pianificato interno, non con un'attività sospetta. Non ci sono elementi che giustifichino isolamento o ticket.\n\nSe vuoi, posso controllare altri codici di errore (es. 403, 404) o un altro intervallo temporale.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

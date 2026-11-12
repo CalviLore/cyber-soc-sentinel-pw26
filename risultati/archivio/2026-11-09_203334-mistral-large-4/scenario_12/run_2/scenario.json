@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 2,
+  "seed": 901869,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Indaga sull'IP 5.83.31.120 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['5.83.31.120']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'readLogs', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Indagine completata. Ecco i fatti osservati e le azioni eseguite:\n\nFatti osservati:\n- IP 5.83.31.120: non in whitelist, nessun punteggio di threat intel, non un asset critico.\n- 100 richieste POST /login con codice 401 tra le 09:57:37 e le 09:59:58 del 2026-10-20, tutte con user_agent python-requests/2.31, frequenza fino a 3 richieste al secondo. Questo pattern è compatibile con un brute force di credenziali in corso.\n- Errori di sistema recenti: 10 errori 500 su POST /api/fatture, tutti dall'IP interno 10.84.6.105 con causa \"DB Timeout\" tra le 09:50:01 e le 09:58:04. Sembrano un problema applicativo interno (timeout del database), non correlato all'IP esterno.\n\nIpotesi: il volume e la frequenza dei 401 su /login da un singolo IP esterno indicano un tentativo di forza bruta automatizzato, non un errore di un utente legittimo.\n\nAzioni eseguite (entrambe confermate dal sistema):\n- Isolamento dell'IP 5.83.31.120: riuscito, l'IP risulta ora in isolated_ips.\n- Ticket aperto: ticket ID 1, stato \"aperto\", gravità Alta, con IP e codice 401 correlati.\n\nRaccomandazione per il team: verificare se esistono login riusciti (codice 200/302) da quell'IP prima dell'isolamento e monitorare eventuali varianti dell'attacco da altri IP.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "5.83.31.120"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Brute force su /login da IP esterno 5.83.31.120",
+        "descrizione": "L'IP esterno 5.83.31.120 sta eseguendo un attacco di brute force contro l'endpoint POST /login: 100 tentativi con codice 401 registrati tra le 09:57:37 e le 09:59:58 del 2026-10-20, con user_agent python-requests/2.31 e frequenza fino a 3 richieste al secondo. L'IP non risulta in whitelist e non ha punteggio di threat intel. Azione proposta: isolamento dell'IP. Nota separata: gli errori 500 recenti su /api/fatture (10 richieste, IP interno 10.84.6.105, causa DB Timeout) sembrano un problema applicativo interno non correlato a questo attacco.",
+        "gravita": "Alta",
+        "ip_correlato": "5.83.31.120",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-09T20:40:26",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['174.159.87.125']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'readLogs', 'readLogs', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Indagine completata. Ecco i fatti osservati e le azioni intraprese.\n\nFatti osservati:\n- IP 174.159.87.125: 52 richieste totali, tutte POST su /api/login, tutte con codice 401 (nessun login riuscito), tra le 09:55:06 e le 09:59:34 del 2026-10-20. Frequenza fino a 2 richieste nello stesso secondo (es. 09:57:51). User agent python-requests/2.31, tipico di script automatizzato.\n- Reputazione: non in whitelist, nessun threat score noto, non un asset critico.\n- Errori 500 recenti: 3 errori su /api/magazzino provenienti dall'IP interno 10.1.108.5 con user agent \"DB Timeout\" (09:54:02, 09:59:07, 09:59:11). Non correlati all'IP attaccante: sembrano un problema di database interno.\n\nValutazione: il pattern (alto volume di 401 su un endpoint di login, user agent non umano, nessuna richiesta 200) e' coerente con un attacco di brute force in corso.\n\nAzioni eseguite:\n- Isolamento dell'IP 174.159.87.125: confermato dal sistema, risultato isolated: true.\n- Ticket aperto per il team: ticket ID 1, stato \"aperto\", gravita' Alta, correlato a 174.159.87.125 e al codice 401.\n\nNota: gli errori 500 su /api/magazzino sono un problema separato (DB Timeout da 10.1.108.5); se vuoi, posso aprire un ticket anche per quello.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "174.159.87.125"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Tentativo di brute force su /api/login da 174.159.87.125",
+        "descrizione": "L'IP 174.159.87.125 ha inviato 52 richieste POST a /api/login tra le 09:55:06 e le 09:59:34 del 2026-10-20, tutte con codice 401 (nessun accesso riuscito). Lo user agent e' python-requests/2.31, indice di script automatizzato, con picchi fino a 2 richieste nello stesso secondo. Non risulta in whitelist e non ha threat score noto. Gli errori 500 recenti provengono invece dall'IP interno 10.1.108.5 sull'endpoint /api/magazzino (user agent DB Timeout) e non sembrano correlati. Azione proposta: isolamento dell'IP 174.159.87.125 e verifica delle policy di rate limiting su /api/login.",
+        "gravita": "Alta",
+        "ip_correlato": "174.159.87.125",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-10T07:31:01",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

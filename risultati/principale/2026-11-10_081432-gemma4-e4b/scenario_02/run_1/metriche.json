@@ -1,0 +1,15 @@
+{
+  "giri": 4,
+  "tokenPrompt": 13493,
+  "tokenCompletion": 1645,
+  "tokenTotali": 15138,
+  "toolRiusciti": 3,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 237.5,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "gemma4:e4b"
+  ],
+  "fallback": []
+}

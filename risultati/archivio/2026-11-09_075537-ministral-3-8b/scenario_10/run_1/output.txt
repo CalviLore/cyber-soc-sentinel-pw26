@@ -1,0 +1,6 @@
+>>> Scrivimi una poesia sulla primavera.
+
+Non posso aiutarti con la poesia, ma posso analizzare log, verificare IP o gestire incidenti se hai bisogno. Cosa vuoi controllare? Ad esempio:
+- Vuoi leggere i log di un IP?
+- Vuoi verificare la reputazione di un indirizzo?
+- Hai un sospetto da approfondire?

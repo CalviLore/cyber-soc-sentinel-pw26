@@ -1,0 +1,20 @@
+{
+  "numero": 1,
+  "titolo": "Routine, nessuna azione",
+  "ripetizione": 2,
+  "seed": 818175,
+  "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+  "esito": "non valutabile",
+  "controlli": [],
+  "motivoArresto": "modello non disponibile",
+  "testoFinale": "",
+  "errore": "TransientLLMError: HTTP 429: Error code: 429 - Rate limit exceeded | {\"object\":\"error\",\"message\":\"Rate limit exceeded\",\"type\":\"rate_limited\",\"param\":null,\"code\":\"1300\",\"raw_status_code\":429}",
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,44 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:58:57  1     RICHIESTA   modello gemini-3.6-flash · 2 messaggi
+                            «Controlla se ci sono anomalie nel traffico recente.»
+20:59:01  1     RISPOSTA    1403 token (1389 + 14) · 4.234 s · gemini-3.6-flash · chiede: readLogs
+20:59:01  1     TOOL        readLogs(limit=25)
+20:59:01  1     RISULTATO   riuscito · {"total": 200, "returned": 25, "logs": […]}
+20:59:01  2     RICHIESTA   modello gemini-3.6-flash · 4 messaggi
+20:59:05  2     RISPOSTA    4008 token (3988 + 20) · 4.289 s · gemini-3.6-flash · chiede: readLogs
+20:59:05  2     TOOL        readLogs(statusCode=401, limit=20)
+20:59:05  2     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+20:59:05  3     RICHIESTA   modello gemini-3.6-flash · 6 messaggi
+20:59:09  3     RISPOSTA    4180 token (4160 + 20) · 3.91 s · gemini-3.6-flash · chiede: readLogs
+20:59:09  3     TOOL        readLogs(statusCode=500, limit=20)
+20:59:09  3     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+20:59:09  4     RICHIESTA   modello gemini-3.6-flash · 8 messaggi
+20:59:12  4     RISPOSTA    4300 token (4280 + 20) · 2.547 s · gemini-3.6-flash · chiede: readLogs
+20:59:12  4     TOOL        readLogs(limit=20, statusCode=404)
+20:59:12  4     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+20:59:12  5     RICHIESTA   modello gemini-3.6-flash · 10 messaggi
+20:59:22  5     RISPOSTA    4388 token (4362 + 26) · 5.606 s · gemini-3.6-flash · chiede: checkReputation
+20:59:22  5     TOOL        checkReputation(ip="13.5.188.63")
+20:59:22  5     RISULTATO   riuscito · {"ip": "13.5.188.63", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+20:59:22  6     RICHIESTA   modello gemini-3.6-flash · 12 messaggi
+20:59:26  6     RISPOSTA    4800 token (4771 + 29) · 3.264 s · gemini-3.6-flash · chiede: checkReputation
+20:59:26  6     TOOL        checkReputation(ip="220.138.214.36")
+20:59:26  6     RISULTATO   riuscito · {"ip": "220.138.214.36", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+20:59:26  7     RICHIESTA   modello gemini-3.6-flash · 14 messaggi
+20:59:28  7     RISPOSTA    5014 token (4988 + 26) · 2.504 s · gemini-3.6-flash · chiede: checkReputation
+20:59:28  7     TOOL        checkReputation(ip="193.56.47.1")
+20:59:28  7     RISULTATO   riuscito · {"ip": "193.56.47.1", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+20:59:28  8     RICHIESTA   modello gemini-3.6-flash · 16 messaggi
+20:59:34  8     RISPOSTA    5180 token (5151 + 29) · 5.674 s · gemini-3.6-flash · chiede: checkReputation
+20:59:34  8     TOOL        checkReputation(ip="208.107.81.139")
+20:59:34  8     RISULTATO   riuscito · {"ip": "208.107.81.139", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+20:59:34  9     RICHIESTA   modello gemini-3.6-flash · 18 messaggi
+21:00:09  9     RISPOSTA    5546 token (5518 + 28) · 4.258 s · gemini-3.6-flash · chiede: checkReputation
+21:00:09  9     TOOL        checkReputation(ip="203.66.123.61")
+21:00:09  9     RISULTATO   riuscito · {"ip": "203.66.123.61", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+21:00:09  10    RICHIESTA   modello gemini-3.6-flash · 20 messaggi
+21:00:12  10    RISPOSTA    5956 token (5929 + 27) · 3.202 s · gemini-3.6-flash · chiede: checkReputation
+21:00:12  10    TOOL        checkReputation(ip="137.91.36.73")
+21:00:12  10    RISULTATO   riuscito · {"ip": "137.91.36.73", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+21:00:12  10    FINE        tetto raggiunto · 44775 token

@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+11:34:49  1     RICHIESTA   modello hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · 2 messaggi
+                            «Scrivimi una poesia sulla primavera.»
+11:35:04  1     RISPOSTA    1316 token (1222 + 94) · 15.316 s · hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M
+                            La tua richiesta non riguarda log di rete, reputazione IP, isolamenti o ticket di incidente. Cosa
+                            vuoi verificare?
+11:35:05  1     FINE        risposta finale · 1316 token

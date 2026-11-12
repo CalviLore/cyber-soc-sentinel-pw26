@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": true,
+      "dettaglio": "status_code_correlato = 500"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Sì, ci sono errori 500 recenti. Ecco i fatti osservati:\n\n- 5 richieste con codice 500, tutte oggi (2026-10-20) tra le 09:40:50 e le 09:53:07\n- Tutte dallo stesso IP sorgente: 10.89.135.76\n- Tutte su GET /api/fatture\n- Il campo user_agent riporta \"DB Timeout\" su tutte e 5 le righe\n\nInterpretazione: il pattern (stesso IP, stesso endpoint, messaggio \"DB Timeout\") punta a un problema applicativo/database, non a un attacco o a un problema di rete. Non ci sono elementi che suggeriscano attività malevola.\n\nHo aperto il ticket come richiesto: ticket ID 1, stato \"aperto\", gravità Media, con IP 10.89.135.76 e codice 500 collegati.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errori 500 ricorrenti su /api/fatture (DB Timeout)",
+        "descrizione": "Osservati 5 errori HTTP 500 recenti (tra le 09:40:50 e le 09:53:07 del 2026-10-20), tutti provenienti dall'IP 10.89.135.76 sull'endpoint GET /api/fatture. Il campo user_agent riporta \"DB Timeout\" su tutte le righe, il che suggerisce un problema lato database/applicativo piuttosto che un problema di rete o un abuso. Nessun altro IP risulta coinvolto negli errori 500 recenti.",
+        "gravita": "Media",
+        "ip_correlato": "10.89.135.76",
+        "status_code_correlato": 500,
+        "timestamp": "2026-11-09T07:20:12",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

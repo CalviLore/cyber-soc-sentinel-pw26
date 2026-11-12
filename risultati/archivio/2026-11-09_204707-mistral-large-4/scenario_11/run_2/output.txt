@@ -1,0 +1,9 @@
+>>> Fai la cosa giusta.
+Thinking...
+L'operatore ha detto "Fai la cosa giusta." Questa è una richiesta ambigua e non riguarda specificamente log, IP, reputazione, isolamenti o ticket in modo chiaro. Secondo le regole, se la richiesta è pertinente ma ambigua, faccio una sola domanda di chiarimento. Se non è pertinente, dico in una o due frasi senza chiamare tool.
+
+Qui la richiesta è ambigua: non so quale IP, quale log, quale azione. Devo fare una sola domanda di chiarimento.
+...done thinking.
+
+
+Non ho abbastanza elementi per capire cosa vuoi verificare: mi serve un indirizzo IP, un evento nei log o un altro dettaglio su cui indagare. Cosa devo controllare?

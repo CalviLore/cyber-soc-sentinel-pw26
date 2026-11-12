@@ -1,0 +1,31 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 82935,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Controlla l'IP 151.146.230.206: risulta responsabile di molti accessi falliti?",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": false,
+      "dettaglio": "[]"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "**Sì, confermo: l'IP 151.146.230.206 è responsabile di un numero elevato di accessi falliti.**\n\nFatti osservati dai log:\n\n- **Totale richieste dell'IP: 41**, tutte con codice **HTTP 401** (sia con filtro 401 che senza filtro il totale resta 41 → il 100% delle sue richieste è fallito).\n- Tutte le richieste sono **`POST /account/login`** — pattern compatibile con un tentativo di brute force / credential stuffing sull'endpoint di login.\n- **Frequenza elevata**: dalle 09:56:32 alle 09:59:48 (meno di 3 minuti e mezzo) → circa 41 tentativi, più di 10 al minuto.\n- **User agent** uniforme: `Mozilla/5.0 (X11; Linux x86_64)`.\n\nReputazione (da `checkReputation`):\n- Non in whitelist, **non presente nel threat intel** (threatScore nullo), non è un asset critico.\n\n**Valutazione (ipotesi basata sui fatti sopra):** il comportamento osservato (solo 401 su `/account/login`, alta frequenza, singolo IP) è coerente con un attacco di forza bruta in corso. Non essendo in whitelist né asset critico, l'IP è candidato all'isolamento.\n\nVuoi che proceda con l'**isolamento dell'IP** e/o l'**apertura di un ticket di incidente** (es. gravità Alta, correlato a 401)? Entrambe le azioni richiedono la tua conferma.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

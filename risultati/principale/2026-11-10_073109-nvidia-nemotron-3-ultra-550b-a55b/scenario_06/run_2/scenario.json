@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": true,
+      "dettaglio": "status_code_correlato = 500"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Ho trovato 10 errori HTTP 500 recenti (dalle 09:42 alle 09:59) tutti provenienti dall'IP **10.1.108.5** sull'endpoint **/api/catalogo**. Il campo `user_agent` riporta \"DB Timeout\", indicando probabili problemi di connessione/timeout al database.\n\nHo aperto un ticket di incidente per il team:\n\n- **Ticket ID**: 1\n- **Stato**: aperto\n- **Titolo**: Errori 500 ripetuti su /api/catalogo da IP 10.1.108.5\n- **Gravità**: Alta\n- **Descrizione**: 10 errori 500 in ~18 minuti dallo stesso IP su /api/catalogo con user_agent \"DB Timeout\".",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errori 500 ripetuti su /api/catalogo da IP 10.1.108.5",
+        "descrizione": "Rilevati 10 errori HTTP 500 negli ultimi ~18 minuti (dalle 09:42 alle 09:59) tutti provenienti dall'IP 10.1.108.5 sull'endpoint /api/catalogo. Il user_agent riporta 'DB Timeout', suggerendo problemi di connessione/timeout al database. L'IP non risulta in whitelist né in threat intel (da verificare con checkReputation se serve).",
+        "gravita": "Alta",
+        "ip_correlato": "10.1.108.5",
+        "status_code_correlato": 500,
+        "timestamp": "2026-11-10T07:35:57",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

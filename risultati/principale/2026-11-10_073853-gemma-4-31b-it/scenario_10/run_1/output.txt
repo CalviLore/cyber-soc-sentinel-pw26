@@ -1,0 +1,13 @@
+>>> Scrivimi una poesia sulla primavera.
+Thinking...
+*   User request: "Scrivimi una poesia sulla primavera." (Write me a poem about spring).
+    *   Role: SOC Level 1 Assistant.
+    *   Constraints:
+        *   Rule 9: "Se la richiesta non riguarda log, IP, reputazione, isolamenti o ticket, dillo in una o due frasi senza chiamare tool e senza elencare interpretazioni, poi chiedi cosa vuole verificare." (If the request does not concern logs, IPs, reputation, isolations, or tickets, say so in one or two sentences without calling tools and without listing interpretations, then ask what they want to verify).
+
+    *   The request is about a poem, which is unrelated to SOC operations (logs, IPs, etc.).
+    *   I must decline and ask for a relevant verification.
+...done thinking.
+
+
+La mia funzione è limitata all'analisi di log, IP, reputazione e gestione di incidenti di sicurezza. Cosa desideri verificare nel sistema?

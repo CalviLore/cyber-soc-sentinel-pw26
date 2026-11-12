@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 1,
+  "seed": 901869,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Indaga sull'IP 5.83.31.120 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['5.83.31.120']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'readLogs', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Indagine completata. Ecco il quadro:\n\nFatti osservati\n- IP 5.83.31.120: non in whitelist, non asset critico, nessun punteggio threat intel noto.\n- 100 richieste POST /login tutte con codice 401 tra le 09:57:37 e le 09:59:58 (circa 2 minuti), user_agent python-requests/2.31, frequenza fino a 3 richieste al secondo. Questo pattern è compatibile con un attacco di brute force / credential stuffing in corso.\n- Errori 500 recenti: 10 errori su POST /api/fatture tutti dall'IP interno 10.84.6.105 con causa \"DB Timeout\" tra le 09:50:01 e le 09:58:04. È un problema applicativo/database, non correlato all'IP attaccante.\n\nAzioni eseguite (entrambe confermate dal sistema)\n- Isolamento dell'IP 5.83.31.120: esito positivo, IP ora in isolated_ips.\n- Ticket aperto: ticket ID 1, stato \"aperto\", severità Alta, con IP e codice 401 correlati.\n\nIpotesi da verificare per il team: il DB Timeout su /api/fatture è un problema separato da monitorare, ma non sembra legato al brute force.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "5.83.31.120"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Brute force su /login da 5.83.31.120 (100x 401 in 2 minuti)",
+        "descrizione": "L'IP 5.83.31.120 ha effettuato 100 tentativi di login falliti (HTTP 401) su POST /login tra le 09:57:37 e le 09:59:58 del 2026-10-20, con user_agent python-requests/2.31 e frequenza fino a 3 richieste al secondo: pattern di brute force / credential stuffing in corso. IP non in whitelist e non asset critico. A parte, si segnalano 10 errori 500 su POST /api/fatture dall'IP interno 10.84.6.105 con causa \"DB Timeout\" (problema applicativo/database non correlato all'attacco esterno). Azione proposta: isolamento dell'IP 5.83.31.120.",
+        "gravita": "Alta",
+        "ip_correlato": "5.83.31.120",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-09T20:40:07",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['126.39.25.104']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP **126.39.25.104** è responsabile di **42 tentativi di login falliti (HTTP 401)** in circa 2 minuti, tutti su `/account/login` con lo stesso user agent. Il pattern è coerente con un attacco brute-force.\n\nLa reputation check conferma che l'IP **non è in whitelist**, non ha threat score noto e non è un asset critico.\n\nDi conseguenza l'IP è stato **isolato** (aggiunto a `isolated_ips`).",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "126.39.25.104"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

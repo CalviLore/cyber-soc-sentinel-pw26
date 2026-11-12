@@ -1,0 +1,6 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:18:48  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+07:18:54  1     ERRORE MODELLOTransientLLMError: HTTP 429: Error code: 429 - Rate limit exceeded | {"object":"error","message":"Rate limit exceeded","type":"rate_limited","param":null,"code":"1300","raw_status_code":429}

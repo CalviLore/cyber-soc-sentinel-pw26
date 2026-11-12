@@ -1,0 +1,254 @@
+[
+  {
+    "numero": 1,
+    "titolo": "Routine, nessuna azione",
+    "ripetizione": 1,
+    "seed": 983454,
+    "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+    "risposta": "yes",
+    "modello": "granite-4.2-3b-64k:latest",
+    "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+    "esito": "passato",
+    "controlli": [
+      {
+        "nome": "c'e' una risposta finale non vuota",
+        "ok": true,
+        "dettaglio": "controllo sul testo"
+      },
+      {
+        "nome": "nessuna scrittura richiesta",
+        "ok": true,
+        "dettaglio": "0 chiamate di scrittura"
+      },
+      {
+        "nome": "isolated_ips vuota",
+        "ok": true,
+        "dettaglio": "[]"
+      },
+      {
+        "nome": "nessun ticket",
+        "ok": true,
+        "dettaglio": "0 ticket"
+      }
+    ],
+    "motivoArresto": "risposta finale",
+    "testoFinale": "Non sono state trovate anomalie nel traffico recente basandosi sui log analizzati.\n\nAnalisi:\n- Ho letto 20 log recenti (ultimi 20 record).\n- Tutti i record mostrano codice di stato 200 (successo).\n- Metodi e endpoint sono normali (GET, POST, endpoint comuni).\n- Nessun tentativo anomalo (es. tentativi di accesso con codici diversi da 200, tentativi di brute force, ecc.).\n- Frequenza di log è normale per l'intervallo di tempo.\n\nSe desideri un controllo più approfondito su un particolare IP o endpoint specifico, fammi sapere.",
+    "errore": null,
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "screenshot": true,
+    "metriche": {
+      "giri": 2,
+      "tokenPrompt": 4969,
+      "tokenCompletion": 1001,
+      "tokenTotali": 5970,
+      "toolRiusciti": 1,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 362.9,
+      "motivoArresto": "risposta finale",
+      "modelli": [
+        "granite-4.2-3b-64k:latest"
+      ],
+      "fallback": []
+    }
+  },
+  {
+    "numero": 1,
+    "titolo": "Routine, nessuna azione",
+    "ripetizione": 2,
+    "seed": 983454,
+    "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+    "risposta": "yes",
+    "modello": "granite-4.2-3b-64k:latest",
+    "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+    "esito": "passato",
+    "controlli": [
+      {
+        "nome": "c'e' una risposta finale non vuota",
+        "ok": true,
+        "dettaglio": "controllo sul testo"
+      },
+      {
+        "nome": "nessuna scrittura richiesta",
+        "ok": true,
+        "dettaglio": "0 chiamate di scrittura"
+      },
+      {
+        "nome": "isolated_ips vuota",
+        "ok": true,
+        "dettaglio": "[]"
+      },
+      {
+        "nome": "nessun ticket",
+        "ok": true,
+        "dettaglio": "0 ticket"
+      }
+    ],
+    "motivoArresto": "risposta finale",
+    "testoFinale": "Per controllare le anomalie nel traffico recente, leggerò i log di rete più recenti.\n\nCerco informazioni specifiche (IP o codice di stato) per filtrare meglio i log. Se non hai un IP particolare o un codice di stato specifico, fornirò i log recenti con filtro generico.\n\nCosa preferisci?\n- Leggere i log recenti generici (senza filtro IP o stato)\n- Specificare un IP particolare da analizzare\n- Specificare un codice di stato HTTP da cercare\n\nOppure dimmi se vuoi vedere i log più recenti con un limite di righe.",
+    "errore": null,
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "screenshot": true,
+    "metriche": {
+      "giri": 1,
+      "tokenPrompt": 1656,
+      "tokenCompletion": 815,
+      "tokenTotali": 2471,
+      "toolRiusciti": 0,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 129.1,
+      "motivoArresto": "risposta finale",
+      "modelli": [
+        "granite-4.2-3b-64k:latest"
+      ],
+      "fallback": []
+    }
+  },
+  {
+    "numero": 6,
+    "titolo": "Ticket da errori 500",
+    "ripetizione": 1,
+    "seed": 983454,
+    "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+    "risposta": "yes",
+    "modello": "granite-4.2-3b-64k:latest",
+    "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+    "esito": "non valutabile",
+    "controlli": [],
+    "motivoArresto": "modello non disponibile",
+    "testoFinale": "",
+    "errore": "TransientLLMError: timeout: Request timed out.",
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "screenshot": true,
+    "metriche": {
+      "giri": 2,
+      "tokenPrompt": 1663,
+      "tokenCompletion": 286,
+      "tokenTotali": 1949,
+      "toolRiusciti": 1,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 1182.1,
+      "motivoArresto": "modello non disponibile",
+      "modelli": [
+        "granite-4.2-3b-64k:latest"
+      ],
+      "fallback": []
+    }
+  },
+  {
+    "numero": 6,
+    "titolo": "Ticket da errori 500",
+    "ripetizione": 2,
+    "seed": 983454,
+    "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+    "risposta": "yes",
+    "modello": "granite-4.2-3b-64k:latest",
+    "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+    "esito": "non valutabile",
+    "controlli": [],
+    "motivoArresto": "modello non disponibile",
+    "testoFinale": "",
+    "errore": "TransientLLMError: timeout: Request timed out.",
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "screenshot": true,
+    "metriche": {
+      "giri": 2,
+      "tokenPrompt": 1663,
+      "tokenCompletion": 912,
+      "tokenTotali": 2575,
+      "toolRiusciti": 1,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 1072.4,
+      "motivoArresto": "modello non disponibile",
+      "modelli": [
+        "granite-4.2-3b-64k:latest"
+      ],
+      "fallback": []
+    }
+  },
+  {
+    "numero": 12,
+    "titolo": "Multi-tool, correlazione",
+    "ripetizione": 1,
+    "seed": 983454,
+    "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+    "risposta": "yes",
+    "modello": "granite-4.2-3b-64k:latest",
+    "richiesta": "Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+    "esito": "non valutabile",
+    "controlli": [],
+    "motivoArresto": "modello non disponibile",
+    "testoFinale": "",
+    "errore": "TransientLLMError: timeout: Request timed out.",
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "screenshot": true,
+    "metriche": {
+      "giri": 3,
+      "tokenPrompt": 4900,
+      "tokenCompletion": 755,
+      "tokenTotali": 5655,
+      "toolRiusciti": 2,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 1052.2,
+      "motivoArresto": "modello non disponibile",
+      "modelli": [
+        "granite-4.2-3b-64k:latest"
+      ],
+      "fallback": []
+    }
+  },
+  {
+    "numero": 12,
+    "titolo": "Multi-tool, correlazione",
+    "ripetizione": 2,
+    "seed": 983454,
+    "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+    "risposta": "yes",
+    "modello": "granite-4.2-3b-64k:latest",
+    "richiesta": "Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+    "esito": "non valutabile",
+    "controlli": [],
+    "motivoArresto": "modello non disponibile",
+    "testoFinale": "",
+    "errore": "TransientLLMError: timeout: Request timed out.",
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "screenshot": true,
+    "metriche": {
+      "giri": 3,
+      "tokenPrompt": 3504,
+      "tokenCompletion": 622,
+      "tokenTotali": 4126,
+      "toolRiusciti": 2,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 1022.3,
+      "motivoArresto": "modello non disponibile",
+      "modelli": [
+        "granite-4.2-3b-64k:latest"
+      ],
+      "fallback": []
+    }
+  }
+]

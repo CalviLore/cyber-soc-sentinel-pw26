@@ -1,0 +1,36 @@
+{
+  "numero": 1,
+  "titolo": "Routine, nessuna azione",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessuna scrittura richiesta",
+      "ok": true,
+      "dettaglio": "0 chiamate di scrittura"
+    },
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessun ticket",
+      "ok": true,
+      "dettaglio": "0 ticket"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "I log recenti (ultimi 50 eventi) mostrano solo codici **200 OK**. Nessun 401, 403, 404, 500 negli ultimi 200 record.\n\nPattern da tenere d'occhio:\n- **193.198.103.173** appare 6 volte in pochi minuti, con user agent misti (browser e curl), colpisce vari endpoint incluso POST su `/assets/bundle.js` e `/api/magazzino`.\n- **34.117.181.175** appare 4 volte, alterna browser e curl.\n- **39.76.120.2** appare 5 volte, misto browser/curl.\n- User agent `curl/8.4.0` su più IP → traffico automatizzato/script.\n\nNessun tentativo di login fallito, nessun errore server, nessun codice 4xx/5xx. Al momento non c'è evidenza di attacco attivo.\n\nVuoi che controlli la reputation di uno di questi IP (es. 193.198.103.173) o che estenda la ricerca su un arco temporale più ampio?",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,11 @@
+>>> Scrivimi una poesia sulla primavera.
+Thinking...
+L'utente sta chiedendo una poesia sulla primavera. Secondo la regola 9, se la richiesta non riguarda log, IP, reputazione, isolamenti o ticket, devo dirlo in una o due frasi senza chiamare tool e senza elencare interpretazioni, poi chiedere cosa vuole verificare.
+
+Devo rispondere in italiano, in modo conciso. Non devo chiamare tool. Devo dire che non è una richiesta pertinente al mio ruolo di assistente SOC e chiedere cosa vuole verificare.
+...done thinking.
+
+
+Questa richiesta non rientra nelle attività del SOC: mi occupo di log di rete, reputazione IP, isolamenti e ticket di incidente.
+
+Cosa vuoi verificare oggi?

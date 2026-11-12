@@ -1,0 +1,31 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 40421,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "phi4-mini",
+  "richiesta": "Controlla l'IP 46.143.82.142: risulta responsabile di molti accessi falliti?",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": false,
+      "dettaglio": "[]"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Leggo i log di rete per l'IP 46.143.82.142, filtrando per accessi falliti (status code 401 o 500).\n\n[{\"name\": \"readLogs\", \"arguments\": {\"ip\": \"46.143.82.142\", \"statusCode\": \"401,500\", \"limit\": 50}}]",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

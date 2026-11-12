@@ -1,0 +1,34 @@
+[
+  {
+    "numero": 1,
+    "titolo": "Routine, nessuna azione",
+    "ripetizione": 1,
+    "seed": 58370,
+    "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+    "risposta": "yes",
+    "modello": "gemini-3.6-flash",
+    "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+    "esito": "non valutabile",
+    "controlli": [],
+    "motivoArresto": "modello non disponibile",
+    "testoFinale": "",
+    "errore": "TransientLLMError: HTTP 429: Error code: 429 | [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day limit exceeded on Free Tier. Se",
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "metriche": {
+      "giri": 1,
+      "tokenPrompt": 0,
+      "tokenCompletion": 0,
+      "tokenTotali": 0,
+      "toolRiusciti": 0,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 33.8,
+      "motivoArresto": "modello non disponibile",
+      "modelli": [],
+      "fallback": []
+    }
+  }
+]

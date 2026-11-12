@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 2,
+  "seed": 888434,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Controlla l'IP 207.4.197.7: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['207.4.197.7']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Esito dell'analisi su 207.4.197.7:\n\nFatti osservati:\n- 32 richieste POST verso /auth/login con codice 401 (accesso fallito), tutte tra le 09:56:36 e le 09:59:57 del 2026-10-20, cioe' in circa 3 minuti.\n- Intervalli regolari di 5-20 secondi tra una richiesta e l'altra, stesso user agent (Mozilla/5.0 X11 Linux) per tutte: pattern tipico di brute force automatizzato.\n- Nessuna richiesta con 403 registrata per questo IP.\n- Reputazione: non in whitelist, nessun punteggio threat intel, non e' un asset critico.\n\nConclusione: si tratta di un tentativo di brute force sull'endpoint di login, non di un uso legittimo.\n\nAzione: ho proceduto con l'isolamento dell'IP e il sistema ha confermato: isolated = true per 207.4.197.7.\n\nSe vuoi, posso aprire anche un ticket di incidente (severita Media o Alta) con l'IP correlato e il codice 401.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "207.4.197.7"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,13 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+17:55:42  1     RICHIESTA   modello gemini-3.6-flash · 2 messaggi
+                            «Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+17:56:16  1     ERRORE MODELLOTransientLLMError: HTTP 503: Error code: 503 | [{
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+]

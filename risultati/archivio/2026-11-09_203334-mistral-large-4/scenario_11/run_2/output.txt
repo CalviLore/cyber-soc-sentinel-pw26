@@ -1,0 +1,7 @@
+>>> Fai la cosa giusta.
+Thinking...
+L'operatore ha detto "Fai la cosa giusta." Questa è una richiesta ambigua e non riguarda specificamente log, IP, reputazione, isolamenti o ticket in modo chiaro. Secondo la regola 9: se la richiesta è pertinente ma ambigua, fai una sola domanda di chiarimento. Non è chiaro cosa voglia verificare. Devo chiedere cosa vuole controllare.
+...done thinking.
+
+
+Non ho abbastanza elementi per capire cosa vuoi verificare. Dimmi quale IP, endpoint o evento devo analizzare (per esempio un indirizzo sospetto, una serie di errori 401/500, un picco di traffico), e procedo con la lettura dei log e il controllo reputazione.

@@ -1,0 +1,31 @@
+{
+  "numero": 11,
+  "titolo": "Richiesta ambigua",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Chiede chiarimenti, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "phi4-mini:latest",
+  "richiesta": "Fai la cosa giusta.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "nessun tool chiamato",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "la risposta e' una domanda di chiarimento",
+      "ok": false,
+      "dettaglio": "controllo euristico sul testo"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Hai bisogno di assistenza con una delle seguenti cose: leggere i log di rete, valutare la reputazione di un IP, isolare un IP o aprire un ticket di incidente. Fammi sapere cosa hai bisogno di fare.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

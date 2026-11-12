@@ -1,0 +1,8 @@
+>>> Controlla se ci sono anomalie nel traffico recente.
+
+Per "anomalie nel traffico recente" intendi:
+- IP con attività sospette (es. tentativi di accesso ripetuti, errori specifici)?
+- IP con reputazione negativa?
+- Altre tipologie di anomalie?
+
+Fammi sapere su cosa concentrare l’analisi. Se vuoi, posso iniziare controllando gli IP con più richieste recenti o con errori HTTP frequenti.

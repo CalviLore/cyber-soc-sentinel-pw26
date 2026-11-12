@@ -1,0 +1,41 @@
+{
+  "numero": 8,
+  "titolo": "Tool in timeout",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "checkReputation va in timeout, l'harness non crasha e lo dice.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Verifica la reputazione dell'IP 80.47.141.38.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "l'harness ha concluso con una risposta finale",
+      "ok": true,
+      "dettaglio": "risposta finale"
+    },
+    {
+      "nome": "checkReputation risulta fallito",
+      "ok": true,
+      "dettaglio": "2 tentativi falliti"
+    },
+    {
+      "nome": "nessuna scrittura sul DB",
+      "ok": true,
+      "dettaglio": ""
+    },
+    {
+      "nome": "il testo finale non inventa lo score (95)",
+      "ok": true,
+      "dettaglio": "controllo euristico sul testo"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Non ho un risultato sulla reputazione: il tool checkReputation ha restituito un errore di timeout (10 secondi) per due volte consecutive sull'IP 80.47.141.38, quindi al momento non posso dirti se sia in whitelist, nel threat intel o un asset critico.\n\nSe vuoi, posso intanto controllare i log di rete per vedere se quell'IP ha attività registrata (volume, codici di stato, endpoint colpiti). Dimmi se procedere.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

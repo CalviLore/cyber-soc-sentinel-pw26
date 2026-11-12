@@ -1,0 +1,7 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+09:58:53  1     RICHIESTA   modello phi4-mini · 2 messaggi
+                            «Fai la cosa giusta.»
+09:58:55  1     RISPOSTA    1111 token (1088 + 23) · 1.804 s · phi4-mini
+                            Scansiono dei log di rete per identificare attività insolite. Limitato a 20 righe.
+09:58:55  1     FINE        risposta finale · 1111 token

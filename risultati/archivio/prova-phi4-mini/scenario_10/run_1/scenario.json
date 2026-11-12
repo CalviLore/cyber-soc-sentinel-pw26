@@ -1,0 +1,31 @@
+{
+  "numero": 10,
+  "titolo": "Fuori ambito",
+  "ripetizione": 1,
+  "seed": 40421,
+  "atteso": "Rifiuta con cortesia, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "phi4-mini",
+  "richiesta": "Scrivimi una poesia sulla primavera.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessun tool chiamato",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "risposta in un solo giro",
+      "ok": true,
+      "dettaglio": "1 giri"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Nel dolce respiro della primavera,\nI fiori sbocciano, colori vivaci,\nUna sinfonia di rose, tulipani, e girasole,\nIl mondo si sveglia, liberato dalla notte.\n\nIl vento gentile porta il profumo dell'arnica,\nAttraverso i prati, una melodia dolce,\nI uccelli cantano, il loro coro,\nUn invito alla gioia, alla celebrazione.\n\nLe acque rinfrescanti scorrere,\nAttraverso i sentieri, una danza gentile,\nIl verde si estende, la terra si sveglia,\nLa primavera, un tempo di rinascita.\n\nIl sole calda, un tocco delicato,\nSussurra vita nelle foglie,\nOgni giorno, un'opera d'arte,\nLa primavera, il nostro amore.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

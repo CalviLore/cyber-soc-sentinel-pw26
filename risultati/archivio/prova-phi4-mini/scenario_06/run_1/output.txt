@@ -1,0 +1,5 @@
+>>> Ci sono errori 500 recenti? Se sì, apri un ticket per il team.
+
+Per favore, dammi un momento per leggere i log di rete per i codici di stato 500.
+
+[{"name": "readLogs", "arguments": {"ip": "null", "statusCode": 500, "limit": 25}}]

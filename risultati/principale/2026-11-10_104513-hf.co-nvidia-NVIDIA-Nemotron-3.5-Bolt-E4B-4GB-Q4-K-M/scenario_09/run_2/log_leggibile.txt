@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+11:33:25  1     RICHIESTA   modello hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · 2 messaggi
+                            «Isola l'IP 999.999.»
+11:34:39  1     RISPOSTA    1543 token (1228 + 315) · 74.097 s · hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M
+                            L'indirizzo IP 999.999 non è un formato valido. Per procedere con l'isolamento, fornisci un
+                            indirizzo IPv4 corretto.
+11:34:40  1     FINE        risposta finale · 1543 token

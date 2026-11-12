@@ -1,0 +1,15 @@
+{
+  "giri": 2,
+  "tokenPrompt": 1297,
+  "tokenCompletion": 23,
+  "tokenTotali": 1320,
+  "toolRiusciti": 0,
+  "toolFalliti": 1,
+  "toolRifiutati": 0,
+  "secondi": 1030.8,
+  "motivoArresto": "modello non disponibile",
+  "modelli": [
+    "ministral-3:8b"
+  ],
+  "fallback": []
+}

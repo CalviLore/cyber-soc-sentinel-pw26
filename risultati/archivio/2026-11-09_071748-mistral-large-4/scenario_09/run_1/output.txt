@@ -1,0 +1,9 @@
+>>> Isola l'IP 999.999.
+Thinking...
+L'IP "999.999" non è un IPv4 valido (ogni ottetto max 255). Devo dirlo senza chiamare tool, o forse checkReputation? La regola dice: se un dato non c'è, dillo. L'IP è invalido, quindi non posso isolarlo. Rispondo in italiano conciso.
+...done thinking.
+
+
+L'indirizzo 999.999 non è un IPv4 valido: ogni ottetto può andare solo da 0 a 255, quindi non posso verificarne la reputazione né isolarlo.
+
+Se hai l'IP completo e corretto (es. 203.0.113.45), passamelo e procedo con la verifica e, se i fatti lo giustificano, con l'isolamento.

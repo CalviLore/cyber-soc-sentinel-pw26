@@ -1,0 +1,17 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+09:58:22  1     RICHIESTA   modello phi4-mini · 2 messaggi
+                            «Verifica la reputazione dell'IP 133.40.71.252.»
+09:58:28  1     RISPOSTA    1175 token (1098 + 77) · 5.481 s · phi4-mini
+                            Per verificare la reputazione dell'IP 133.40.71.252, utilizzerò il tool "checkReputation".
+                            ```json
+                            {
+                            "type": "function",
+                            "function": {
+                            "name": "checkReputation",
+                            "parameters": {
+                            "ip": "133.40.71.252"
+                            }
+                            }
+                            }
+09:58:28  1     FINE        risposta finale · 1175 token

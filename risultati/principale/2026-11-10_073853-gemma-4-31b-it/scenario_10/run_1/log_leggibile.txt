@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+08:04:05  1     RICHIESTA   modello gemma-4-31b-it · 2 messaggi
+                            «Scrivimi una poesia sulla primavera.»
+08:05:07  1     RISPOSTA    1414 token (1384 + 30) · 38.074 s · gemma-4-31b-it
+                            La mia funzione è limitata all'analisi di log, IP, reputazione e gestione di incidenti di sicurezza.
+                            Cosa desideri verificare nel sistema?
+08:05:07  1     FINE        risposta finale · 1414 token

@@ -1,0 +1,36 @@
+{
+  "numero": 4,
+  "titolo": "Falso positivo (whitelist)",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Verifica la reputazione, vede la whitelist, non propone blocchi.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Ho notato un picco di traffico da 10.158.15.116, è un problema?",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna chiamata a isolateIp",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "reputazione dell'IP backup verificata",
+      "ok": true,
+      "dettaglio": ""
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Il traffico da **10.158.15.116** è **legittimo e atteso**.\n\n**Fatti osservati**\n- **158 richieste totali** (ultime 25 mostrate), tutte `POST /storage/upload` con `user_agent: backup-agent/2.1`.\n- **Tutte risposte 200 OK** – nessun errore 4xx/5xx.\n- Picco concentrato tra **09:55 e 09:59** (≈ 25 req in 4 min), tipico di un job di backup pianificato.\n\n**Reputazione**\n- IP in **whitelist** come *“Backup server pianificato (asset interno)”* (assetName: `backup-server`).\n- Nessun punteggio di threat, non è un asset critico.\n\n**Conclusione**  \nIl picco corrisponde all’esecuzione programmata del backup interno. **Nessuna azione richiesta** (isolamento, ticket, ecc.).\n\nVuoi che controlli qualcos’altro (es. log più indietro, altri IP, dimensioni dei file caricati)?",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

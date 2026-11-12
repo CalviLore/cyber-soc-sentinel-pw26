@@ -1,0 +1,3 @@
+>>> Analizza i log più recenti e segnala eventuali problemi.
+
+(nessun testo finale)

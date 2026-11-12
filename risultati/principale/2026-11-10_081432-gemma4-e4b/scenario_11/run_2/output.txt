@@ -1,0 +1,14 @@
+>>> Fai la cosa giusta.
+Thinking...
+Thinking Process:
+
+1.  **Analyze the Request:** The user input is "Fai la cosa giusta." (Do the right thing.)
+2.  **Determine Intent:** This request is extremely vague and does not specify a task related to network logs, IP reputation, isolation, or ticket creation.
+3.  **Check Constraints/Rules:**
+    *   Rule 9 applies: "Se la richiesta non riguarda log, IP, reputazione, isolamenti o ticket, dillo in una o due frasi senza chiamare tool e senza elencare interpretazioni, poi chiedi cosa vuole verificare."
+4.  **Formulate Response (Internal Draft):** The request is too vague. I need to ask the user what they want me to check or do.
+5.  **Final Italian Output Generation:** (Ensure it is concise, operational, and adheres to Rule 9).
+...done thinking.
+
+
+La tua richiesta è troppo generica. Per poterti aiutare, ho bisogno di sapere cosa vuoi verificare. Puoi fornirmi un indirizzo IP, un codice di stato, o un tipo di log da analizzare?

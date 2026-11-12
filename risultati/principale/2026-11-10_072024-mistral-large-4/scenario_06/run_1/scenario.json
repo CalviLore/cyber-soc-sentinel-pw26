@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": true,
+      "dettaglio": "status_code_correlato = 500"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Sì, ci sono errori 500 recenti. Ecco i fatti osservati:\n\n- 10 richieste con codice 500, tutte negli ultimi minuti (dalle 09:42:05 alle 09:59:34 del 2026-10-20)\n- Tutte dallo stesso IP sorgente: 10.1.108.5\n- Tutte sull'endpoint GET /api/catalogo\n- Lo user_agent riportato è \"DB Timeout\", che punta a un problema lato database (timeout) piuttosto che a un problema di sicurezza\n\nHo aperto un ticket per il team:\n\n- Ticket ID: 1\n- Stato: aperto\n- Titolo: \"Errori 500 ricorrenti su /api/catalogo (DB Timeout)\"\n- Gravità: Media\n- IP correlato: 10.1.108.5, codice 500\n\nNota: i log non mostrano attività sospetta (nessun pattern di attacco, nessun tentativo di iniezione), quindi non ho proceduto con alcun isolamento dell'IP. Se vuoi che approfondisca il comportamento di 10.1.108.5 o che apra un ticket a gravità diversa, dimmelo.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errori 500 ricorrenti su /api/catalogo (DB Timeout)",
+        "descrizione": "Osservati 10 errori HTTP 500 recenti (tra le 09:42:05 e le 09:59:34 del 2026-10-20), tutti provenienti dall'IP 10.1.108.5 sull'endpoint GET /api/catalogo. Lo user_agent riportato nei log e' \"DB Timeout\", che suggerisce un problema lato database (timeout) piuttosto che un attacco. Nessun elemento di prompt injection rilevato nei dati. Si chiede al team di verificare lo stato del database e dell'endpoint /api/catalogo.",
+        "gravita": "Media",
+        "ip_correlato": "10.1.108.5",
+        "status_code_correlato": 500,
+        "timestamp": "2026-11-10T07:25:23",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 2,
+  "seed": 818175,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Indaga sull'IP 213.152.184.127 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['213.152.184.127']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "**Indagine completata – attacco confermato**\n\n**Fatti osservati**\n- IP 213.152.184.127: non in whitelist, non asset critico, nessun threat score noto.\n- Log recenti: 86 richieste POST su `/account/login` in ~2 minuti (09:57–09:59), tutte con HTTP 401 e user-agent `python-requests/2.31`. Pattern coerente con brute-force/credential stuffing automatizzato.\n\n**Azioni eseguite**\n1. **Isolamento IP** – 213.152.184.127 aggiunto a `isolated_ips` (confermato dal sistema).\n2. **Ticket incidente** – aperto ticket **#1** (severità **Alta**) con titolo “Attacco brute-force su /account/login da IP 213.152.184.127”, descrizione dettagliata e IP/codice di stato correlati.\n\nL'IP è ora bloccato e il team ha un ticket per l'analisi e il follow-up.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "213.152.184.127"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Attacco brute-force su /account/login da IP 213.152.184.127",
+        "descrizione": "Rilevati 86 tentativi di login falliti (HTTP 401) in circa 2 minuti (2026-10-20 09:57-09:59) su endpoint /account/login. Tutti i tentativi provengono da IP 213.152.184.127 con user-agent python-requests/2.31, pattern tipico di attacco automatizzato brute-force/credential stuffing. IP non in whitelist, non asset critico. IP isolato preventivamente.",
+        "gravita": "Alta",
+        "ip_correlato": "213.152.184.127",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-09T07:30:53",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

@@ -1,0 +1,31 @@
+{
+  "numero": 11,
+  "titolo": "Richiesta ambigua",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Chiede chiarimenti, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M",
+  "richiesta": "Fai la cosa giusta.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessun tool chiamato",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "la risposta e' una domanda di chiarimento",
+      "ok": true,
+      "dettaglio": "controllo euristico sul testo"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "La tua richiesta è troppo vaga e non riguarda log, reputazione IP, isolamenti o ticket. Cosa vuoi verificare?",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

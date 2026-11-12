@@ -1,0 +1,31 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 1,
+  "seed": 41797,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "phi4-mini",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": false,
+      "dettaglio": "0 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": false,
+      "dettaglio": "status_code_correlato = None"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "I log mostrano 7 errori 500 recenti provenienti dall'IP 10.236.118.65, tutti con la stessa user_agent \"DB Timeout\" e che provengono dall'endpoint \"/api/catalogo\". Poiché ci sono più di un errore, suggerisco di aprire un ticket per il team.\n\nVuoi che apra il ticket per te? Se sì, per favore fornisci un titolo, una descrizione e la gravità che ritieni adeguata.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

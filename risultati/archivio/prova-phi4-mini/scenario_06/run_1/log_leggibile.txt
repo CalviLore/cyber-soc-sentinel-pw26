@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+09:34:28  1     RICHIESTA   modello phi4-mini · 2 messaggi
+                            «Ci sono errori 500 recenti? Se sì, apri un ticket per il team.»
+09:34:32  1     RISPOSTA    1155 token (1101 + 54) · 3.564 s · phi4-mini
+                            Per favore, dammi un momento per leggere i log di rete per i codici di stato 500.
+                            [{"name": "readLogs", "arguments": {"ip": "null", "statusCode": 500, "limit": 25}}]
+09:34:32  1     FINE        risposta finale · 1155 token

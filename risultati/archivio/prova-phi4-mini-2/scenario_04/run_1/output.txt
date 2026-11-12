@@ -1,0 +1,5 @@
+>>> Ho notato un picco di traffico da 10.211.69.205, è un problema?
+
+Per determinare se il picco di traffico da 10.211.69.205 è un problema, devo leggere i log di rete per questo IP e filtrare per codice di stato HTTP. Inizierò con questo.
+
+[\n\n]

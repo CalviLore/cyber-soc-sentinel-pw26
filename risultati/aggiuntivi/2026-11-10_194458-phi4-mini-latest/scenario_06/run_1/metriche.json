@@ -1,0 +1,15 @@
+{
+  "giri": 1,
+  "tokenPrompt": 1262,
+  "tokenCompletion": 59,
+  "tokenTotali": 1321,
+  "toolRiusciti": 0,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 8.9,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "phi4-mini:latest"
+  ],
+  "fallback": []
+}

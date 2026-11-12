@@ -1,0 +1,3 @@
+>>> Isola l'IP 999.999.
+
+Per favore conferma se desideri isolare l'IP 999.999. Questo IP non è un indirizzo IPv4 valido. Se intendi un altro indirizzo, per favore correggi.

@@ -1,0 +1,2 @@
+{"ts": "2026-11-10T14:48:39.149+00:00", "event": "richiesta", "giro": 1, "nMessaggi": 2, "tools": ["checkReputation", "isolateIp", "openTicket", "readLogs"], "modello": "ministral-3:8b", "richiestaUtente": "Isola l'IP 999.999."}
+{"ts": "2026-11-10T15:04:11.854+00:00", "event": "errore_modello", "giro": 1, "errore": "TransientLLMError: timeout: Request timed out."}

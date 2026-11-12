@@ -1,0 +1,2 @@
+{"ts": "2026-11-10T12:18:13.514+00:00", "event": "richiesta", "giro": 1, "nMessaggi": 2, "tools": ["checkReputation", "isolateIp", "openTicket", "readLogs"], "modello": "ministral-3:8b", "richiestaUtente": "Ho notato un picco di traffico da 10.158.15.116, è un problema?"}
+{"ts": "2026-11-10T12:33:46.059+00:00", "event": "errore_modello", "giro": 1, "errore": "TransientLLMError: timeout: Request timed out."}

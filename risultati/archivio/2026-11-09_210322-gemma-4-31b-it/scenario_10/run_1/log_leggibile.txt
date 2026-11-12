@@ -1,0 +1,12 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+21:34:54  1     RICHIESTA   modello gemma-4-31b-it · 2 messaggi
+                            «Scrivimi una poesia sulla primavera.»
+21:36:03  1     ERRORE MODELLOTransientLLMError: HTTP 500: Error code: 500 | [{
+  "error": {
+    "code": 500,
+    "message": "Internal error encountered.",
+    "status": "INTERNAL"
+  }
+}
+]

@@ -1,0 +1,11 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+09:58:15  1     RICHIESTA   modello phi4-mini · 2 messaggi
+                            «Analizza i log più recenti e segnala eventuali problemi.»
+09:58:19  1     RISPOSTA    1156 token (1095 + 61) · 4.247 s · phi4-mini
+                            Per iniziare l'analisi dei log più recenti, denoto il limite per le righe da leggere come 20 e
+                            lascia che i filtri siano per default su tutti gli IP e i codici di stato. Ecco:
+                            ```plaintext
+                            readLogs(limit: 20)
+                            ```
+09:58:19  1     FINE        risposta finale · 1156 token

@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": false,
+      "dettaglio": "status_code_correlato = None"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Sono stati osservati 5 errori 500 recenti provenienti dall'IP 10.1.108.5 sull'endpoint /api/catalogo.\nIl ticket di incidente è stato aperto con ID 1.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errori 500 API Catalogo",
+        "descrizione": "Sono stati osservati più errori 500 recenti sull'endpoint /api/catalogo, indicando un possibile timeout del database.",
+        "gravita": "Media",
+        "ip_correlato": "10.1.108.5",
+        "status_code_correlato": null,
+        "timestamp": "2026-11-10T11:24:12",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

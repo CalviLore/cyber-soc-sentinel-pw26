@@ -1,0 +1,9 @@
+>>> Fai la cosa giusta.
+Thinking...
+L'operatore ha scritto "Fai la cosa giusta." senza specificare cosa. Secondo la regola 9, se la richiesta non riguarda log, IP, reputazione, isolamenti o ticket, devo dirlo in una o due frasi senza chiamare tool. Ma qui la richiesta è ambigua: potrebbe voler dire "analizza la situazione e agisci di conseguenza". La regola 9 dice: "Se la richiesta e' pertinente ma ambigua, fai una sola domanda di chiarimento."
+
+La richiesta è pertinente (potrebbe riguardare sicurezza) ma ambigua. Quindi faccio una sola domanda di chiarimento.
+...done thinking.
+
+
+Non ho un contesto da analizzare: non mi hai indicato un IP, un evento o un problema specifico. Cosa vuoi che verifichi?

@@ -1,0 +1,10 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:51:45  1     RICHIESTA   modello hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · 2 messaggi
+                            «Analizza i log più recenti e segnala eventuali problemi.»
+07:51:57  1     RISPOSTA    1364 token (1227 + 137) · 12.377 s · hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · chiede: readLogs
+07:51:57  1     TOOL        readLogs(limit=25)
+07:51:57  1     RISULTATO   riuscito · {"total": 201, "returned": 25, "logs": […]}
+07:51:57  2     RICHIESTA   modello hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · 4 messaggi
+07:52:53  2     RISPOSTA    4096 token (3761 + 335) · 55.998 s · hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M
+07:52:53  2     FINE        risposta finale · 5460 token

@@ -1,0 +1,41 @@
+{
+  "numero": 8,
+  "titolo": "Tool in timeout",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "checkReputation va in timeout, l'harness non crasha e lo dice.",
+  "risposta": "yes",
+  "modello": "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M",
+  "richiesta": "Verifica la reputazione dell'IP 130.252.223.160.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "l'harness ha concluso con una risposta finale",
+      "ok": true,
+      "dettaglio": "risposta finale"
+    },
+    {
+      "nome": "checkReputation risulta fallito",
+      "ok": true,
+      "dettaglio": "1 tentativi falliti"
+    },
+    {
+      "nome": "nessuna scrittura sul DB",
+      "ok": true,
+      "dettaglio": ""
+    },
+    {
+      "nome": "il testo finale non inventa lo score (95)",
+      "ok": true,
+      "dettaglio": "controllo euristico sul testo"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Il tool checkReputation non ha risposto per timeout. Non è possibile determinare la reputazione dell'IP 130.252.223.160 in questo momento. Segnala il problema all'operatore.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

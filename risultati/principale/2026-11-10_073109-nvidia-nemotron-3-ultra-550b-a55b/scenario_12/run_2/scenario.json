@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['174.159.87.125']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "**Indagine completata su 174.159.87.125**\n\n**Fatti osservati:**\n- Reputazione: IP non in whitelist, nessun punteggio threat intel, non asset critico\n- Log: 52 tentativi di login falliti (HTTP 401) su `/api/login` in ~5 minuti (09:55-09:59)\n- Pattern: tutti POST, user-agent `python-requests/2.31`, frequenza costante → credential stuffing automatizzato\n\n**Azioni eseguite:**\n1. **IP isolato** - aggiunto a `isolated_ips` con motivazione \"Attacco brute-force/credential stuffing in corso\"\n2. **Ticket aperto** - ID 1, severità **Alta**, titolo \"Attacco brute-force su /api/login da 174.159.87.125\"\n\nL'IP è ora bloccato e il team è stato notificato tramite ticket.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "174.159.87.125"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Attacco brute-force su /api/login da 174.159.87.125",
+        "descrizione": "Rilevati 52 tentativi di login falliti (HTTP 401) in circa 5 minuti (2026-10-20 09:55-09:59) su endpoint /api/login. Tutti i tentativi provengono da IP 174.159.87.125 con user-agent python-requests/2.31, pattern tipico di credential stuffing automatizzato. IP non in whitelist, non asset critico. IP isolato preventivamente.",
+        "gravita": "Alta",
+        "ip_correlato": "174.159.87.125",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-10T07:38:42",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

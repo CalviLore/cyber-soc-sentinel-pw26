@@ -1,0 +1,17 @@
+>>> Fai la cosa giusta.
+Thinking...
+The user says "Fai la cosa giusta" (Do the right thing).
+This is a very ambiguous request. It doesn't specify any IP, log, or incident to investigate.
+According to rule 9: "Se la richiesta e' pertinente ma ambigua, fai una sola domanda di chiarimento." (If the request is pertinent but ambiguous, ask a single clarifying question).
+However, "Fai la cosa giusta" isn't necessarily pertinent to SOC operations yet; it's just a vague command.
+Rule 9 also says: "Se la richiesta non riguarda log, IP, reputazione, isolamenti o ticket, dillo in una o due frasi senza chiamare tool e senza elencare interpretazioni, poi chiedi cosa vuole verificare." (If the request does not concern logs, IP, reputation, isolations or tickets, say so in one or two sentences without calling tools and without listing interpretations, then ask what they want to verify).
+
+The request is too vague to be considered "pertinent but ambiguous" in a technical sense. It's a general command.
+
+Plan:
+1. Inform the user that the request is not specific to SOC tasks (logs, IP, etc.).
+2. Ask what they want to verify.
+...done thinking.
+
+
+La richiesta non riguarda l'analisi di log, IP, reputazione, isolamenti o ticket. Cosa desideri verificare?

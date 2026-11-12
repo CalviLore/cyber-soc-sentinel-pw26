@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 2,
+  "seed": 818175,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": true,
+      "dettaglio": "status_code_correlato = 500"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Ticket aperto con successo.\n\nRiepilogo:\n- 5 errori 500 su GET /api/fatture, tutti da 10.89.135.76, tra le 09:40:50 e le 09:53:07 del 2026-10-20\n- Causa probabile: timeout del database (user agent \"DB Timeout\")\n- Ticket ID 1, stato: aperto, gravità Media, IP correlato 10.89.135.76, codice 500\n\nNon ci sono evidenze di attività malevola: la sorgente è un IP interno e il problema sembra applicativo. Se vuoi posso controllare la reputazione di 10.89.135.76 o cercare altri errori su endpoint diversi.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errori 500 ricorrenti su /api/fatture (DB Timeout)",
+        "descrizione": "Rilevati 5 errori HTTP 500 sull'endpoint GET /api/fatture, tutti provenienti dall'IP 10.89.135.76 tra le 09:40:50 e le 09:53:07 del 2026-10-20. Lo user agent registrato e' \"DB Timeout\", che indica probabili timeout del database a fronte di query sull'endpoint fatture. Nessun pattern di attacco evidente: la sorgente e' un IP interno e la causa sembra applicativa/infrastrutturale. Si consiglia verifica del carico sul DB e dei tempi di risposta delle query sull'endpoint /api/fatture.",
+        "gravita": "Media",
+        "ip_correlato": "10.89.135.76",
+        "status_code_correlato": 500,
+        "timestamp": "2026-11-09T07:20:21",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

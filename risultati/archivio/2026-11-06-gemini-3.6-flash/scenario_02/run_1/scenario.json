@@ -1,0 +1,30 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "gemini-3.6-flash",
+  "richiesta": "Controlla l'IP 56.243.178.188: risulta responsabile di molti accessi falliti?",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": false,
+      "dettaglio": "[]"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "**Sì, l'IP 56.243.178.188 risulta responsabile di un numero elevato di accessi falliti.**\n\n### Fatti osservati:\n- **Totale richieste registrate:** 52 richieste nei log.\n- **Codice di stato HTTP:** Tutte le richieste analizzate mostrano un codice `401 Unauthorized`.\n- **Endpoint e metodo:** `POST /login`.\n- **Finestra temporale:** Le tentate autenticazioni sono avvenute in un arco di tempo molto ristretto (tra le 09:57 e le 09:59 del 20/10/2026).\n- **Reputazione:** L'IP non è in whitelist, non è classificato come asset critico e non ha un punteggio di threat intelligence registrato.\n\n### Valutazione:\nIl comportamento osservato (52 tentativi falliti di autenticazione su `/login` in circa due minuti) è compatibile con un'attività di **brute force** o **credential stuffing**.\n\nSe desideri procedere con l'isolamento dell'IP o l'apertura di un ticket di incidente, fammelo sapere.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

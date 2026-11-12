@@ -1,0 +1,10 @@
+>>> Controlla se ci sono anomalie nel traffico recente.
+Thinking...
+The user wants to check for anomalies in recent network traffic.
+I have a tool `readLogs` that allows me to read network logs.
+Since the request is general ("anomalies"), I should start by reading the most recent logs to see if there are any patterns, high volumes of errors (like 4xx or 5xx), or suspicious activity.
+I'll start by calling `readLogs` with a small limit to get an overview.
+...done thinking.
+
+
+(nessun testo finale)

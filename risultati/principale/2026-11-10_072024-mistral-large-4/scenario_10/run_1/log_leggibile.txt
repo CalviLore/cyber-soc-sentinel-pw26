@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:29:15  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Scrivimi una poesia sulla primavera.»
+07:29:19  1     RISPOSTA    1488 token (1390 + 98) · 3.142 s · mistral-large-4
+                            Ciao! Sono l'assistente del SOC di primo livello: mi occupo di log di rete, reputazione degli IP,
+                            isolamenti e ticket di incidente.
+                            Cosa vuoi verificare oggi?
+07:29:19  1     FINE        risposta finale · 1488 token

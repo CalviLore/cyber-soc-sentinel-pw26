@@ -1,0 +1,15 @@
+>>> Controlla la reputazione dell'IP 147.89.38.217.
+
+Per controllare la reputazione dell'IP 147.89.38.217, utilizzerò il tool "checkReputation".
+
+```json
+{
+  "type": "function",
+  "function": {
+    "name": "checkReputation",
+    "parameters": {
+      "ip": "147.89.38.217"
+    }
+  }
+}
+```

@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 2,
+  "seed": 818175,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": true,
+      "dettaglio": "status_code_correlato = 500"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Sì, ci sono 5 errori 500 recenti (tutti tra le 09:40 e le 09:53 del 2026-10-20) provenienti dall'IP **10.89.135.76** sull'endpoint **/api/fatture**. Il campo `user_agent` riporta \"DB Timeout\", indicando probabili problemi di connessione al database.\n\nHo aperto un ticket per il team backend:\n- **Ticket ID**: 1\n- **Stato**: aperto\n- **Titolo**: \"Errori 500 ripetuti su /api/fatture\"\n- **Gravità**: Media\n- **IP correlato**: 10.89.135.76\n- **Codice di stato**: 500\n\nIl team può ora indagare sulla causa dei timeout del database.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errori 500 ripetuti su /api/fatture",
+        "descrizione": "Rilevati 5 errori HTTP 500 nelle ultime ore (2026-10-20 09:40-09:53) tutti provenienti da IP 10.89.135.76 sull'endpoint /api/fatture. User-Agent riporta 'DB Timeout', suggerendo problemi di connessione al database. Richiede indagine del team backend.",
+        "gravita": "Media",
+        "ip_correlato": "10.89.135.76",
+        "status_code_correlato": 500,
+        "timestamp": "2026-11-09T07:27:16",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+19:45:27  1     RICHIESTA   modello phi4-mini:latest · 2 messaggi
+                            «Controlla se ci sono anomalie nel traffico recente.»
+19:45:34  1     RISPOSTA    1310 token (1255 + 55) · 6.598 s · phi4-mini:latest
+                            Per controllare le anomalie nel traffico recente, ho bisogno di informazioni aggiuntive specifiche.
+                            Puoi fornirmi un IP target, un codice di stato HTTP specifico da filtrare, o dovrei cercare anomalie
+                            generali senza filtri?
+19:45:34  1     FINE        risposta finale · 1310 token

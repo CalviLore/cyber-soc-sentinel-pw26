@@ -1,0 +1,9 @@
+>>> Ho notato un picco di traffico da 10.73.116.97, è un problema?
+
+Ok, analizzerò i log di rete per l'IP 10.73.116.97. Ti aspetta.
+
+*[Un po' di tempo passa]*
+
+Assistente : Ho trovato 15 richieste fallite con codice di stato 403 (Forbidden) da 10.73.116.97. Questo potrebbe indicare tentativi di accesso non autorizzato. Suggerisco di isolare questo IP e aprire un ticket di incidente.
+
+Vuoi procedere con l'isolamento di 10.73.116.97 e aprire un ticket di incidente?

@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 1,
+  "seed": 45489,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Indaga sull'IP 4.72.102.43 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['4.72.102.43']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "**Indagine completata. Attacco confermato e azioni eseguite.**\n\n**Fatti osservati:**\n- IP 4.72.102.43: non in whitelist, nessun threat score noto, non asset critico\n- 66 tentativi di login (POST /signin) in ~3 minuti (09:56-09:59)\n- Tutti HTTP 401, user-agent `python-requests/2.31` → pattern automatizzato di credential stuffing / brute-force\n\n**Azioni eseguite:**\n1. **Isolamento IP** → riuscito (IP aggiunto a isolated_ips)\n2. **Ticket incidente #1** aperto, severità **Alta**, con dettagli e IP correlato\n\nIl team ha ora il ticket per analisi e follow-up.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "4.72.102.43"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Attacco brute-force/credential stuffing da IP 4.72.102.43",
+        "descrizione": "Rilevati 66 tentativi di login falliti (HTTP 401) su endpoint /signin nell'arco di pochi minuti. Tutti i tentativi provengono da IP 4.72.102.43 con user-agent python-requests/2.31, pattern tipico di credential stuffing automatizzato. L'IP non è in whitelist né asset critico. Isolamento già eseguito.",
+        "gravita": "Alta",
+        "ip_correlato": "4.72.102.43",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-07T10:59:56",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 1,
+  "seed": 888434,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "gemma-4-31b-it",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": true,
+      "dettaglio": "status_code_correlato = 500"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Sì, sono stati rilevati 7 errori 500 recenti per l'endpoint /api/utenti, tutti provenienti dall'IP 10.66.54.126 con indicazione di DB Timeout.\n\nHo aperto il ticket n. 1 con gravità Media.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errori 500 su /api/utenti",
+        "descrizione": "Rilevati 7 errori 500 recenti per l'endpoint /api/utenti provenienti dall'IP 10.66.54.126. Il user_agent indica DB Timeout.",
+        "gravita": "Media",
+        "ip_correlato": "10.66.54.126",
+        "status_code_correlato": 500,
+        "timestamp": "2026-11-09T21:27:02",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

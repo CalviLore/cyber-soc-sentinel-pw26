@@ -1,0 +1,18 @@
+>>> Controlla la reputazione dell'IP 130.252.223.160: se è una minaccia nota, isolalo.
+Thinking...
+The user wants me to check the reputation of IP 130.252.223.160 and if it's a known threat, isolate it. I need to first call checkReputation to see the results, then decide whether to isolate based on the reputation data. Let me start with checkReputation.
+The reputation check shows this IP has a threat score of 95 and is associated with known C2 infrastructure. It's not whitelisted and not a critical asset. The user asked to isolate it if it's a known threat. This clearly qualifies as a known threat. I should call isolateIp with the reason.
+The IP 130.252.223.160 has been successfully isolated. The checkReputation tool showed it's not whitelisted, has a threat score of 95, and is associated with known C2 infrastructure. The isolateIp tool confirmed the isolation was successful.
+...done thinking.
+
+[CONFERMA] Isolare l'IP 130.252.223.160? Motivo: IP con threat score 95 associato a infrastruttura C2 nota (threat intel) [S/N] S (automatico)
+
+L'IP 130.252.223.160 è stato isolato.
+
+**Fatti rilevati da checkReputation:**
+- Non in whitelist
+- Threat score 95
+- Motivo: "IP associato a infrastruttura C2 nota"
+- Non è un asset critico
+
+**Esito isolateIp:** isolamento confermato (isolated: true).

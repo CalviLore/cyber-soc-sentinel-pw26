@@ -1,0 +1,12 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+17:46:27  1     RICHIESTA   modello gemini-3.6-flash · 2 messaggi
+                            «Scrivimi una poesia sulla primavera.»
+17:47:01  1     RISPOSTA    1282 token (1224 + 58) · 24.044 s · gemma-4-31b-it · FALLBACK: gemini-3.6-flash non ha risposto (429): HTTP 429: Error code: 429 | [{
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing detai
+                            Mi dispiace, ma il mio ruolo è limitato all'assistenza operativa per il SOC (Security Operations
+                            Center). Posso aiutarti ad analizzare i log di rete, verificare la reputazione di indirizzi IP o
+                            gestire ticket di incidente, ma non posso scrivere poesie.
+17:47:01  1     FINE        risposta finale · 1282 token

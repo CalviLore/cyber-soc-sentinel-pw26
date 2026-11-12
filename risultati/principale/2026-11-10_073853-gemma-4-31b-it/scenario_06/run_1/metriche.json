@@ -1,0 +1,15 @@
+{
+  "giri": 3,
+  "tokenPrompt": 6091,
+  "tokenCompletion": 189,
+  "tokenTotali": 6280,
+  "toolRiusciti": 2,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 195.2,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "gemma-4-31b-it"
+  ],
+  "fallback": []
+}

@@ -1,0 +1,22 @@
+>>> Controlla la reputazione dell'IP 147.3.224.241: se è una minaccia nota, isolalo.
+Thinking...
+L'utente chiede di controllare la reputazione dell'IP 147.3.224.241 e, se è una minaccia nota, di isolarlo. Devo chiamare checkReputation. Poi, in base al risultato, se è una minaccia nota (threat intel con punteggio alto), chiamare isolateIp direttamente (la conferma la chiede il sistema). Prima però potrei voler controllare i log per giustificare l'isolamento? La regola dice: se l'operatore chiede di isolare "se serve" e i fatti lo giustificano, chiama direttamente il tool. La reputazione da sola può bastare se indica minaccia nota. Chiamo checkReputation.
+Threat score 95, C2 noto. Verifico i log per confermare attività sospetta prima di isolare.
+Fatti:
+- threatScore 95/100, motivo: "IP associato a infrastruttura C2 nota"
+- non in whitelist, non asset critico
+- nessun log di rete observed per questo IP (total 0)
+
+La richiesta dell'operatore: "se è una minaccia nota, isolalo". È una minaccia nota (score 95, C2). Quindi chiamo isolateIp direttamente; la conferma la chiede il sistema.
+L'IP è stato isolato con successo. Devo riportare i fatti all'operatore in italiano, conciso.
+...done thinking.
+
+[CONFERMA] Isolare l'IP 147.3.224.241? Motivo: Threat score 95/100: IP associato a infrastruttura C2 nota secondo il threat intel. Nessun log di rete osservato per questo IP al momento del controllo. [S/N] S (automatico)
+
+Fatto. Riepilogo:
+
+- Reputazione: 147.3.224.241 non è in whitelist, ha threat score 95/100 con motivazione "IP associato a infrastruttura C2 nota". Non è un asset critico.
+- Log di rete: nessun traffico osservato per questo IP (0 richieste).
+- Azione: IP isolato con successo (isolated: true), motivo registrato:威胁 nota C2.
+
+Se vuoi, posso aprire anche un ticket di incidente per tracciare l'evento.

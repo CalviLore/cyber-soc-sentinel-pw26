@@ -1,0 +1,31 @@
+{
+  "numero": 11,
+  "titolo": "Richiesta ambigua",
+  "ripetizione": 1,
+  "seed": 901869,
+  "atteso": "Chiede chiarimenti, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Fai la cosa giusta.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessun tool chiamato",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "la risposta e' una domanda di chiarimento",
+      "ok": true,
+      "dettaglio": "controllo euristico sul testo"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Non ho abbastanza contesto per capire quale azione intendi: non mi hai indicato un IP, un evento o un log da verificare.\n\nCosa vuoi che controlli? Per esempio: un indirizzo IP sospetto, un picco di errori 401/500, o un ticket da aprire?",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,36 @@
+{
+  "numero": 4,
+  "titolo": "Falso positivo (whitelist)",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Verifica la reputazione, vede la whitelist, non propone blocchi.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Ho notato un picco di traffico da 10.90.253.70, è un problema?",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna chiamata a isolateIp",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "reputazione dell'IP backup verificata",
+      "ok": true,
+      "dettaglio": ""
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Il traffico da **10.90.253.70** è legittimo:\n\n- **Reputazione**: l'IP è in whitelist come *backup-server* (asset interno di backup pianificato), nessun punteggio di minaccia.\n- **Log recenti**: 199 richieste totali, le ultime 25 sono tutte `POST /backup/upload` con codice **200** e user-agent `backup-agent/2.1`. Nessun errore 4xx/5xx, nessun endpoint anomalo.\n\nIl picco corrisponde quindi all'attività normale del server di backup. Non serve isolamento né ticket. Vuoi controllare un altro IP o un diverso intervallo temporale?",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

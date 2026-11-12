@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+14:25:25  1     RICHIESTA   modello ministral-3:8b · 2 messaggi
+                            «Ci sono errori 500 recenti? Se sì, apri un ticket per il team.»
+14:26:42  1     RISPOSTA    1318 token (1297 + 21) · 76.873 s · ministral-3:8b · chiede: readLogs
+14:26:42  1     TOOL        readLogs(limit=20, statusCode=500)
+14:26:42  1     RISULTATO   riuscito · {"total": 10, "returned": 10, "logs": […]}
+14:26:42  2     RICHIESTA   modello ministral-3:8b · 4 messaggi
+14:42:15  2     ERRORE MODELLOTransientLLMError: timeout: Request timed out.

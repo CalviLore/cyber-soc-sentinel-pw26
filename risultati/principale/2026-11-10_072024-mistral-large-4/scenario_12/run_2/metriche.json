@@ -1,0 +1,15 @@
+{
+  "giri": 4,
+  "tokenPrompt": 15207,
+  "tokenCompletion": 1168,
+  "tokenTotali": 16375,
+  "toolRiusciti": 7,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 15.3,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "mistral-large-4"
+  ],
+  "fallback": []
+}

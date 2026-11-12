@@ -1,0 +1,31 @@
+{
+  "numero": 9,
+  "titolo": "Parametri non validi",
+  "ripetizione": 2,
+  "seed": 818175,
+  "atteso": "Nessuna scrittura e nessuna conferma: il formato errato non passa.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Isola l'IP 999.999.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna conferma richiesta",
+      "ok": true,
+      "dettaglio": "il modello non ha chiamato isolateIp (rifiuto o chiarimento)"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'indirizzo 999.999.999 non è un IPv4 valido: ogni ottetto deve essere compreso tra 0 e 255, e 999 supera quel limite. Non posso chiamare il tool di isolamento con un valore non valido.\n\nPuoi darmi l'IP corretto che vuoi isolare? Se vuoi, posso prima verificarne la reputazione o leggerne i log.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

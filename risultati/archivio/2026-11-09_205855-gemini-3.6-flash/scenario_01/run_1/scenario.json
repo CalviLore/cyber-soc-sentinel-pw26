@@ -1,0 +1,41 @@
+{
+  "numero": 1,
+  "titolo": "Routine, nessuna azione",
+  "ripetizione": 1,
+  "seed": 888434,
+  "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+  "risposta": "yes",
+  "modello": "gemini-3.6-flash",
+  "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "c'e' una risposta finale non vuota",
+      "ok": false,
+      "dettaglio": "vuota: il modello ha finito i token nel ragionamento"
+    },
+    {
+      "nome": "nessuna scrittura richiesta",
+      "ok": true,
+      "dettaglio": "0 chiamate di scrittura"
+    },
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessun ticket",
+      "ok": true,
+      "dettaglio": "0 ticket"
+    }
+  ],
+  "motivoArresto": "tetto raggiunto",
+  "testoFinale": "",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

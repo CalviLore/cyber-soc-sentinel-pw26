@@ -1,0 +1,8 @@
+>>> Ci sono errori 500 recenti? Se sì, apri un ticket per il team.
+
+Ci sono **5 errori 500 recenti** tutti provenienti dallo stesso IP interno: **10.89.135.76**.
+L’endpoint interessato è `/api/fatture` e il messaggio di errore è **"DB Timeout"**, il che suggerisce un problema di backend (non un attacco esterno).
+
+**Domanda:**
+- Vuoi aprire un ticket per il team DevOps/Backend per indagare sul timeout della DB su `/api/fatture`?
+- Se sì, specifica la gravità (Bassa/Media/Alta) o conferma che la priorità sia "Alta" per un problema che blocca un servizio critico.

@@ -1,0 +1,27 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:41:28  1     RICHIESTA   modello gemma-4-31b-it · 2 messaggi
+                            «Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+07:42:27  1     RISPOSTA    1513 token (1416 + 97) · 55.843 s · gemma-4-31b-it · chiede: readLogs, readLogs, checkReputation
+07:42:27  1     TOOL        readLogs(statusCode=401, ip="196.31.179.190")
+07:42:27  1     RISULTATO   riuscito · {"total": 74, "returned": 74, "logs": […]}
+07:42:27  1     TOOL        readLogs(statusCode=403, ip="196.31.179.190")
+07:42:27  1     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:42:27  1     TOOL        checkReputation(ip="196.31.179.190")
+07:42:27  1     RISULTATO   riuscito · {"ip": "196.31.179.190", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:42:27  2     RICHIESTA   modello gemma-4-31b-it · 6 messaggi
+07:43:42  2     RISPOSTA    9160 token (9098 + 62) · 21.924 s · gemma-4-31b-it · chiede: isolateIp
+07:43:42  2     TOOL        isolateIp(ip="196.31.179.190", reason="Brute-force attack: 74 failed login attempts (401) su /api…)
+07:43:42        CONFERMA    Isolare l'IP 196.31.179.190? Motivo: Brute-force attack: 74 failed login attempts (401) su /api/login in un breve arco di tempo. → Y
+07:43:42  2     RISULTATO   riuscito · {"isolated": true, "ip": "196.31.179.190"}
+07:43:42  3     RICHIESTA   modello gemma-4-31b-it · 8 messaggi
+07:44:22  3     RISPOSTA    9385 token (9216 + 169) · 40.655 s · gemma-4-31b-it
+                            L'IP 196.31.179.190 è responsabile di un numero elevato di accessi falliti.
+                            Fatti osservati:
+                            - Log: sono stati registrati 74 tentativi di accesso falliti (codice di stato 401) verso l'endpoint
+                            /api/login in un arco di tempo molto ristretto (tra le 09:55 e le 09:59).
+                            - Reputazione: l'IP non è in whitelist, non è un asset critico e non ha un punteggio di minaccia
+                            predefinito.
+                            Considerata l'evidenza di un attacco brute-force, l'IP 196.31.179.190 è stato isolato.
+07:44:22  3     FINE        risposta finale · 20058 token

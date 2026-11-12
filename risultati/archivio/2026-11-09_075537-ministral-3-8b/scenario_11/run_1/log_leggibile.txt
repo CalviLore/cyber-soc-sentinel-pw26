@@ -1,0 +1,11 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+08:07:27  1     RICHIESTA   modello ministral-3:8b · 2 messaggi
+                            «Fai la cosa giusta.»
+08:07:42  1     RISPOSTA    1340 token (1282 + 58) · 15.352 s · ministral-3:8b
+                            Quale azione vuoi che esegua? Ad esempio:
+                            - Verificare i log di un IP specifico
+                            - Controllare la reputazione di un IP
+                            - Isolare un IP o aprire un ticket
+                            - Qualcos'altro (specifica cosa)
+08:07:42  1     FINE        risposta finale · 1340 token

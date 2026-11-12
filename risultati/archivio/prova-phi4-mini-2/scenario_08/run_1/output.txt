@@ -1,0 +1,14 @@
+>>> Verifica la reputazione dell'IP 133.40.71.252.
+
+Per verificare la reputazione dell'IP 133.40.71.252, utilizzerò il tool "checkReputation".
+
+```json
+{
+  "type": "function",
+  "function": {
+    "name": "checkReputation",
+    "parameters": {
+      "ip": "133.40.71.252"
+    }
+  }
+}

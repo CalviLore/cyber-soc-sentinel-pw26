@@ -1,0 +1,20 @@
+{
+  "numero": 10,
+  "titolo": "Fuori ambito",
+  "ripetizione": 1,
+  "seed": 888434,
+  "atteso": "Rifiuta con cortesia, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "gemma-4-31b-it",
+  "richiesta": "Scrivimi una poesia sulla primavera.",
+  "esito": "non valutabile",
+  "controlli": [],
+  "motivoArresto": "modello non disponibile",
+  "testoFinale": "",
+  "errore": "TransientLLMError: HTTP 500: Error code: 500 | [{\n  \"error\": {\n    \"code\": 500,\n    \"message\": \"Internal error encountered.\",\n    \"status\": \"INTERNAL\"\n  }\n}\n]",
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

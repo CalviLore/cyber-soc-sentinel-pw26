@@ -1,0 +1,17 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:18:35  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+07:18:37  1     RISPOSTA    1535 token (1413 + 122) · 1.654 s · mistral-large-4 · chiede: readLogs, checkReputation
+07:18:37  1     TOOL        readLogs(ip="126.39.25.104", limit=25, statusCode=401)
+07:18:37  1     RISULTATO   riuscito · {"total": 42, "returned": 25, "logs": […]}
+07:18:37  1     TOOL        checkReputation(ip="126.39.25.104")
+07:18:37  1     RISULTATO   riuscito · {"ip": "126.39.25.104", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:18:37  2     RICHIESTA   modello mistral-large-4 · 5 messaggi
+07:18:39  2     RISPOSTA    3619 token (3465 + 154) · 2.316 s · mistral-large-4 · chiede: isolateIp
+07:18:39  2     TOOL        isolateIp(ip="126.39.25.104", reason="Brute force su /account/login: 42 richieste POST con rispo…)
+07:18:39        CONFERMA    Isolare l'IP 126.39.25.104? Motivo: Brute force su /account/login: 42 richieste POST con risposta 401 da un singolo IP in pochi minuti (09:57-09:59), frequenza fino a 2 richieste/secondo, stesso user agent. Nessuna indication di whitelist o asset critico. → Y
+07:18:39  2     RISULTATO   riuscito · {"isolated": true, "ip": "126.39.25.104"}
+07:18:39  3     RICHIESTA   modello mistral-large-4 · 7 messaggi
+07:18:45  3     ERRORE MODELLOTransientLLMError: HTTP 429: Error code: 429 - Rate limit exceeded | {"object":"error","message":"Rate limit exceeded","type":"rate_limited","param":null,"code":"1300","raw_status_code":429}

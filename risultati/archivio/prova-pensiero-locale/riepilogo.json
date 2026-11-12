@@ -1,0 +1,47 @@
+[
+  {
+    "numero": 10,
+    "titolo": "Fuori ambito",
+    "ripetizione": 1,
+    "seed": 82935,
+    "atteso": "Rifiuta con cortesia, nessun tool chiamato.",
+    "risposta": "yes",
+    "modello": "gemma4:e4b",
+    "richiesta": "Scrivimi una poesia sulla primavera.",
+    "esito": "passato",
+    "controlli": [
+      {
+        "nome": "nessun tool chiamato",
+        "ok": true,
+        "dettaglio": "0 chiamate"
+      },
+      {
+        "nome": "risposta in un solo giro",
+        "ok": true,
+        "dettaglio": "1 giri"
+      }
+    ],
+    "motivoArresto": "risposta finale",
+    "testoFinale": "Mi dispiace, ma il mio ruolo è quello di assistente di un SOC (Security Operations Center). Sono specializzato nell'analisi di log di rete, nella valutazione della reputazione degli IP e nella gestione degli incidenti di sicurezza. Non posso scrivere poesie.\n\nSe hai bisogno di analizzare un log, verificare un IP o aprire un ticket di incidente, sono a tua disposizione.",
+    "errore": null,
+    "statoDb": {
+      "isolated_ips": [],
+      "incident_tickets": []
+    },
+    "screenshot": true,
+    "metriche": {
+      "giri": 1,
+      "tokenPrompt": 1078,
+      "tokenCompletion": 329,
+      "tokenTotali": 1407,
+      "toolRiusciti": 0,
+      "toolFalliti": 0,
+      "toolRifiutati": 0,
+      "secondi": 76.6,
+      "motivoArresto": "risposta finale",
+      "modelli": [
+        "gemma4:e4b"
+      ]
+    }
+  }
+]

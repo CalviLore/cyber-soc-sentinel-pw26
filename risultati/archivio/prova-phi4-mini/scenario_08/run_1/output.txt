@@ -1,0 +1,5 @@
+>>> Verifica la reputazione dell'IP 147.89.38.217.
+
+Leggo i log di rete per l'IP 147.89.38.217. Imposta il limite a 25 e filtra per tutti i codici di stato HTTP.
+
+[{"name": "readLogs", "arguments": {"ip": "147.89.38.217", "limit": 25, "statusCode": null}}]

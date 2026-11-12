@@ -1,0 +1,23 @@
+>>> Controlla l'IP 214.161.222.14: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.
+Thinking...
+L'operatore chiede di controllare l'IP 214.161.222.14: verificare accessi falliti (probabilmente 401), reputazione, e se è un attacco, isolare.
+
+Inizio con checkReputation e readLogs con statusCode 401 in parallelo (indipendenti).
+Controllo la reputazione dell'IP e i suoi accessi falliti (codice 401) in parallelo.
+87 accessi falliti 401 su /login, tutti POST, stesso user agent, frequenze elevate (più richieste al secondo/minuto). Non whitelisted, non asset critico, nessun threat score. È un pattern di brute force / credential stuffing. L'operatore ha chiesto di isolarlo se è un attacco: i fatti lo giustificano, chiamo isolateIp direttamente.
+L'operatore ha annullato. Devo avvisare che è stata annullata e non riproporre. Posso comunque aprire un ticket? L'operatore ha chiesto solo di isolare se è un attacco. Non ha chiesto un ticket. Non devo proporre di nuovo l'isolamento. Posso solo riportare. Forse posso suggerire di aprire un ticket? La regola dice non riproporre l'operazione di isolamento. Aprire un ticket è diverso, ma l'operatore non l'ha chiesto. Meglio non aprire senza richiesta. Riporto i fatti e dico che l'isolamento è stato annullato.
+...done thinking.
+
+[CONFERMA] Isolare l'IP 214.161.222.14? Motivo: Brute force su /login: 87 richieste POST con risposta 401 da un singolo IP in pochi minuti (2026-10-20 09:58-09:59), frequenza fino a diverse richieste al secondo, stesso user_agent. IP non in whitelist e non asset critico. [S/N] N (automatico)
+
+Riepilogo dell'analisi su 214.161.222.14:
+
+Fatti osservati:
+- Reputazione: non in whitelist, nessun punteggio threat intel, non è un asset critico.
+- Log: 87 richieste POST con codice 401 (totale), tutte verso l'endpoint /login, concentrate tra le 09:58:26 e le 09:59:59 del 2026-10-20, con punte di diverse richieste al secondo e un unico user_agent (Mozilla/5.0 X11 Linux x86_64).
+
+Valutazione: il pattern è compatibile con un tentativo di brute force / credential stuffing sull'endpoint di login, non con un comportamento legittimo.
+
+Azione di isolamento: ho proposto l'isolamento dell'IP, ma il sistema ha registrato l'operazione come annullata (operatore ha risposto no). Nessuna modifica è stata fatta: l'IP 214.161.222.14 non è isolato. Non ripropongo l'isolamento.
+
+Se vuoi, posso aprire un ticket di incidente per tracciare l'evento (severità a mio avviso Media/Alta, dato il volume di 87 fallimenti in ~90 secondi). Dimmi tu se procedere.

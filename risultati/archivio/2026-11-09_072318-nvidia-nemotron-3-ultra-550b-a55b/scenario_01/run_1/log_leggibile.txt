@@ -1,0 +1,38 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:23:19  1     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 2 messaggi
+                            «Controlla se ci sono anomalie nel traffico recente.»
+07:23:21  1     RISPOSTA    1845 token (1775 + 70) · 2.554 s · nvidia/nemotron-3-ultra-550b-a55b · chiede: readLogs
+07:23:21  1     TOOL        readLogs(limit=50)
+07:23:21  1     RISULTATO   riuscito · {"total": 200, "returned": 50, "logs": […]}
+07:23:21  2     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 4 messaggi
+07:23:24  2     RISPOSTA    6888 token (6763 + 125) · 2.712 s · nvidia/nemotron-3-ultra-550b-a55b · chiede: readLogs
+07:23:24  2     TOOL        readLogs(statusCode=401, limit=20)
+07:23:24  2     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:23:24  3     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 6 messaggi
+07:23:26  3     RISPOSTA    6922 token (6858 + 64) · 1.444 s · nvidia/nemotron-3-ultra-550b-a55b · chiede: readLogs
+07:23:26  3     TOOL        readLogs(statusCode=403, limit=20)
+07:23:26  3     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:23:26  4     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 8 messaggi
+07:23:32  4     RISPOSTA    7178 token (6953 + 225) · 6.096 s · nvidia/nemotron-3-ultra-550b-a55b · chiede: readLogs
+07:23:32  4     TOOL        readLogs(limit=20, statusCode=500)
+07:23:32  4     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:23:32  5     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 10 messaggi
+07:23:36  5     RISPOSTA    7216 token (7048 + 168) · 4.064 s · nvidia/nemotron-3-ultra-550b-a55b · chiede: readLogs
+07:23:36  5     TOOL        readLogs(statusCode=404, limit=20)
+07:23:36  5     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:23:36  6     RICHIESTA   modello nvidia/nemotron-3-ultra-550b-a55b · 12 messaggi
+07:23:45  6     RISPOSTA    7619 token (7143 + 476) · 8.865 s · nvidia/nemotron-3-ultra-550b-a55b
+                            I log recenti (ultimi 50 eventi) mostrano solo codici **200 OK**. Nessun 401, 403, 404, 500 negli
+                            ultimi 200 record.
+                            Pattern da tenere d'occhio:
+                            - **193.198.103.173** appare 6 volte in pochi minuti, con user agent misti (browser e curl),
+                            colpisce vari endpoint incluso POST su `/assets/bundle.js` e `/api/magazzino`.
+                            - **34.117.181.175** appare 4 volte, alterna browser e curl.
+                            - **39.76.120.2** appare 5 volte, misto browser/curl.
+                            - User agent `curl/8.4.0` su più IP → traffico automatizzato/script.
+                            Nessun tentativo di login fallito, nessun errore server, nessun codice 4xx/5xx. Al momento non c'è
+                            evidenza di attacco attivo.
+                            Vuoi che controlli la reputation di uno di questi IP (es. 193.198.103.173) o che estenda la ricerca
+                            su un arco temporale più ampio?
+07:23:45  6     FINE        risposta finale · 37668 token

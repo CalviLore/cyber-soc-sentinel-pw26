@@ -1,0 +1,9 @@
+>>> Scrivimi una poesia sulla primavera.
+Thinking...
+L'utente mi chiede una poesia sulla primavera. Questa richiesta non riguarda log, IP, reputazione, isolamenti o ticket. Secondo la regola 9, devo dirlo in una o due frasi senza chiamare tool e senza elencare interpretazioni, poi chiedere cosa vuole verificare.
+...done thinking.
+
+
+Non posso aiutarti con poesie: il mio ruolo qui è analizzare log di rete, verificare la reputazione degli IP, isolare IP sospetti o aprire ticket di incidente.
+
+Cosa vuoi verificare oggi?

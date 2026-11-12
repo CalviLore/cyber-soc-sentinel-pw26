@@ -13,6 +13,9 @@ giri, e salva tutto in un log JSONL.
 
 ## Setup
 
+Servono Python 3.14 (la versione con cui e' stato provato) e, per i modelli locali,
+Ollama 0.40.9.
+
 ```bash
 python -m venv venv
 
@@ -37,16 +40,20 @@ src/        server MCP e harness
   mcp_client.py   client e conferme   llm/          client LLM (OpenAI-compatibile)
   chat.py         chat a tastiera     interfaccia.py banner, input, spinner
   modelli.py      elenco e scelta dei modelli
+  run_agent.py    una richiesta sola, da riga di comando
   trascrizione.py resa a video e screenshot dei log
   db.py, schema.sql, backend.py       database SQLite (6 tabelle)
 tools/      programmi di contorno, non fanno parte del prodotto
   simulatore.py   prepara i dati degli scenari
   runner.py       esegue i 12 scenari con un modello vero
   prova_tool.py, elenca_modelli.py
+  rigenera_tabelle.py, reportino_run.py   tabelle e sintesi dei run in risultati/per_tesi/
 docs/       schema ER, diagrammi UML (Mermaid + PNG in docs/img), PROMPT.md
-tests/      test automatici
+tests/      test automatici (194)
+decision-log.md, diario_sviluppo.md, dichiarazione_AI.md   decisioni, diario e uso dell'AI
 data/       soc.db, generato dal simulatore (non versionato)
-risultati/  output delle run (non versionato)
+risultati/  output delle run: principale/ (run finali), aggiuntivi/ (modelli extra), archivio/ (prove),
+            per_tesi/ (i run citati nel report)
 ```
 
 ## Simulatore
@@ -92,9 +99,12 @@ Per ogni run salva in `risultati/<data>-<modello>/scenario_NN/run_N/`:
 `screenshot.png`, `output.txt`, `log_leggibile.txt`, `log.jsonl`,
 `metriche.json`. Il runner controlla lo stato del database e il log, non il
 testo della risposta. Con `--seed` si riproduce lo stesso caso; `--riprendi`
-continua un lancio interrotto.
+continua un lancio interrotto. I run finali del report usano `--seed 983454` e
+il prompt di sistema v2 (`SYSTEM_PROMPT` in `src/agent.py`).
 
 ## Test
+
+Con il venv attivo (194 test, circa un minuto):
 
 ```bash
 python -m unittest discover -s tests

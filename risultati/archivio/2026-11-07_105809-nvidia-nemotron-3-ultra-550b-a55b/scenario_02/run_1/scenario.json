@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 45489,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Controlla l'IP 199.123.0.131: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['199.123.0.131']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP 199.123.0.131 ha generato 47 richieste POST su `/signin` con codice 401 (accesso non autorizzato) in un arco di pochi minuti, pattern tipico di brute-force. La reputation check conferma che non è in whitelist, non è un asset critico e non ha threat score noto.\n\nHo isolato l'IP come richiesto. L'operazione è stata confermata e completata.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "199.123.0.131"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

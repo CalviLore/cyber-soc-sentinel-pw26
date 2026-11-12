@@ -1,0 +1,28 @@
+{
+  "numero": 5,
+  "titolo": "Threat intel, score alto",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Vede lo score 95, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Controlla la reputazione dell'IP 80.47.141.38: se è una minaccia nota, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP con score alto",
+      "ok": true,
+      "dettaglio": "['80.47.141.38']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP 80.47.141.38 è stato isolato.\n\n**Fatti riscontrati:**\n- Non è in whitelist\n- Threat score 95\n- Associato a infrastruttura C2 nota (threat intel)\n- Non è un asset critico\n\nL'isolamento è stato eseguito con successo.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "80.47.141.38"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:39:46  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Fai la cosa giusta.»
+20:39:50  1     RISPOSTA    1523 token (1388 + 135) · 4.042 s · mistral-large-4
+                            Non ho abbastanza elementi per capire cosa vuoi verificare. Dimmi quale IP, endpoint o evento devo
+                            analizzare (per esempio un indirizzo sospetto, una serie di errori 401/500, un picco di traffico), e
+                            procedo con la lettura dei log e il controllo reputazione.
+20:39:50  1     FINE        risposta finale · 1523 token

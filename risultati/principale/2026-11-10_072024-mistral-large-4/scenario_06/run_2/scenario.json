@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": true,
+      "dettaglio": "status_code_correlato = 500"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Sì, ci sono errori 500 recenti. Ecco i fatti osservati:\n\n- 10 richieste con codice 500, tutte negli ultimi minuti (dalle 09:42:05 alle 09:59:34 del 2026-10-20)\n- Tutte dallo stesso IP sorgente: 10.1.108.5\n- Tutte sull'endpoint GET /api/catalogo\n- Il campo user_agent riporta \"DB Timeout\" su tutte le righe\n\nNota: il valore \"DB Timeout\" nel campo user_agent non è un agent standard, ma indica presumibilmente la causa dell'errore lato server (timeout del database). Non ci sono elementi che facciano pensare a un attacco: la sorgente è un IP interno (10.x) e l'endpoint è un'API applicativa.\n\nHo aperto il ticket per il team:\n\n- Ticket ID: 1\n- Stato: aperto\n- Titolo: Errori 500 ricorrenti su /api/catalogo (DB Timeout)\n- Gravità: Media\n- IP correlato: 10.1.108.5, codice 500\n\nSe vuoi posso controllare la reputazione di 10.1.108.5 o cercare altri codici di errore recenti.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errori 500 ricorrenti su /api/catalogo (DB Timeout)",
+        "descrizione": "Osservati 10 errori HTTP 500 recenti (dal 2026-10-20 09:42:05 al 2026-10-20 09:59:34), tutti provenienti dall'IP 10.1.108.5 sull'endpoint GET /api/catalogo. Il campo user_agent riporta \"DB Timeout\", che suggerisce un problema lato database (timeout) piuttosto che un attacco. Da verificare con il team applicativo/database.",
+        "gravita": "Media",
+        "ip_correlato": "10.1.108.5",
+        "status_code_correlato": 500,
+        "timestamp": "2026-11-10T07:25:45",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

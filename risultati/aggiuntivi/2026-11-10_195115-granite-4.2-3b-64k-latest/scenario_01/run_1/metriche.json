@@ -1,0 +1,15 @@
+{
+  "giri": 2,
+  "tokenPrompt": 4969,
+  "tokenCompletion": 1001,
+  "tokenTotali": 5970,
+  "toolRiusciti": 1,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 362.9,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "granite-4.2-3b-64k:latest"
+  ],
+  "fallback": []
+}

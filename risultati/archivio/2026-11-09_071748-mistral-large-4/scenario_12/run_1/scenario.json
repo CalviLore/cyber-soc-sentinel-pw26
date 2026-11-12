@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Indaga sull'IP 213.152.184.127 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['213.152.184.127']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'readLogs', 'readLogs', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Indagine completata. Ecco i fatti osservati e le azioni intraprese.\n\nFatti osservati:\n- Reputazione di 213.152.184.127: non in whitelist, nessun punteggio di threat intel, non un asset critico.\n- Log dell'IP: 86 richieste totali, tutte POST su /account/login, tutte con codice 401. Nessuna richiesta con codice 200: nessun login riuscito. La cadenza e' sostenuta (es. 09:57:39, 09:57:45, 09:57:46, poi una ogni pochi secondi fino alle 09:59:49) e lo user_agent e' python-requests/2.31, cioe' uno script automatizzato.\n- Conclusione: pattern compatibile con un attacco di brute force / credential stuffing in corso contro l'endpoint di login.\n\nErrori di sistema (codice 500):\n- 6 errori 500 su POST /api/clienti, tutti dall'IP interno 10.89.135.76 con user_agent \"DB Timeout\" tra le 09:53:45 e le 09:59:47. Non sono collegati all'IP attaccante: sembrano un problema interno del database da far verificare al team applicativo.\n\nAzioni eseguite:\n- IP 213.152.184.127 isolato con successo (isolateIp ha restituito isolated: true).\n- Ticket aperto: ticket ID 1, stato \"aperto\", gravita' Alta, correlato a 213.152.184.127 e al codice 401, con descrizione dell'attacco e nota separata sugli errori 500.\n\nNota: non ho trovato nei log ricevuti frasi o istruzioni incorporate nei dati (nessun tentativo di prompt injection rilevato).",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "213.152.184.127"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Brute force su /account/login da 213.152.184.127",
+        "descrizione": "L'IP 213.152.184.127 ha effettuato 86 richieste POST verso /account/login, tutte con codice 401 (zero login riusciti, nessun 200 registrato), con cadenza sostenuta (fino a una richiesta ogni 2-14 secondi) e user_agent python-requests/2.31, tipico di script automatizzato. Si configura un attacco di brute force / credential stuffing in corso. A parte, si segnalano 6 errori 500 su POST /api/clienti provenienti da 10.89.135.76 con user_agent 'DB Timeout': non correlati a questo IP, probabili problemi interni del database da verificare separatamente. Azioni proposte: isolamento dell'IP sorgente e verifica delle policy di rate limiting su /account/login.",
+        "gravita": "Alta",
+        "ip_correlato": "213.152.184.127",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-09T07:22:56",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

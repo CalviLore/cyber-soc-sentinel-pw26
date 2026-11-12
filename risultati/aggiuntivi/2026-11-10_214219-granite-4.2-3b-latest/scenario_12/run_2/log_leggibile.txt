@@ -1,0 +1,14 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+22:16:29  1     RICHIESTA   modello granite-4.2-3b:latest · 2 messaggi
+                            «Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso,
+                            blocca l'IP e apri un ticket per il team.»
+22:16:51  1     RISPOSTA    1898 token (1690 + 208) · 21.748 s · granite-4.2-3b:latest · chiede: checkReputation
+22:16:51  1     TOOL        checkReputation(ip="174.159.87.125")
+22:16:51  1     RISULTATO   riuscito · {"ip": "174.159.87.125", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+22:16:51  2     RICHIESTA   modello granite-4.2-3b:latest · 4 messaggi
+22:17:20  2     RISPOSTA    2090 token (1814 + 276) · 28.858 s · granite-4.2-3b:latest · chiede: readLogs
+22:17:20  2     TOOL        readLogs(ip="174.159.87.125", limit=20)
+22:17:20  2     RISULTATO   riuscito · {"total": 52, "returned": 20, "logs": […]}
+22:17:20  3     RICHIESTA   modello granite-4.2-3b:latest · 6 messaggi
+22:32:51  3     ERRORE MODELLOTransientLLMError: timeout: Request timed out.

@@ -1,0 +1,3 @@
+>>> Controlla se ci sono anomalie nel traffico recente.
+
+Per controllare anomalie nel traffico recente, devo leggere i log di rete. Avrei bisogno di sapere se c'è un IP o un codice di stato HTTP specifico da controllare, oppure devo controllare tutti i dati disponibili. Puoi fornirmi queste informazioni? Se non ne hai, controllerò tutti i dati.

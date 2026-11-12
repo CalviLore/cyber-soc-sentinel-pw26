@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 45169,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Controlla l'IP 214.66.138.68: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['214.66.138.68']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Esito dell'analisi su 214.66.138.68:\n\nFatti osservati:\n- 75 richieste totali dall'IP, tutte POST su /login con codice 401 (accesso fallito). Nessun 403, nessun altro endpoint.\n- Frequenza molto alta: nel campione analizzato le richieste vanno dalle 09:58:12 alle 09:59:53 del 2026-10-20, cioe' decine di tentativi in meno di 2 minuti, con lo stesso user_agent (Mozilla/5.0 X11 Linux).\n- Reputazione: non in whitelist, non asset critico, nessun punteggio threat intel presente.\n\nValutazione: il pattern (solo /login, solo 401, alto volume in pochi minuti da un singolo IP) e' coerente con un tentativo di brute force / credential stuffing.\n\nAzione: ho proceduto con l'isolamento dell'IP. Il tool ha restituito isolated: true per 214.66.138.68, quindi l'IP e' ora bloccato.\n\nSe vuoi, posso aprire anche un ticket di incidente (gravita' Media o Alta) con questi dettagli.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "214.66.138.68"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

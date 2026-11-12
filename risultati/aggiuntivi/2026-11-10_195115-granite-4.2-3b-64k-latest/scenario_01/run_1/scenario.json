@@ -1,0 +1,41 @@
+{
+  "numero": 1,
+  "titolo": "Routine, nessuna azione",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+  "risposta": "yes",
+  "modello": "granite-4.2-3b-64k:latest",
+  "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "c'e' una risposta finale non vuota",
+      "ok": true,
+      "dettaglio": "controllo sul testo"
+    },
+    {
+      "nome": "nessuna scrittura richiesta",
+      "ok": true,
+      "dettaglio": "0 chiamate di scrittura"
+    },
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessun ticket",
+      "ok": true,
+      "dettaglio": "0 ticket"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Non sono state trovate anomalie nel traffico recente basandosi sui log analizzati.\n\nAnalisi:\n- Ho letto 20 log recenti (ultimi 20 record).\n- Tutti i record mostrano codice di stato 200 (successo).\n- Metodi e endpoint sono normali (GET, POST, endpoint comuni).\n- Nessun tentativo anomalo (es. tentativi di accesso con codici diversi da 200, tentativi di brute force, ecc.).\n- Frequenza di log è normale per l'intervallo di tempo.\n\nSe desideri un controllo più approfondito su un particolare IP o endpoint specifico, fammi sapere.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

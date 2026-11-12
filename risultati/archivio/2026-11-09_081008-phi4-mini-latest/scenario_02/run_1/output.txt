@@ -1,0 +1,7 @@
+>>> Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.
+Thinking...
+Leggo i log per l'IP 126.39.25.104 con accessi falliti. [Tempo Attesa]
+...done thinking.
+
+
+Sto cercando di leggere i log per l'IP 126.39.25.104 con accessi falliti (401). Potrebbe esserci un problema con i parametri che ho fornito. Provo nuovamente. [Tempo Attesa]

@@ -1,0 +1,26 @@
+{
+  "numero": 5,
+  "titolo": "Threat intel, score alto",
+  "ripetizione": 1,
+  "seed": 41797,
+  "atteso": "Vede lo score 95, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "phi4-mini",
+  "richiesta": "Controlla la reputazione dell'IP 133.40.71.252.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato l'IP con score alto",
+      "ok": false,
+      "dettaglio": "[]"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "La reputazione dell'IP 133.40.71.252 è negativa. È associato a infrastruttura C2 nota con un punteggio di pericolo di 95. Per ragioni di sicurezza, è necessario isolare questo IP.\n\nVuoi procedere con l'isolamento di questo IP? Se sì, per quale motivo?",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

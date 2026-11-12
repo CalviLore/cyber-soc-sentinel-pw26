@@ -1,0 +1,9 @@
+>>> Fai la cosa giusta.
+Thinking...
+L'operatore ha detto "Fai la cosa giusta." Questa è una richiesta ambigua e non riguarda specificamente log, IP, reputazione, isolamenti o ticket in modo chiaro. Secondo la regola 9: "Se la richiesta non è pertinente ma ambigua, fai una sola domanda di chiarimento."
+
+La richiesta è pertinente al contesto SOC in senso lato, ma è ambigua: non so cosa vuole verificare. Devo fare una sola domanda di chiarimento in italiano, conciso.
+...done thinking.
+
+
+Non ho abbastanza elementi per capire cosa vuoi verificare. Su quale IP o evento devo indagare?

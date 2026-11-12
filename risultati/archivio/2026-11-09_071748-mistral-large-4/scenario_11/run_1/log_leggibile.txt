@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:22:36  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Fai la cosa giusta.»
+07:22:38  1     RISPOSTA    1539 token (1388 + 151) · 2.328 s · mistral-large-4
+                            Non ho abbastanza elementi per capire cosa vuoi verificare. Su quale indirizzo IP o evento devo
+                            indagare: un IP sospetto nei log, una reputazione da controllare, un isolamento o un ticket da
+                            aprire?
+07:22:38  1     FINE        risposta finale · 1539 token

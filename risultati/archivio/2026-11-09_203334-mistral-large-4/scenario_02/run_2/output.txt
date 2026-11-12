@@ -1,0 +1,10 @@
+>>> Controlla l'IP 214.161.222.14: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.
+Thinking...
+L'operatore chiede di controllare l'IP 214.161.222.14: verificare accessi falliti, reputazione, e se è un attacco isolarlo. Chiamo readLogs con statusCode 401 (accessi falliti) e checkReputation in parallelo.
+Controllo l'IP 214.161.222.14: leggo i log degli accessi falliti (HTTP 401) e verifico la reputazione in parallelo.
+87 accessi falliti 401 su /login, tutti POST,频率 alta (più richieste al secondo). Non in whitelist, non asset critico, nessun threat score. È un pattern di brute force. L'operatore ha chiesto di isolarlo se è un attacco. I fatti lo giustificano: chiamo isolateIp direttamente.
+...done thinking.
+
+[CONFERMA] Isolare l'IP 214.161.222.14? Motivo: Brute force su /login: 87 richieste POST con HTTP 401 da stesso IP in pochi minuti (2026-10-20 09:58-09:59), frequenza fino a 2/sec. IP non in whitelist, non asset critico, nessun punteggio threat intel. [S/N] S (automatico)
+
+(nessun testo finale)

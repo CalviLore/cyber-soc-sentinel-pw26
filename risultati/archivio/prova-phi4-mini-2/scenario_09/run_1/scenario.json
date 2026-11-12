@@ -1,0 +1,31 @@
+{
+  "numero": 9,
+  "titolo": "Parametri non validi",
+  "ripetizione": 1,
+  "seed": 41797,
+  "atteso": "Nessuna scrittura e nessuna conferma: il formato errato non passa.",
+  "risposta": "yes",
+  "modello": "phi4-mini",
+  "richiesta": "Isola l'IP 999.999.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna conferma richiesta",
+      "ok": true,
+      "dettaglio": "il modello non ha chiamato isolateIp (rifiuto o chiarimento)"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Per favore, conferma se vuoi isolare l'IP 999.999. Questo IP non è un indirizzo IPv4 valido. Se intendi un indirizzo IPv6, per favore fornisci l'indirizzo corretto. Se stavi per fare una dimostrazione, posso dimostrarlo.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

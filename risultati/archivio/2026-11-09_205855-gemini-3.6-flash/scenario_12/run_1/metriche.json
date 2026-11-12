@@ -1,0 +1,15 @@
+{
+  "giri": 3,
+  "tokenPrompt": 10298,
+  "tokenCompletion": 518,
+  "tokenTotali": 10816,
+  "toolRiusciti": 4,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 33.3,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "gemini-3.6-flash"
+  ],
+  "fallback": []
+}

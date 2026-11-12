@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 888434,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "gemini-3.6-flash",
+  "richiesta": "Controlla l'IP 207.4.197.7: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['207.4.197.7']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP 207.4.197.7 risulta responsabile di 32 tentativi di accesso falliti (codice HTTP 401) verso l'endpoint /auth/login nell'arco di pochi minuti, configurando un evidente attacco di brute force.\n\nDalla verifica di reputazione, l'IP non e' in whitelist e non e' un asset critico.\n\nHo avviato la procedura di isolamento dell'IP 207.4.197.7, che e' stato isolato con successo.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "207.4.197.7"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,31 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "granite-4.2-3b:latest",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": false,
+      "dettaglio": "0 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": false,
+      "dettaglio": "status_code_correlato = None"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Ho trovato 10 errori 500 recenti dall'IP 10.1.108.5 per l'endpoint /api/catalogo (user_agent: DB Timeout).  \nVuoi che apra un ticket di incidente per questi errori? (Y/N)",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

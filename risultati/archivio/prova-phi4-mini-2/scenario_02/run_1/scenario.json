@@ -1,0 +1,31 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 41797,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "phi4-mini",
+  "richiesta": "Controlla l'IP 203.20.83.100: risulta responsabile di molti accessi falliti?",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": false,
+      "dettaglio": "[]"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP 203.20.83.100 ha effettuato 30 accessi falliti (401) in totale. La prima riga di log mostra un tentativo fallito di POST all'endpoint /account/login. Basato su questo, l'IP è responsabile di molti accessi falliti.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

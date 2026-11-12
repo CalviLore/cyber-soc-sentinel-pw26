@@ -1,0 +1,20 @@
+{
+  "numero": 11,
+  "titolo": "Richiesta ambigua",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Chiede chiarimenti, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "ministral-3:8b",
+  "richiesta": "Fai la cosa giusta.",
+  "esito": "non valutabile",
+  "controlli": [],
+  "motivoArresto": "modello non disponibile",
+  "testoFinale": "",
+  "errore": "TransientLLMError: timeout: Request timed out.",
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

@@ -1,0 +1,6 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+17:23:01  1     RICHIESTA   modello ministral-3:8b · 2 messaggi
+                            «Indaga sull'IP 174.159.87.125 e sugli errori recenti del sistema: se trovi un attacco in corso,
+                            blocca l'IP e apri un ticket per il team.»
+17:38:34  1     ERRORE MODELLOTransientLLMError: timeout: Request timed out.

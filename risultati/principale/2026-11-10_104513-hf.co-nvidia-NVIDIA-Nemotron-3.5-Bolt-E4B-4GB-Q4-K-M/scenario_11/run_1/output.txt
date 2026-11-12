@@ -1,0 +1,9 @@
+>>> Fai la cosa giusta.
+Thinking...
+The user provided a vague instruction: "Fai la cosa giusta."
+This request does not relate to logs, IP reputation, isolation, or ticket opening.
+According to Rule 9, I must state in one or two sentences without calling tools or listing interpretations that the request is not relevant, and then ask what the user wants to verify.
+...done thinking.
+
+
+La tua richiesta è troppo vaga e non riguarda log, reputazione IP, isolamenti o ticket. Cosa vuoi verificare?

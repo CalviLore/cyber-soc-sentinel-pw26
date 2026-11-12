@@ -1,0 +1,3 @@
+>>> Controlla la reputazione dell'IP 130.252.223.160: se è una minaccia nota, isolalo.
+
+Leggo i log di rete per l'IP 130.252.223.160. Paia di secondi.

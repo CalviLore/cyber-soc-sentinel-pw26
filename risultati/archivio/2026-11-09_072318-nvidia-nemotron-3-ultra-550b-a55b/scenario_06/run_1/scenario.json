@@ -1,0 +1,42 @@
+{
+  "numero": 6,
+  "titolo": "Ticket da errori 500",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Trova gli errori 500, propone openTicket, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "ticket correlato al codice 500",
+      "ok": true,
+      "dettaglio": "status_code_correlato = 500"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Ho trovato 5 errori HTTP 500 recenti (tra le 09:40 e le 09:53 del 2026-10-20) tutti provenienti dall'IP 10.89.135.76 sull'endpoint `/api/fatture`. Ogni log riporta `user_agent: \"DB Timeout\"`, segno di probabili timeout del database.\n\nHo aperto un ticket per il team:\n- **Ticket ID**: 1\n- **Stato**: aperto\n- **Titolo**: \"Errori 500 ripetuti su /api/fatture\"\n- **Gravità**: Media\n- **Descrizione**: include IP, endpoint, orari e indicazione del timeout DB.\n\nIl ticket è pronto per essere preso in carico dal team backend/infrastruttura.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Errori 500 ripetuti su /api/fatture",
+        "descrizione": "Rilevati 5 errori HTTP 500 consecutivi (2026-10-20 09:40-09:53) dall'IP 10.89.135.76 sull'endpoint /api/fatture. Tutti i log riportano user_agent 'DB Timeout', indicando probabili timeout del database. L'IP non risulta in whitelist né in threat intel (da verificare se serve). Richiesto intervento team backend/infrastruttura.",
+        "gravita": "Media",
+        "ip_correlato": "10.89.135.76",
+        "status_code_correlato": 500,
+        "timestamp": "2026-11-09T07:26:59",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

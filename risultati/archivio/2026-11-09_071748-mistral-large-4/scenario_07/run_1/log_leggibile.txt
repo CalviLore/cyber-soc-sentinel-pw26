@@ -1,0 +1,69 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:20:26  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Analizza i log più recenti e segnala eventuali problemi.»
+07:20:27  1     RISPOSTA    1450 token (1394 + 56) · 1.052 s · mistral-large-4 · chiede: readLogs
+07:20:27  1     TOOL        readLogs(limit=25)
+07:20:27  1     RISULTATO   riuscito · {"total": 201, "returned": 25, "logs": […]}
+07:20:27  2     RICHIESTA   modello mistral-large-4 · 4 messaggi
+07:20:28  2     RISPOSTA    3515 token (3384 + 131) · 1.175 s · mistral-large-4 · chiede: readLogs, readLogs, readLogs, readLogs
+07:20:28  2     TOOL        readLogs(limit=25, statusCode=401)
+07:20:28  2     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:28  2     TOOL        readLogs(limit=25, statusCode=403)
+07:20:28  2     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:28  2     TOOL        readLogs(limit=25, statusCode=500)
+07:20:28  2     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:28  2     TOOL        readLogs(limit=25, statusCode=404)
+07:20:28  2     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:28  3     RICHIESTA   modello mistral-large-4 · 9 messaggi
+07:20:29  3     RISPOSTA    3713 token (3593 + 120) · 1.19 s · mistral-large-4 · chiede: readLogs, readLogs, readLogs, readLogs
+07:20:29  3     TOOL        readLogs(limit=25, statusCode=429)
+07:20:29  3     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:29  3     TOOL        readLogs(limit=25, statusCode=400)
+07:20:29  3     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:29  3     TOOL        readLogs(limit=25, statusCode=503)
+07:20:29  3     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:29  3     TOOL        readLogs(limit=25, statusCode=502)
+07:20:29  3     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:29  4     RICHIESTA   modello mistral-large-4 · 14 messaggi
+07:20:32  4     RISPOSTA    3994 token (3802 + 192) · 2.965 s · mistral-large-4 · chiede: readLogs, readLogs, readLogs, readLogs
+07:20:32  4     TOOL        readLogs(limit=25, statusCode=302)
+07:20:32  4     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:32  4     TOOL        readLogs(limit=25, statusCode=201)
+07:20:32  4     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:32  4     TOOL        readLogs(limit=25, statusCode=405)
+07:20:32  4     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:32  4     TOOL        readLogs(limit=25, statusCode=422)
+07:20:32  4     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+07:20:32  5     RICHIESTA   modello mistral-large-4 · 19 messaggi
+07:20:35  5     RISPOSTA    4367 token (4011 + 356) · 2.249 s · mistral-large-4 · chiede: checkReputation, readLogs, checkReputation, readLogs, checkReputation, readLogs
+07:20:35  5     TOOL        checkReputation(ip="158.155.195.5")
+07:20:35  5     RISULTATO   riuscito · {"ip": "158.155.195.5", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:20:35  5     TOOL        readLogs(ip="158.155.195.5", limit=25)
+07:20:35  5     RISULTATO   riuscito · {"total": 1, "returned": 1, "logs": […]}
+07:20:35  5     TOOL        checkReputation(ip="193.198.103.173")
+07:20:35  5     RISULTATO   riuscito · {"ip": "193.198.103.173", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:20:35  5     TOOL        readLogs(ip="193.198.103.173", limit=25)
+07:20:35  5     RISULTATO   riuscito · {"total": 13, "returned": 13, "logs": […]}
+07:20:35  5     TOOL        checkReputation(ip="215.79.157.255")
+07:20:35  5     RISULTATO   riuscito · {"ip": "215.79.157.255", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:20:35  5     TOOL        readLogs(ip="215.79.157.255", limit=25)
+07:20:35  5     RISULTATO   riuscito · {"total": 10, "returned": 10, "logs": […]}
+07:20:35  6     RICHIESTA   modello mistral-large-4 · 26 messaggi
+07:20:48  6     RISPOSTA    6978 token (6289 + 689) · 6.553 s · mistral-large-4 · chiede: readLogs, checkReputation, readLogs, checkReputation, readLogs, checkReputation, readLogs
+07:20:48  6     TOOL        readLogs(limit=25, statusCode=200)
+07:20:48  6     RISULTATO   riuscito · {"total": 201, "returned": 25, "logs": […]}
+07:20:48  6     TOOL        checkReputation(ip="114.108.153.111")
+07:20:48  6     RISULTATO   riuscito · {"ip": "114.108.153.111", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:20:48  6     TOOL        readLogs(ip="114.108.153.111", limit=25)
+07:20:48  6     RISULTATO   riuscito · {"total": 15, "returned": 15, "logs": […]}
+07:20:48  6     TOOL        checkReputation(ip="34.117.181.175")
+07:20:48  6     RISULTATO   riuscito · {"ip": "34.117.181.175", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:20:48  6     TOOL        readLogs(ip="34.117.181.175", limit=25)
+07:20:48  6     RISULTATO   riuscito · {"total": 10, "returned": 10, "logs": […]}
+07:20:48  6     TOOL        checkReputation(ip="209.236.248.217")
+07:20:48  6     RISULTATO   riuscito · {"ip": "209.236.248.217", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+07:20:48  6     TOOL        readLogs(ip="209.236.248.217", limit=25)
+07:20:48  6     RISULTATO   riuscito · {"total": 11, "returned": 11, "logs": […]}
+07:20:48  7     RICHIESTA   modello mistral-large-4 · 34 messaggi
+07:20:55  7     ERRORE MODELLOTransientLLMError: HTTP 429: Error code: 429 - Rate limit exceeded | {"object":"error","message":"Rate limit exceeded","type":"rate_limited","param":null,"code":"1300","raw_status_code":429}

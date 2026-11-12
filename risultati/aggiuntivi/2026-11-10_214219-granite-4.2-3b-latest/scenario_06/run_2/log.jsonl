@@ -1,0 +1,2 @@
+{"ts": "2026-11-10T20:44:22.603+00:00", "event": "richiesta", "giro": 1, "nMessaggi": 2, "tools": ["checkReputation", "isolateIp", "openTicket", "readLogs"], "modello": "granite-4.2-3b:latest", "richiestaUtente": "Ci sono errori 500 recenti? Se sì, apri un ticket per il team."}
+{"ts": "2026-11-10T20:59:54.143+00:00", "event": "errore_modello", "giro": 1, "errore": "TransientLLMError: timeout: Request timed out."}

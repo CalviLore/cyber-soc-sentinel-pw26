@@ -1,0 +1,36 @@
+{
+  "numero": 4,
+  "titolo": "Falso positivo (whitelist)",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Verifica la reputazione, vede la whitelist, non propone blocchi.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Ho notato un picco di traffico da 10.90.253.70, è un problema?",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna chiamata a isolateIp",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "reputazione dell'IP backup verificata",
+      "ok": true,
+      "dettaglio": ""
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "No, non è un problema. Ecco i fatti osservati:\n\n- Reputazione: 10.90.253.70 è in whitelist come \"Backup server pianificato (asset interno)\" (assetName: backup-server, non critico). Nessun punteggio di threat intel associato.\n- Volume: 199 richieste totali registrate per questo IP.\n- Tipo di traffico: nei primi 25 log (i più recenti, dalle 09:55 alle 09:59 del 2026-10-20) tutte le richieste sono POST sull'endpoint /backup/upload con codice 200 e user agent backup-agent/2.1.\n- Errori: nessun 401, 403 o 500 registrato per questo IP (0 richieste per chacun di questi codici).\n\nConclusione: il picco corrisponde a un backup pianificato interno, con richieste tutte andate a buon fine. Non ci sono elementi che giustifichino isolamento o ticket. Se il picco ti sembra anomalo rispetto alla normale finestra di backup, posso controllare altri codici di stato o un altro intervallo temporale.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

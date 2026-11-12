@@ -1,0 +1,8 @@
+>>> Verifica la reputazione dell'IP 130.252.223.160.
+
+Il tool per verificare la reputazione dell’IP **130.252.223.160** ha superato il timeout. Non ho dati da analizzare.
+
+Cosa vuoi fare?
+- Riprovare a verificare la reputazione?
+- Leggere i log di questo IP per valutare il traffico?
+- Chiedere altro?

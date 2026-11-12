@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:37:42  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Analizza i log più recenti e segnala eventuali problemi.»
+20:37:45  1     RISPOSTA    1450 token (1394 + 56) · 2.369 s · mistral-large-4 · chiede: readLogs
+20:37:45  1     TOOL        readLogs(limit=25)
+20:37:45  1     RISULTATO   riuscito · {"total": 201, "returned": 25, "logs": […]}
+20:37:45  2     RICHIESTA   modello mistral-large-4 · 4 messaggi
+20:37:51  2     ERRORE MODELLOTransientLLMError: HTTP 429: Error code: 429 - Rate limit exceeded | {"object":"error","message":"Rate limit exceeded","type":"rate_limited","param":null,"code":"1300","raw_status_code":429}

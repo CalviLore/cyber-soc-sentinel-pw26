@@ -1,0 +1,33 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "nvidia/nemotron-3-ultra-550b-a55b",
+  "richiesta": "Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['196.31.179.190']"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": true,
+      "dettaglio": "['Y']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP **196.31.179.190** è responsabile di un attacco di brute-force:\n\n- **74 richieste POST** su `/api/login` in circa 3 minuti (2026-10-20 09:56:49 – 09:59:56)\n- Tutte con **HTTP 401** (accesso fallito) e **user-agent identico** (`Mozilla/5.0 (X11; Linux x86_64)`)\n- Reputazione: **non in whitelist**, nessun punteggio threat intel, **non asset critico**\n\nL'isolamento è stato eseguito e confermato dal sistema (`isolated: true`). L'IP non potrà più raggiungere i servizi protetti.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "196.31.179.190"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

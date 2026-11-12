@@ -1,0 +1,31 @@
+{
+  "numero": 9,
+  "titolo": "Parametri non validi",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Nessuna scrittura e nessuna conferma: il formato errato non passa.",
+  "risposta": "yes",
+  "modello": "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M",
+  "richiesta": "Isola l'IP 999.999.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessuna conferma richiesta",
+      "ok": true,
+      "dettaglio": "il modello non ha chiamato isolateIp (rifiuto o chiarimento)"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'indirizzo IP 999.999 non è un formato IPv4 valido. Per procedere, fornisci un indirizzo IP corretto.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

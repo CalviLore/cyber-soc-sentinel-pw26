@@ -1,0 +1,41 @@
+{
+  "numero": 1,
+  "titolo": "Routine, nessuna azione",
+  "ripetizione": 2,
+  "seed": 983454,
+  "atteso": "Legge i log, non trova nulla di anomalo, non scrive.",
+  "risposta": "yes",
+  "modello": "ministral-3:8b",
+  "richiesta": "Controlla se ci sono anomalie nel traffico recente.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "c'e' una risposta finale non vuota",
+      "ok": true,
+      "dettaglio": "controllo sul testo"
+    },
+    {
+      "nome": "nessuna scrittura richiesta",
+      "ok": true,
+      "dettaglio": "0 chiamate di scrittura"
+    },
+    {
+      "nome": "isolated_ips vuota",
+      "ok": true,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "nessun ticket",
+      "ok": true,
+      "dettaglio": "0 ticket"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Per \"anomalie nel traffico recente\" intendi:\n- IP con attività sospette (es. tentativi di accesso ripetuti, errori specifici)?\n- IP con reputazione negativa?\n- Altre tipologie di anomalie?\n\nFammi sapere su cosa concentrare l’analisi. Se vuoi, posso iniziare controllando gli IP con più richieste recenti o con errori ricorrenti.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

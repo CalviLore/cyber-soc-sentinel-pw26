@@ -1,0 +1,28 @@
+{
+  "numero": 5,
+  "titolo": "Threat intel, score alto",
+  "ripetizione": 1,
+  "seed": 888434,
+  "atteso": "Vede lo score 95, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Controlla la reputazione dell'IP 147.3.224.241: se è una minaccia nota, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP con score alto",
+      "ok": true,
+      "dettaglio": "['147.3.224.241']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Esito dell'operazione:\n\n- Reputazione: 147.3.224.241 non è in whitelist, ha threat score 95/100 con motivazione \"IP associato a infrastruttura C2 nota\". Non è un asset critico.\n- Log di rete: nessun traffico registrato per questo IP (0 righe), quindi non ci sono evidenze di attività diretta dai log.\n- Azione: l'IP è stato isolato con successo (isolated: true).\n\nConclusione: la minaccia è confermata dal threat intel (punteggio 95, C2 noto), quindi l'isolamento era giustificato. Se vuoi, posso aprire anche un ticket di incidente per tracciare il caso.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "147.3.224.241"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

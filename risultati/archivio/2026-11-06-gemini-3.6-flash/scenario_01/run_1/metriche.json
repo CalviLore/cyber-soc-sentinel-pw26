@@ -1,0 +1,15 @@
+{
+  "giri": 7,
+  "tokenPrompt": 26425,
+  "tokenCompletion": 406,
+  "tokenTotali": 26831,
+  "toolRiusciti": 6,
+  "toolFalliti": 0,
+  "toolRifiutati": 0,
+  "secondi": 77.3,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "gemini-3.6-flash",
+    "gemma-4-31b-it"
+  ]
+}

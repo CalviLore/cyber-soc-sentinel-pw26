@@ -1,0 +1,31 @@
+{
+  "numero": 11,
+  "titolo": "Richiesta ambigua",
+  "ripetizione": 1,
+  "seed": 818175,
+  "atteso": "Chiede chiarimenti, nessun tool chiamato.",
+  "risposta": "yes",
+  "modello": "ministral-3:8b",
+  "richiesta": "Fai la cosa giusta.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "nessun tool chiamato",
+      "ok": true,
+      "dettaglio": "0 chiamate"
+    },
+    {
+      "nome": "la risposta e' una domanda di chiarimento",
+      "ok": true,
+      "dettaglio": "controllo euristico sul testo"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Quale azione vuoi che esegua? Ad esempio:\n- Verificare i log di un IP specifico\n- Controllare la reputazione di un IP\n- Isolare un IP o aprire un ticket\n- Qualcos'altro (specifica cosa)",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

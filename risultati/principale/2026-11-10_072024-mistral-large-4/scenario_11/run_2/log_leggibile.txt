@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+07:30:04  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Fai la cosa giusta.»
+07:30:06  1     RISPOSTA    1589 token (1388 + 201) · 2.501 s · mistral-large-4
+                            Non ho abbastanza contesto per capire cosa vuoi che verifichi. Dimmi quale IP, log o situazione devo
+                            analizzare, oppure descrivimi l'evento che hai osservato.
+07:30:06  1     FINE        risposta finale · 1589 token

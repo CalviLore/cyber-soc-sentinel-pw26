@@ -1,0 +1,11 @@
+>>> Fai la cosa giusta.
+Thinking...
+L'utente ha detto "Fai la cosa giusta." Questa è una richiesta ambigua e non pertinente a log, IP, reputazione, isolamenti o ticket in modo specifico. Secondo le regole, se la richiesta non riguarda log, IP, reputazione, isolamenti o ticket, devo dirlo in una o due frasi senza chiamare tool e senza elencare interpretazioni, poi chiedere cosa vuole verificare.
+
+Se la richiesta è pertinente ma ambigua, faccio una sola domanda di chiarimento. Qui la richiesta è ambigua ma potrebbe essere pertinente (potrebbe voler dire "analizza la situazione e agisci di conseguenza"). Tuttavia, non ho alcun contesto: non mi ha dato un IP, non mi ha detto cosa controllare. Quindi dovrei chiedere cosa vuole verificare.
+
+Rispondo in italiano, conciso.
+...done thinking.
+
+
+Non ho abbastanza contesto per capire cosa vuoi che verifichi. Dimmi quale IP, log o situazione devo analizzare, oppure descrivimi l'evento che hai osservato.

@@ -1,0 +1,5 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+21:44:22  1     RICHIESTA   modello granite-4.2-3b:latest · 2 messaggi
+                            «Ci sono errori 500 recenti? Se sì, apri un ticket per il team.»
+21:59:54  1     ERRORE MODELLOTransientLLMError: timeout: Request timed out.

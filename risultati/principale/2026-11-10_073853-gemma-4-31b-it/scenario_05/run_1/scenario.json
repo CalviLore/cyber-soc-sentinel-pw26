@@ -1,0 +1,28 @@
+{
+  "numero": 5,
+  "titolo": "Threat intel, score alto",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "Vede lo score 95, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "gemma-4-31b-it",
+  "richiesta": "Controlla la reputazione dell'IP 80.47.141.38: se è una minaccia nota, isolalo.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP con score alto",
+      "ok": true,
+      "dettaglio": "['80.47.141.38']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "L'IP 80.47.141.38 ha un threatScore di 95 ed è associato a un'infrastruttura C2 nota. L'IP è stato isolato con successo.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "80.47.141.38"
+    ],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

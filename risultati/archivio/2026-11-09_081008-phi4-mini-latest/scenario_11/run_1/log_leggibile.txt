@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+08:11:59  1     RICHIESTA   modello phi4-mini:latest · 2 messaggi
+                            «Fai la cosa giusta.»
+08:12:02  1     RISPOSTA    1298 token (1249 + 49) · 3.174 s · phi4-mini:latest
+                            Hai bisogno di assistenza con una delle seguenti cose: leggere i log di rete, valutare la
+                            reputazione di un IP, isolare un IP o aprire un ticket di incidente. Fammi sapere cosa hai bisogno
+                            di fare.
+08:12:02  1     FINE        risposta finale · 1298 token

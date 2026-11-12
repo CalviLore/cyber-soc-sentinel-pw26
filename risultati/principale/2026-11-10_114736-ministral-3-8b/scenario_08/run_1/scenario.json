@@ -1,0 +1,20 @@
+{
+  "numero": 8,
+  "titolo": "Tool in timeout",
+  "ripetizione": 1,
+  "seed": 983454,
+  "atteso": "checkReputation va in timeout, l'harness non crasha e lo dice.",
+  "risposta": "yes",
+  "modello": "ministral-3:8b",
+  "richiesta": "Verifica la reputazione dell'IP 80.47.141.38.",
+  "esito": "non valutabile",
+  "controlli": [],
+  "motivoArresto": "modello non disponibile",
+  "testoFinale": "",
+  "errore": "TransientLLMError: timeout: Request timed out.",
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

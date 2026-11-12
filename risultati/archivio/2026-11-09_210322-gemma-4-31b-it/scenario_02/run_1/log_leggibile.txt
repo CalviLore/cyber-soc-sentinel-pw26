@@ -1,0 +1,25 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+21:08:04  1     RICHIESTA   modello gemma-4-31b-it · 2 messaggi
+                            «Controlla l'IP 207.4.197.7: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+21:09:43  1     RISPOSTA    1501 token (1413 + 88) · 31.385 s · gemma-4-31b-it · chiede: readLogs, readLogs, checkReputation
+21:09:43  1     TOOL        readLogs(statusCode=401, ip="207.4.197.7")
+21:09:43  1     RISULTATO   riuscito · {"total": 32, "returned": 32, "logs": […]}
+21:09:43  1     TOOL        readLogs(ip="207.4.197.7", statusCode=403)
+21:09:43  1     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+21:09:43  1     TOOL        checkReputation(ip="207.4.197.7")
+21:09:43  1     RISULTATO   riuscito · {"ip": "207.4.197.7", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+21:09:43  2     RICHIESTA   modello gemma-4-31b-it · 6 messaggi
+21:10:19  2     RISPOSTA    4952 token (4787 + 165) · 29.266 s · gemma-4-31b-it · chiede: isolateIp
+                            L'IP 207.4.197.7 è responsabile di 32 accessi falliti (codice 401) all'endpoint /auth/login in un
+                            arco di tempo di circa 5 minuti (dalle 09:55:08 alle 09:59:57). Questo pattern è indicativo di un
+                            attacco brute-force. La reputazione dell'IP non risulta in whitelist né come asset critico.
+                            Procedo con l'isolamento dell'IP.
+21:10:19  2     TOOL        isolateIp(ip="207.4.197.7", reason="Attacco brute-force: 32 tentativi di login falliti in 5 mi…)
+21:10:19        CONFERMA    Isolare l'IP 207.4.197.7? Motivo: Attacco brute-force: 32 tentativi di login falliti in 5 minuti. → Y
+21:10:19  2     RISULTATO   riuscito · {"isolated": true, "ip": "207.4.197.7"}
+21:10:19  3     RICHIESTA   modello gemma-4-31b-it · 8 messaggi
+21:12:31  3     RISPOSTA    5026 token (5004 + 22) · 22.314 s · gemma-4-31b-it
+                            L'IP 207.4.197.7 è stato isolato con successo.
+21:12:31  3     FINE        risposta finale · 11479 token

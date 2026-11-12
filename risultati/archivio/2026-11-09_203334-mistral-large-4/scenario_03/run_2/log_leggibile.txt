@@ -1,0 +1,39 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+20:35:12  1     RICHIESTA   modello mistral-large-4 · 2 messaggi
+                            «Controlla l'IP 214.161.222.14: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+20:35:17  1     RISPOSTA    1557 token (1413 + 144) · 2.447 s · mistral-large-4 · chiede: readLogs, checkReputation
+                            Controllo l'IP 214.161.222.14: leggo i log degli accessi falliti (HTTP 401) e verifico la
+                            reputazione in parallelo.
+20:35:17  1     TOOL        readLogs(ip="214.161.222.14", statusCode=401, limit=25)
+20:35:17  1     RISULTATO   riuscito · {"total": 87, "returned": 25, "logs": […]}
+20:35:17  1     TOOL        checkReputation(ip="214.161.222.14")
+20:35:17  1     RISULTATO   riuscito · {"ip": "214.161.222.14", "whitelisted": false, "whitelistReason": null, "threatScore": null, "threatReason": null, "assetName": null, "criticalAsset": false}
+20:35:17  2     RICHIESTA   modello mistral-large-4 · 5 messaggi
+20:35:26  2     RISPOSTA    3655 token (3477 + 178) · 2.898 s · mistral-large-4 · chiede: readLogs
+20:35:26  2     TOOL        readLogs(ip="214.161.222.14", limit=25, statusCode=200)
+20:35:26  2     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+20:35:26  3     RICHIESTA   modello mistral-large-4 · 7 messaggi
+20:35:36  3     RISPOSTA    3783 token (3542 + 241) · 2.949 s · mistral-large-4 · chiede: isolateIp
+20:35:36  3     TOOL        isolateIp(ip="214.161.222.14", reason="Brute force su /login: 87 richieste POST con risposta 401 …)
+20:35:36        CONFERMA    Isolare l'IP 214.161.222.14? Motivo: Brute force su /login: 87 richieste POST con risposta 401 in ~90 secondi (09:58:26-09:59:59), nessuna richiesta con successo (0 x 200), stesso user_agent. IP non in whitelist e non asset critico. → N
+20:35:36  3     RISULTATO   riuscito · {"cancelled": true, "message": "The operator declined the operation. Nothing was changed. Do not retry and do not propose it again unless asked: tell the operator that t…
+20:35:36  4     RICHIESTA   modello mistral-large-4 · 9 messaggi
+20:35:40  4     RISPOSTA    4093 token (3681 + 412) · 4.797 s · mistral-large-4
+                            Riepilogo dell'analisi su 214.161.222.14:
+                            Fatti osservati:
+                            - 87 richieste POST verso /login con codice 401 (accesso fallito), tutte concentrate in circa 90
+                            secondi (dalle 09:58:26 alle 09:59:59 del 2026-10-20)
+                            - Nessuna richiesta con codice 200: zero accessi riusciti
+                            - Stesso user_agent per tutte le richieste: Mozilla/5.0 (X11; Linux x86_64)
+                            - Reputazione: non in whitelist, non asset critico, nessun punteggio threat intel disponibile
+                            Valutazione: il pattern (volume elevato, endpoint di login, solo 401, finestra temporale ristretta)
+                            è coerente con un tentativo di brute force. Non ci sono elementi che lo colleghino a un asset
+                            legittimo.
+                            Azione di isolamento: ho avviato la procedura di isolamento, ma il sistema ha restituito cancelled:
+                            true, cioè l'operazione è stata annullata dall'operatore e nulla è stato modificato. Come da
+                            procedura, non la ripropongo.
+                            Se vuoi, posso aprire un ticket di incidente (severità Alta) per tracciare questo tentativo di brute
+                            force sull'IP 214.161.222.14: dimmi se procedere.
+20:35:40  4     FINE        risposta finale · 13088 token

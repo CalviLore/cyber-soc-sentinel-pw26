@@ -1,0 +1,20 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+18:00:40  1     RICHIESTA   modello gemini-3.6-flash · 2 messaggi
+                            «Analizza i log più recenti e segnala eventuali problemi.»
+18:00:51  1     RISPOSTA    1403 token (1389 + 14) · 5.349 s · gemini-3.6-flash · chiede: readLogs
+18:00:51  1     TOOL        readLogs(limit=25)
+18:00:51  1     RISULTATO   riuscito · {"total": 201, "returned": 25, "logs": […]}
+18:00:51  2     RICHIESTA   modello gemini-3.6-flash · 4 messaggi
+18:01:08  2     RISPOSTA    4099 token (4079 + 20) · 8.331 s · gemini-3.6-flash · chiede: readLogs
+18:01:08  2     TOOL        readLogs(limit=25, statusCode=401)
+18:01:08  2     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+18:01:08  3     RICHIESTA   modello gemini-3.6-flash · 6 messaggi
+18:01:14  3     RISPOSTA    4396 token (4376 + 20) · 3.973 s · gemini-3.6-flash · chiede: readLogs
+18:01:14  3     TOOL        readLogs(limit=25, statusCode=500)
+18:01:14  3     RISULTATO   riuscito · {"total": 0, "returned": 0, "logs": […]}
+18:01:14  4     RICHIESTA   modello gemini-3.6-flash · 8 messaggi
+18:01:45  4     ERRORE MODELLOTransientLLMError: HTTP 429: Error code: 429 | [{
+  "error": {
+    "code": 429,
+    "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day limit exceeded on Free Tier. Se

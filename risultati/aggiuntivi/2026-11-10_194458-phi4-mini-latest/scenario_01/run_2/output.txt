@@ -1,0 +1,3 @@
+>>> Controlla se ci sono anomalie nel traffico recente.
+
+Per controllare le anomalie nel traffico recente, ho bisogno di informazioni aggiuntive specifiche. Puoi fornirmi un IP target, un codice di stato HTTP specifico da filtrare, o dovrei cercare anomalie generali senza filtri?

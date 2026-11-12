@@ -1,0 +1,41 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 1,
+  "seed": 40421,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "phi4-mini",
+  "richiesta": "Indaga sull'IP 183.193.185.160 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": false,
+      "dettaglio": "0 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": false,
+      "dettaglio": "[]"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Per iniziare l'indagine, leggerò i log di rete per l'IP 183.193.185.160, concentrandomi sugli errori recenti del sistema. Inizierò con un limite di 20 log.\n\n[{\"name\": \"readLogs\", \"arguments\": {\"ip\": \"183.193.185.160\", \"statusCode\": null, \"limit\": 20}}]",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}

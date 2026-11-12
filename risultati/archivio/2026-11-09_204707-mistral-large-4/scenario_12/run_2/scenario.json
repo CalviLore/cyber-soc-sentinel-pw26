@@ -1,0 +1,54 @@
+{
+  "numero": 12,
+  "titolo": "Multi-tool, correlazione",
+  "ripetizione": 2,
+  "seed": 888434,
+  "atteso": "Legge i log, isola l'IP e apre un ticket, con due conferme Y.",
+  "risposta": "yes",
+  "modello": "mistral-large-4",
+  "richiesta": "Indaga sull'IP 130.125.124.87 e sugli errori recenti del sistema: se trovi un attacco in corso, blocca l'IP e apri un ticket per il team.",
+  "esito": "passato",
+  "controlli": [
+    {
+      "nome": "isolato l'IP del brute force",
+      "ok": true,
+      "dettaglio": "['130.125.124.87']"
+    },
+    {
+      "nome": "un solo ticket aperto",
+      "ok": true,
+      "dettaglio": "1 ticket"
+    },
+    {
+      "nome": "due conferme, entrambe Y",
+      "ok": true,
+      "dettaglio": "['Y', 'Y']"
+    },
+    {
+      "nome": "ha letto i log prima di isolare",
+      "ok": true,
+      "dettaglio": "['checkReputation', 'readLogs', 'readLogs', 'readLogs', 'readLogs', 'isolateIp', 'openTicket']"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "Indagine completata. Ecco il quadro, separando fatti e conclusioni.\n\nFatti osservati:\n- IP 130.125.124.87: non in whitelist, nessun threat score nel threat intel, non un asset critico.\n- 78 richieste totali dall'IP, tutte POST su /auth/login, tutte con codice 401 (login fallito). Zero richieste con codice 200: nessun accesso riuscito.\n- Frequenza anomala: fino a 3 richieste nello stesso secondo (es. 09:58:08, 09:59:45-46, 09:59:51-56), con user_agent python-requests/2.31, tipico di script automatizzato.\n- Errori 500 recenti: 8 errori su POST /api/fatture, tutti dall'IP interno 10.66.54.126 con causa \"DB Timeout\" tra le 09:50 e le 09:59. Non sono collegati all'IP attaccante: sembrano un problema applicativo/database separato.\n\nConclusione: si tratta di un attacco di brute force / credential stuffing in corso contro l'endpoint di login.\n\nAzioni eseguite (entrambe confermate dal sistema):\n- IP 130.125.124.87 isolato (isolated: true).\n- Ticket aperto: ticket ID 1, stato \"aperto\", severità Alta, con IP e codice 401 correlati. Nella descrizione ho incluso anche la nota sugli errori 500 su /api/fatture per il team applicativo.\n\nRaccomandazione per il team: verificare eventuali login riusciti da altri IP con lo stesso pattern e valutare un rate limit su /auth/login.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [
+      "130.125.124.87"
+    ],
+    "incident_tickets": [
+      {
+        "id": 1,
+        "titolo": "Brute force su /auth/login da 130.125.124.87",
+        "descrizione": "L'IP 130.125.124.87 sta eseguendo un attacco di brute force / credential stuffing contro POST /auth/login. Fatti osservati: 78 richieste totali tutte con codice 401, user_agent python-requests/2.31, picchi fino a 3 richieste nello stesso secondo (es. 09:58:08 e 09:59:45-56), nessun accesso riuscito (0 richieste con 200). Reputazione: non in whitelist, nessun threat score noto, non asset critico. Azione: IP isolato. Nota separata: 8 errori 500 su POST /api/fatture dall'IP interno 10.66.54.126 con causa \"DB Timeout\" tra le 09:50 e le 09:59, non correlati all'attacco ma da verificare per il team applicativo.",
+        "gravita": "Alta",
+        "ip_correlato": "130.125.124.87",
+        "status_code_correlato": 401,
+        "timestamp": "2026-11-09T20:58:08",
+        "stato": "aperto"
+      }
+    ]
+  },
+  "screenshot": true
+}

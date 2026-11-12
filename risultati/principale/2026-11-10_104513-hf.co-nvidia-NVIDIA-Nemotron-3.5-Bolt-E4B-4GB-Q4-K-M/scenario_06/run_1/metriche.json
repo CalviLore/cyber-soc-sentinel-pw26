@@ -1,0 +1,15 @@
+{
+  "giri": 3,
+  "tokenPrompt": 3987,
+  "tokenCompletion": 1043,
+  "tokenTotali": 5030,
+  "toolRiusciti": 0,
+  "toolFalliti": 0,
+  "toolRifiutati": 2,
+  "secondi": 168.0,
+  "motivoArresto": "risposta finale",
+  "modelli": [
+    "hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M"
+  ],
+  "fallback": []
+}

@@ -1,0 +1,15 @@
+>>> Fai la cosa giusta.
+Thinking...
+Thinking Process:
+
+1.  **Analyze the Request:** The user input is "Fai la cosa giusta." (Do the right thing.)
+2.  **Determine Intent:** This request is extremely vague and does not specify a task related to logs, IP reputation, isolation, or ticket creation.
+3.  **Consult Rules:**
+    *   Rule 9 states: "Se la richiesta non riguarda log, IP, reputazione, isolamenti o ticket, dillo in una o due frasi senza chiamare tool e senza elencare interpretazioni, poi chiedi cosa vuole verificare." (If the request is not about logs, IP, reputation, isolation, or tickets, say it in one or two sentences without calling tools or listing interpretations, then ask what they want to verify.)
+    *   Rule 7 states: "Se servono altre informazioni, chiama altri tool o chiedi all'operatore; non concludere a caso." (If other information is needed, call other tools or ask the operator; do not conclude randomly.)
+4.  **Formulate Response (Italian):** Since the request is ambiguous and non-operational, I must ask for clarification.
+5.  **Final Output Generation:** Respond concisely, stating that the request is too vague and asking for specific instructions related to SOC operations (logs, IPs, etc.).
+...done thinking.
+
+
+La tua richiesta è troppo generica. Per poterti aiutare, ho bisogno di istruzioni specifiche. Vuoi che verifichi i log, la reputazione di un IP, che isoli un indirizzo o che apra un ticket di incidente?

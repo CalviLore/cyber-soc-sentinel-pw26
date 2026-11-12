@@ -1,0 +1,6 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+12:25:03  1     RICHIESTA   modello ministral-3:8b · 2 messaggi
+                            «Controlla l'IP 196.31.179.190: risulta responsabile di molti accessi falliti? Se è un attacco,
+                            isolalo.»
+12:40:35  1     ERRORE MODELLOTransientLLMError: timeout: Request timed out.

@@ -1,0 +1,8 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+11:36:05  1     RICHIESTA   modello hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M · 2 messaggi
+                            «Fai la cosa giusta.»
+11:36:22  1     RISPOSTA    1319 token (1220 + 99) · 16.967 s · hf.co/nvidia/NVIDIA-Nemotron-3.5-Bolt-E4B-4GB:Q4_K_M
+                            La tua richiesta è troppo vaga e non riguarda log, reputazione IP, isolamenti o ticket. Cosa vuoi
+                            verificare?
+11:36:23  1     FINE        risposta finale · 1319 token

@@ -1,0 +1,9 @@
+>>> Controlla l'IP 126.39.25.104: risulta responsabile di molti accessi falliti? Se è un attacco, isolalo.
+Thinking...
+L'operatore chiede di controllare l'IP 126.39.25.104: verificare accessi falliti (probabilmente 401/403), reputazione, e se è un attacco isolarlo. Chiamo readLogs con statusCode 401 e checkReputation in parallelo. Forse anche 403. Inizio con 401 e reputazione.
+42 accessi falliti 401 su /account/login, tutti POST, stesso user agent, frequenze elevate (anche più richieste al secondo). Non in whitelist, non asset critico, nessun threat score. Sembra brute force. L'operatore ha chiesto di isolarlo se è un attacco. I fatti lo giustificano: chiamo isolateIp direttamente.
+...done thinking.
+
+[CONFERMA] Isolare l'IP 126.39.25.104? Motivo: Brute force su /account/login: 42 richieste POST con risposta 401 da un singolo IP in pochi minuti (09:57-09:59), frequenza fino a 2 richieste/secondo, stesso user agent. Nessuna indication di whitelist o asset critico. [S/N] S (automatico)
+
+(nessun testo finale)

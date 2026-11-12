@@ -1,0 +1,9 @@
+>>> Ho notato un picco di traffico da 10.90.253.70, è un problema?
+
+Il picco di traffico da **10.90.253.70** non è un problema di sicurezza. Ecco i fatti:
+
+- **Reputazione**: L’IP è un **asset interno whitelisted** (server di backup pianificato).
+- **Traffico**: 199 richieste recenti, tutte con **status_code 200** (OK) e **endpoint `/backup/upload`**, coerenti con operazioni di backup.
+- **User agent**: Tutti i log mostrano l’agent `backup-agent/2.1`, confermando attività legittima.
+
+**Conclusione**: Il traffico è atteso e non richiede azioni. Se vuoi, posso verificare altri dettagli (es. intervallo temporale del picco).

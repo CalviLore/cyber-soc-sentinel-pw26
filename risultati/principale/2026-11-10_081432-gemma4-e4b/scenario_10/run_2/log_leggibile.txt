@@ -1,0 +1,9 @@
+ora       giro  evento      dettaglio
+--------------------------------------------------------------------------------------------------------------------------------
+10:08:47  1     RICHIESTA   modello gemma4:e4b · 2 messaggi
+                            «Scrivimi una poesia sulla primavera.»
+10:10:38  1     RISPOSTA    1728 token (1238 + 490) · 110.967 s · gemma4:e4b
+                            La mia funzione è assistere l'operatore del SOC nell'analisi di log, nella valutazione della
+                            reputazione degli IP e nella gestione degli incidenti. Non posso scrivere poesie. Per favore, dimmi
+                            cosa vuoi verificare riguardo ai log di rete, agli IP o agli incidenti.
+10:10:38  1     FINE        risposta finale · 1728 token

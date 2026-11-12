@@ -1,0 +1,31 @@
+{
+  "numero": 2,
+  "titolo": "Scrittura approvata (Y)",
+  "ripetizione": 1,
+  "seed": 81713,
+  "atteso": "Trova il brute force, propone isolateIp, conferma Y, scrive.",
+  "risposta": "yes",
+  "modello": "gemini-3.6-flash",
+  "richiesta": "Controlla l'IP 207.21.82.212: risulta responsabile di molti accessi falliti?",
+  "esito": "fallito",
+  "controlli": [
+    {
+      "nome": "isolato solo l'IP del brute force",
+      "ok": false,
+      "dettaglio": "[]"
+    },
+    {
+      "nome": "conferma Y registrata",
+      "ok": false,
+      "dettaglio": "[]"
+    }
+  ],
+  "motivoArresto": "risposta finale",
+  "testoFinale": "**Sì, l'IP 207.21.82.212 risulta responsabile di un numero elevato di accessi falliti.**\n\n### Fatti osservati:\n- **Conteggio log:** Sono stati registrati **47 tentativi** totali per questo IP.\n- **Endpoint e metodo:** Tutte le richieste sono `POST /api/login`.\n- **Codice di stato HTTP:** Tutte le richieste restituiscono codice **401 (Unauthorized)**, concentrate in un intervallo di circa due minuti (dalle 09:57:34 alle 09:59:58 del 20/10/2026).\n- **Reputazione IP:** Non è presente in whitelist, non è un asset critico e non ha un threat score registrato.\n\n### Conclusione:\nIl comportamento osservato (47 tentativi di autenticazione falliti consecutivi in tempi ristretti) è compatibile con un attacco di tipo *brute-force* o *credential stuffing*. \n\nSe desideri procedere con l'isolamento dell'IP o con l'apertura di un ticket di incidente, fammelo sapere.",
+  "errore": null,
+  "statoDb": {
+    "isolated_ips": [],
+    "incident_tickets": []
+  },
+  "screenshot": true
+}
