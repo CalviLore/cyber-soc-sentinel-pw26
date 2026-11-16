@@ -45,5 +45,5 @@ Svolto insieme all'autore:
 | Back-end (`backend.py`) | scritto dall'autore | test automatici |
 | Server MCP (`mcp_server.py`) | scritto dall'autore | test end-to-end |
 | Client dei modelli e harness | scritto dall'autore | scenari |
-| Test unitari | scritti dall'assistente, riletti dall'autore | esecuzione dei 194 test |
+| Test unitari | scritti dall'assistente, riletti dall'autore | esecuzione dei test |
 | Documentazione | scritta insieme dall'autore e dall'assistente | lettura e correzioni dell'autore |
