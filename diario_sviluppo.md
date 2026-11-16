@@ -33,4 +33,25 @@ Log cronologico: 2 righe per modulo chiuso.
 ## 2026-11-05
 - Modulo: Fase 3 — client LLM in src/llm/: LLMClient astratto (base.py), OpenAICompatibleClient (3 tentativi con attesa crescente, Retry-After rispettato), FakeLLMClient, FallbackClient. 53 test in tests/test_llm_*.py.
 - Note: scelte di progetto: argomenti JSON rotti del modello non sollevano errore ma finiscono in ToolCall.invalidArguments (deciderà il ciclo agentico); i tool MCP si convertono nel formato OpenAI dentro il client; il fallback scatta solo su TransientLLMError. Rimosso il remote vecchio-origin.
-- Prova dal vivo dei tre provider (Ollama ministral-3:8b, Gemini, Mistral) con una richiesta e un tool: tutti hanno chiamato readLogs con argomenti validi. La prova ha mostrato due problemi che i test finti non vedevano: Mistral con temperature=0 rifiuta la richiesta (errore 400) se top_p non è 1, e restituisce il contenuto come lista di blocchi (thinking + text) invece che come stringa. Corretti in OpenAICompatibleClient (top_p=1 a temperatura 0, _textOf tiene solo il testo), con 4 test nuovi (57 totali). Provati anche i modelli locali: ministral-3:8b, gemma4:e4b e Gemma Unsloth Q3 funzionano; Ministral Unsloth Q3 non parte (CUDA out of memory sulla RTX 3050 da 4 GB) ed è stato rimosso da Ollama. I test unitari li ha scritti Claude (da annotare in dichiarazione_AI.md).
+- Prova dal vivo dei tre provider (Ollama ministral-3:8b, Gemini, Mistral) con una richiesta e un tool: tutti hanno chiamato readLogs con argomenti validi. La prova ha mostrato due problemi che i test finti non vedevano: Mistral con temperature=0 rifiuta la richiesta (errore 400) se top_p non è 1, e restituisce il contenuto come lista di blocchi (thinking + text) invece che come stringa. Corretti in OpenAICompatibleClient (top_p=1 a temperatura 0, _textOf tiene solo il testo), con 4 test nuovi (57 totali). Provati anche i modelli locali: ministral-3:8b, gemma4:e4b e Gemma Unsloth Q3 funzionano; Ministral Unsloth Q3 non parte (CUDA out of memory sulla RTX 3050 da 4 GB) ed è stato rimosso da Ollama. I test unitari sono stati scritti insieme a Claude (indicato in docs/dichiarazione_AI.md).
+
+## 2026-11-06
+- Modulo: Fase 4 — ciclo agentico e chat. runAgent con history per la memoria tra più richieste; Chat (src/chat.py, motore e chat a tastiera) e trascrizione della sessione (conferme, pensiero in grigio, risposta); prompt di sistema con ragionamento e risposte in italiano; tools/runner.py per eseguire gli scenari con un modello vero, con controlli su DB e log, output e screenshot; diagrammi UML in Mermaid. Test aggiunti per ogni modulo.
+- Note: le decisioni di questa fase (D025-D031) sono nel decision-log.md.
+
+## 2026-11-07
+- Modulo: Fase 5 — runner multi-modello con ragionamento vero, provider NVIDIA, tool letti dal testo, seed ed endpoint per lancio. Chat con banner, /models e spinner, conferma S/N, Markdown reso a video. Prompt v2. Diagrammi UML in PNG. README, requirements.txt e .env.example aggiornati (tolte le righe Unsloth, aggiunta NVIDIA).
+- Note: decision-log aggiornato fino a D035.
+
+## 2026-11-09
+- Modulo: Fase 5 — runner con controlli sulla risposta finale; client LLM con timeout e 5 tentativi.
+
+## 2026-11-10
+- Modulo: Fase 6-7 — run per la tesi, tabelle per scenario e diagrammi UML aggiornati; DIAGRAMMI.md allineato ai diagrammi numerati (2a: il Runner passa da Chat).
+
+## 2026-11-12
+- Modulo: Fase 7 — tutte le esecuzioni salvate in risultati/ e README aggiornato.
+
+## 2026-11-15
+- Modulo: dichiarazione sull'uso dell'AI spostata in docs/dichiarazione_AI.md e aggiornata (contributo dell'autore, supporto dell'assistente, ripartizione per modulo).
+- Note: le voci dal 6 al 12 novembre sono ricostruite dalla cronologia dei commit.
