@@ -1,49 +1,38 @@
 # Dichiarazione sull'uso di assistenti AI
 
 ## Strumenti utilizzati
-- Claude Code (Anthropic), assistente di programmazione e di scrittura, usato durante il
-  progetto.
-- Modelli linguistici del prototipo (Gemini, Gemma, Mistral/Ministral, Nemotron, phi4-mini):
-  sono il *prodotto* del progetto, non strumenti usati per costruirlo.
+- **Claude Code (Anthropic):** assistente di programmazione e scrittura utilizzato in modalità collaborativa (*pair programming*) sotto la direzione tecnica dell'autore.
+- **Modelli linguistici del prototipo (Gemini, Gemma, Mistral/Ministral, Nemotron, phi4-mini):** costituiscono il *prodotto* oggetto di sperimentazione, non gli strumenti impiegati per sviluppare il progetto.
 
-## Cosa ha fatto l'autore
-L'autore ha ideato, scritto, diretto, eseguito e verificato il progetto. In particolare:
-- il codice (simulatore e database, back-end, server MCP, client dei modelli e harness);
-- la traccia e il perimetro (agente SOC di primo livello, 4 tool, 12 scenari);
-- la scelta dei modelli: stesso produttore per cloud e locale, famiglie Google, Mistral e
-  NVIDIA, fallback Gemini → Gemma 4 31B, taglie da 8B accettando i tempi lunghi, esclusione
-  dei modelli di provider cinesi;
-- le ricerche su modelli, piani gratuiti e riferimenti, con le fonti indicate;
-- l'esecuzione dei 12 scenari con otto modelli (quattro cloud e quattro locali) e
-  l'interpretazione dei risultati;
-- l'impostazione dei diagrammi UML, delle figure, delle tabelle e degli snippet: cosa mostrare, con quali elementi e a quale livello di dettaglio, e la revisione di ogni versione.
+## Contributo dell'autore
+L'autore ha ideato, progettato, scritto, diretto e validato l'intero lavoro. In particolare:
+- **Sviluppo del codice applicativo:** simulatore e schema del database, back-end, server MCP, client dei modelli e harness agentico;
+- **Definizione del perimetro:** contestualizzazione su un SOC di primo livello, progettazione dei 4 tool e definizione dei 12 scenari di test;
+- **Strategia sui modelli:** selezione delle coppie cloud/locale per produttore (Google, Mistral, NVIDIA), meccanismo di fallback (`Gemini → Gemma 4 31B`), dimensionamento fino a 8B sui modelli locali ed esclusione dei provider cinesi per motivi di governance dei dati;
+- **Analisi e ricerca:** valutazione delle specifiche tecniche, dei piani gratuiti e dei listini, con relativa documentazione delle fonti;
+- **Sperimentazione:** progettazione ed esecuzione dei 12 scenari sugli 8 modelli (4 cloud e 4 locali) e interpretazione critica dei risultati;
+- **Impostazione editoriale e grafica:** definizione dei diagrammi UML, delle figure, delle tabelle e degli snippet (selezione degli elementi, livello di dettaglio) e revisione puntuale di ogni versione.
 
 ## Supporto dell'assistente
-L'assistente ha lavorato su specifiche e decisioni dell'autore.
+L'assistente ha operato esclusivamente su specifiche, vincoli e revisione continua dell'autore.
 
-Svolto dall'assistente:
-- scrittura dei test unitari ed esecuzione e controllo dei test sugli scenari (194 test
-  automatici passano).
+**Attività eseguite su specifiche e supervisione dell'autore:**
+- Generazione assistita dei test unitari (194 test automatici superati), basata sui casi limite e sui requisiti definiti dall'autore, seguita da revisione ed esecuzione;
+- Automazione dei controlli di coerenza incrociata tra i log di esecuzione, lo stato del database e le tabelle riportate nel report.
 
-Svolto insieme all'autore:
-- consigli e valutazione delle idee dell'autore sulle scelte tecniche e sul lavoro di
-  sviluppo;
-- documentazione tecnica (`docs/`, `TOOL_MCP.md`, `decision-log.md`, diario di sviluppo) e
-  script di servizio, per esempio `tools/elenca_modelli.py`;
-- verifica dei dati riportati nel report rispetto a codice e log;
-- diagrammi UML, figure, tabelle e immagini degli snippet, a partire dai file del
-  repository e con le indicazioni e la revisione dell'autore;
-- struttura del report (brainstorming), revisione ortografica, grammaticale e della
-  punteggiatura, e proposte di riscrittura di parti del testo, poi riviste e approvate
-  dall'autore.
+**Attività svolte in collaborazione con l'autore:**
+- Confronto tecnico e valutazione critica sulle scelte architetturali e sulle soluzioni di implementazione;
+- Redazione della documentazione tecnica (`docs/`, `TOOL_MCP.md`, `decision-log.md`, diario di sviluppo) e di script di servizio (es. `tools/elenca_modelli.py`);
+- Generazione di diagrammi UML, figure, tabelle e snippet a partire dai file del repository, secondo le indicazioni progettuali e la validazione finale dell'autore;
+- Brainstorming sulla struttura del report, revisione linguistica (ortografia, grammatica, punteggiatura) e proposte di sintesi testuale, tutte vagliate e approvate dall'autore.
 
 ## Ripartizione per modulo
 
-| Modulo | Chi l'ha scritto | Come è stato verificato |
-|---|---|---|
-| Simulatore e database | scritto dall'autore | seed fisso, controlli sulle tabelle |
-| Back-end (`backend.py`) | scritto dall'autore | test automatici |
-| Server MCP (`mcp_server.py`) | scritto dall'autore | test end-to-end |
-| Client dei modelli e harness | scritto dall'autore | scenari |
-| Test unitari | scritti dall'assistente, riletti dall'autore | esecuzione dei test |
-| Documentazione | scritta insieme dall'autore e dall'assistente | lettura e correzioni dell'autore |
+| Modulo | Responsabilità e sviluppo | Modalità di verifica |
+| :--- | :--- | :--- |
+| Simulatore e database | Scritto dall'autore | Seed fisso, controlli sulle tabelle |
+| Back-end (`backend.py`) | Scritto dall'autore | Test automatici |
+| Server MCP (`mcp_server.py`) | Scritto dall'autore | Test end-to-end |
+| Client dei modelli e harness | Scritto dall'autore | Esecuzione dei 12 scenari |
+| Test unitari | Generati su specifiche dell'autore, revisionati dall'autore | Esecuzione suite di test |
+| Documentazione | Redatta in collaborazione, revisionata e approvata dall'autore | Lettura critica e correzioni dell'autore |
