@@ -48,9 +48,9 @@ tools/      programmi di contorno, non fanno parte del prodotto
   runner.py       esegue i 12 scenari con un modello vero
   prova_tool.py, elenca_modelli.py
   rigenera_tabelle.py, reportino_run.py   tabelle e sintesi dei run in risultati/per_tesi/
-docs/       schema ER, diagrammi UML (Mermaid + PNG in docs/img), PROMPT.md, dichiarazione_AI.md (uso dell'AI)
+docs/       schema ER, diagrammi UML (Mermaid + PNG in docs/img), PROMPT.md,
+            decision-log.md, diario_sviluppo.md, dichiarazione_AI.md (uso dell'AI)
 tests/      test automatici (194)
-decision-log.md, diario_sviluppo.md   decisioni e diario
 data/       soc.db, generato dal simulatore (non versionato)
 risultati/  output delle run: principale/ (run finali), aggiuntivi/ (modelli extra), archivio/ (prove),
             per_tesi/ (i run citati nel report)
